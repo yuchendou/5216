@@ -842,7 +842,7 @@ reg('f-chatlist', {nav:'chat', html:()=>`
     <div class="search">${I.search}<input placeholder="Search conversations"></div>
     ${[['🍲','Hope Kitchen','Could we move the pickup to 2pm?','2',true],
        ['🏥','FoodShare Sydney','We have locked it in, thank you!','',false],
-       ['🤝','Rotary Foodbank','Attaching last week\\'s receipt PDF 📎','',false]]
+       ['🤝','Rotary Foodbank','Attaching last week’s receipt PDF 📎','',false]]
       .map(([e,n,m,u,f],i)=>`
       <div class="thread" style="animation:tileIn .4s ${i*.07}s both" onclick="go('f-chat')">
         <div class="av">${e}</div>
@@ -975,7 +975,7 @@ function switchPeriod(btn,p){
 function drawChart(p){
   const d = CHART[p]; const c = document.getElementById('chart'); if(!c) return;
   c.innerHTML = d.labels.map((l,i)=>`<div class="bar-col"><div class="bar" data-h="${d.vals[i]}"></div><div class="lb">${l}</div></div>`).join('');
-  requestAnimationFrame(()=>c.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h+'%', i*70)));
+  c.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h+'%', 30+i*70));
   d.kpi.forEach((v,i)=>{ const el=document.getElementById('kpi'+i); if(el){ el.textContent=v; el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .45s cubic-bezier(.68,-.4,.27,1.4)'; }});
   const t=document.getElementById('trendVal'); if(t) t.textContent = d.kpi[3];
   setTimeout(()=>document.querySelectorAll('.growbar').forEach((g,i)=>setTimeout(()=>g.style.width=g.dataset.w+'%',i*90)),200);
@@ -1308,7 +1308,8 @@ function go(id, back=false){
   el.className='screen'; el.id='scr-'+id; if(back) el.dataset.dir='back';
   el.innerHTML = SCREENS[id].html();
   views.appendChild(el);
-  requestAnimationFrame(()=>el.classList.add('active'));
+  // timeout rather than rAF: rAF is paused in background tabs, which would leave the screen invisible
+  setTimeout(()=>el.classList.add('active'),20);
   activeScreen=id;
   // file:// documents have an opaque origin and reject replaceState, so URL sync is best-effort
   try{ if(location.hash.slice(1)!==id) history.replaceState(null,'','#'+id); }catch(_){}
