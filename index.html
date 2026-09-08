@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -430,18 +430,18 @@ body{
     </svg>
     <h1><span class="fm">Farm</span><span class="lk">Link</span></h1>
   </div>
-  <p class="tagline">Connecting fresh produce to brighter tomorrows.<br>互動式原型 · 依 Components 文件建構</p>
+  <p class="tagline">Connecting fresh produce to brighter tomorrows.<br>Interactive prototype · built from the Components doc</p>
 
   <div class="role-switch" id="roleSwitch" data-role="farmer">
     <div class="role-thumb"></div>
-    <button class="on" onclick="setRole('farmer')">🚜 農民端</button>
-    <button onclick="setRole('charity')">🤝 慈善端</button>
+    <button class="on" onclick="setRole('farmer')">🚜 Farmer</button>
+    <button onclick="setRole('charity')">🤝 Charity</button>
   </div>
 
-  <h3>畫面導覽</h3>
+  <h3>Screens</h3>
   <nav class="jump" id="jumpList"></nav>
 
-  <p class="hint">💡 每個畫面都可點擊操作：貼文表單、鎖定交易、QR 掃描、聊天引用回覆、統計圖表都有動畫回饋。</p>
+  <p class="hint">💡 Every screen is clickable — the post form, lock-in, QR scan, chat quote-reply and stats charts all animate.</p>
 </aside>
 
 <!-- ============ PHONE ============ -->
@@ -467,7 +467,7 @@ body{
     <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
   </div>
 </div>
-<div class="f11 muted" style="text-align:center;max-width:378px">FarmLink 高保真原型 · 農民端與慈善／志工端雙角色 · 單一 HTML 檔可離線開啟</div>
+<div class="f11 muted" style="text-align:center;max-width:378px">FarmLink hi-fi prototype · farmer and charity/volunteer roles · single HTML file, works offline</div>
 </div>
 
 <script>
@@ -563,7 +563,6 @@ const CHART = {
 
 let ROLE = 'farmer';
 let activeScreen = '';
-let history = [];
 let currentListing = LISTINGS[0];
 let replyTo = null;
 
@@ -608,8 +607,8 @@ reg('splash', {nav:false, html:()=>`
     <div class="f12 muted" style="text-align:center;animation:fadeUp .8s .15s both">Connecting fresh produce<br>to brighter tomorrows.</div>
     <div style="margin:18px 0 26px;animation:popIn .8s .2s both">${cow(190,{heart:true})}</div>
     <button class="btn" onclick="go('${'home'}')">Get Started</button>
-    <button class="btn ghost" style="margin-top:10px" onclick="toast('登入畫面（原型示意）')">Log In</button>
-    <div class="f11 muted" style="margin-top:16px">目前身分：<b id="roleLabel">農民 / 生產者</b> · 可於左側切換</div>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Log in screen (prototype stub)')">Log In</button>
+    <div class="f11 muted" style="margin-top:16px">Signed in as <b id="roleLabel">Farmer / Producer</b> · switch on the left</div>
   </div>`});
 
 /* =======================================================================
@@ -638,26 +637,26 @@ reg('f-home', {nav:'home', html:()=>`
       <div class="tile" style="animation-delay:.23s" onclick="go('f-stats')"><span class="ic">📈</span><div class="t">Sales Stats</div><div class="s">See the difference</div></div>
     </div>
 
-    <div class="sect">今日待辦</div>
+    <div class="sect">Today</div>
     <div class="card">
       <div class="listrow" onclick="go('f-scan')">
         <div class="av" style="background:#fdf0d6">${I.qr}</div>
-        <div style="flex:1"><div class="b7 f13">掃描取貨 QR</div><div class="f11 muted">Hope Kitchen · Leafy Greens Mix</div></div>
-        <div class="pill lock">待掃描</div>
+        <div style="flex:1"><div class="b7 f13">Scan pickup QR</div><div class="f11 muted">Hope Kitchen · Leafy Greens Mix</div></div>
+        <div class="pill lock">To scan</div>
       </div>
       <div class="listrow" onclick="go('f-chat')">
         <div class="av">💬</div>
-        <div style="flex:1"><div class="b7 f13">2 則未讀訊息</div><div class="f11 muted">Hope Kitchen 想協商取貨時間</div></div>
+        <div style="flex:1"><div class="b7 f13">2 unread messages</div><div class="f11 muted">Hope Kitchen wants to change pickup time</div></div>
         <div class="unread">2</div>
       </div>
     </div>
 
-    <div class="sect">社群影響力</div>
+    <div class="sect">Community impact</div>
     <div class="card row" style="gap:14px">
       <div>${cow(70,{still:false})}</div>
       <div style="flex:1">
         <div class="b8" style="font-size:19px"><span class="cnt" data-to="742">0</span> kg</div>
-        <div class="f11 muted">已避免的食物浪費 · 相當於 <b class="cnt" data-to="1484">0</b> 份餐點</div>
+        <div class="f11 muted">of food waste avoided · about <b class="cnt" data-to="1484">0</b> meals</div>
       </div>
     </div>
   </div>`});
@@ -667,13 +666,13 @@ reg('f-listings', {nav:'list', html:()=>`
   ${bar('Active Listings', null, `<button class="iconbtn" onclick="go('f-post')">${I.plus}</button>`)}
   <div class="body">
     <div class="chips" id="fChips">
-      <button class="chip on" onclick="filterF(this,'all')">全部 6</button>
+      <button class="chip on" onclick="filterF(this,'all')">All 6</button>
       <button class="chip" onclick="filterF(this,'avail')">Available</button>
       <button class="chip" onclick="filterF(this,'lock')">Locked-in</button>
       <button class="chip" onclick="filterF(this,'done')">Completed</button>
     </div>
     <div id="fList"></div>
-    <button class="btn ghost" style="margin-top:4px" onclick="lazyMore('fList')">載入更多（Lazy loading）</button>
+    <button class="btn ghost" style="margin-top:4px" onclick="lazyMore('fList')">Load more (lazy loading)</button>
   </div>`,
   mount(){ renderF('all'); }});
 
@@ -687,17 +686,17 @@ function renderF(f){
         <div class="row"><div class="b8 f15">${l.name}</div><div class="sp"></div><div class="b8" style="color:var(--green-600)">${l.price}</div></div>
         <div class="row f12 muted" style="margin-top:4px"><span>${l.qty}</span><span>·</span><span>Collect by ${l.dl}</span><div class="sp"></div>${statusPill(l.status)}</div>
         <div class="row" style="margin-top:9px;gap:7px" onclick="event.stopPropagation()">
-          <button class="btn ghost sm" onclick="toast('編輯 ${l.name}')">${I.edit} Edit</button>
+          <button class="btn ghost sm" onclick="toast('Editing ${l.name}')">${I.edit} Edit</button>
           <button class="btn ghost sm" onclick="lockIn(${l.id})">${I.lock} Lock-in</button>
           <div class="sp"></div>
           <button class="btn ghost sm" style="color:var(--red)" onclick="delListing(this,'${l.name}')">${I.trash}</button>
         </div>
       </div>
-    </div>`).join('') || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">這個分類目前沒有刊登</div></div>`;
+    </div>`).join('') || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">No listings in this category</div></div>`;
 }
 function filterF(btn,f){ [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on'); renderF(f); }
-function delListing(btn,name){ const card = btn.closest('.listing'); card.style.transition='.35s'; card.style.transform='translateX(-110%)'; card.style.opacity='0'; setTimeout(()=>{card.remove(); toast('已刪除「'+name+'」');},340); }
-function lockIn(id){ const l = LISTINGS.find(x=>x.id===id); l.status='lock'; renderF('all'); toast('已標記為 Locked-in 🔒'); }
+function delListing(btn,name){ const card = btn.closest('.listing'); card.style.transition='.35s'; card.style.transform='translateX(-110%)'; card.style.opacity='0'; setTimeout(()=>{card.remove(); toast('Deleted "'+name+'"');},340); }
+function lockIn(id){ const l = LISTINGS.find(x=>x.id===id); l.status='lock'; renderF('all'); toast('Marked as locked-in 🔒'); }
 
 /* -- Post Surplus ------------------------------------------------------- */
 reg('f-post', {nav:false, html:()=>`
@@ -719,14 +718,14 @@ reg('f-post', {nav:false, html:()=>`
     <div class="field"><label>🚚 Pickup info</label><input placeholder="Gate B, 8am–5pm"></div>
 
     <div class="card row" style="margin:12px 0 16px">
-      <div style="flex:1"><div class="b7 f13">允許慈善單位直接聯絡</div><div class="f11 muted">關閉時需先通過通知審核</div></div>
+      <div style="flex:1"><div class="b7 f13">Let charities contact me directly</div><div class="f11 muted">When off, requests need approval first</div></div>
       <div class="switch on" onclick="this.classList.toggle('on')"></div>
     </div>
 
     <button class="btn" onclick="go('f-success')">Post Listing</button>
   </div>`});
 
-function photoAdd(el){ el.innerHTML = '<div style="font-size:38px;animation:popIn .5s cubic-bezier(.68,-.6,.32,1.6)">🥕</div><span style="color:var(--green-700)">照片已加入 · 1/3</span>'; el.style.background='var(--green-050)'; el.style.borderColor='var(--green-500)'; stepUp(); }
+function photoAdd(el){ el.innerHTML = '<div style="font-size:38px;animation:popIn .5s cubic-bezier(.68,-.6,.32,1.6)">🥕</div><span style="color:var(--green-700)">Photo added · 1/3</span>'; el.style.background='var(--green-050)'; el.style.borderColor='var(--green-500)'; stepUp(); }
 function stepUp(){ const a=document.getElementById('st2'), b=document.getElementById('st3'); if(a) a.classList.add('done'); setTimeout(()=>b&&b.classList.add('done'),260); }
 
 /* -- Success screens ---------------------------------------------------- */
@@ -736,7 +735,7 @@ reg('f-success', {nav:false, html:()=>`
     ${cow(180)}
     <div class="big-title" style="margin-top:8px">Hurray!</div>
     <div class="f13 muted" style="margin-top:6px">Your listing has been posted.</div>
-    <div class="note">🌱 <div>You're helping reduce food waste!<br><span class="f11 muted">附近 8 個慈善單位已收到通知</span></div></div>
+    <div class="note">🌱 <div>You're helping reduce food waste!<br><span class="f11 muted">8 nearby charities have been notified</span></div></div>
     <button class="btn" style="margin-top:24px" onclick="openListing(1,'farmer')">View Listing</button>
     <button class="btn ghost" style="margin-top:10px" onclick="go('f-nice')">Done</button>
   </div>`,
@@ -755,7 +754,7 @@ reg('f-nice', {nav:false, html:()=>`
 /* -- Listing detail (farmer) -------------------------------------------- */
 reg('f-detail', {nav:false, html:()=>{
   const l = currentListing;
-  return `${bar('Listing Details','f-listings', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('已加入關注')">${I.heart}</button>`)}
+  return `${bar('Listing Details','f-listings', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('Added to watchlist')">${I.heart}</button>`)}
   <div class="body">
     <div class="gallery" style="background:${l.bg}"><span class="em">${l.emo}</span><span class="count">1/3</span></div>
     <div class="row" style="margin-top:13px"><div class="b8" style="font-size:19px">${l.name}</div><div class="sp"></div><div class="b8" style="font-size:19px;color:var(--green-600)">${l.price}</div></div>
@@ -767,21 +766,21 @@ reg('f-detail', {nav:false, html:()=>{
     <div class="grower">
       <div class="av" style="background:#d8ecd2">👨‍🌾</div>
       <div style="flex:1"><div class="f11 muted">Posted by</div><div class="b8 f13">${l.farm}</div><div class="verified">${I.check} Verified grower</div></div>
-      <button class="iconbtn" onclick="toast('撥號：0412 345 678')">${I.phone}</button>
+      <button class="iconbtn" onclick="toast('Calling 0412 345 678')">${I.phone}</button>
     </div>
 
-    <div class="sect">交易流程</div>
+    <div class="sect">Transaction flow</div>
     <div class="card">
-      <div class="listrow"><div class="av" style="background:var(--green-100)">1</div><div style="flex:1"><div class="b7 f13">Published</div><div class="f11 muted">刊登已上架，慈善單位可瀏覽</div></div>${I.check}</div>
-      <div class="listrow"><div class="av" style="background:#fdf0d6">2</div><div style="flex:1"><div class="b7 f13">Locked-in</div><div class="f11 muted">與對方協商後鎖定</div></div><button class="btn ghost sm" onclick="toast('已鎖定給 Hope Kitchen 🔒')">Mark</button></div>
-      <div class="listrow"><div class="av" style="background:#e0eefb">3</div><div style="flex:1"><div class="b7 f13">QR Verified</div><div class="f11 muted">掃描對方 QR 才算完成</div></div><button class="btn ghost sm" onclick="go('f-scan')">Scan</button></div>
+      <div class="listrow"><div class="av" style="background:var(--green-100)">1</div><div style="flex:1"><div class="b7 f13">Published</div><div class="f11 muted">Listing is live and visible to charities</div></div>${I.check}</div>
+      <div class="listrow"><div class="av" style="background:#fdf0d6">2</div><div style="flex:1"><div class="b7 f13">Locked-in</div><div class="f11 muted">Reserved after chat and negotiation</div></div><button class="btn ghost sm" onclick="toast('Locked in for Hope Kitchen 🔒')">Mark</button></div>
+      <div class="listrow"><div class="av" style="background:#e0eefb">3</div><div style="flex:1"><div class="b7 f13">QR Verified</div><div class="f11 muted">Only complete once their QR is scanned</div></div><button class="btn ghost sm" onclick="go('f-scan')">Scan</button></div>
     </div>
 
     <div class="row" style="gap:9px;margin-top:16px">
       <button class="btn ghost" onclick="go('f-chat')">💬 Chat</button>
       <button class="btn" onclick="go('f-scan')">${I.qr} Scan QR</button>
     </div>
-    <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="toast('已取消 lock-in，重新開放刊登')">Cancel lock-in</button>
+    <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="toast('Lock-in cancelled — listing is available again')">Cancel lock-in</button>
   </div>`;}});
 
 /* -- QR scanner --------------------------------------------------------- */
@@ -792,9 +791,9 @@ reg('f-scan', {nav:false, html:()=>`
       <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
       <div class="scanline"></div>
     </div>
-    <div class="f13 muted" style="text-align:center;margin-top:20px">請對方出示取貨 QR code。<br>掃描成功後交易才會標記為 <b>Successful</b>。</div>
-    <button class="btn" style="margin-top:26px" onclick="scanDone()">模擬掃描成功</button>
-    <button class="btn ghost" style="margin-top:10px" onclick="toast('已手動輸入代碼')">手動輸入代碼</button>
+    <div class="f13 muted" style="text-align:center;margin-top:20px">Ask the collector to show their pickup QR code.<br>The sale is marked <b>Successful</b> only after a scan.</div>
+    <button class="btn" style="margin-top:26px" onclick="scanDone()">Simulate successful scan</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Code entered manually')">Enter code manually</button>
   </div>`});
 
 function scanDone(){
@@ -802,7 +801,7 @@ function scanDone(){
   s.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,#2e6b34,#1f4d27)">
     <div style="text-align:center;color:#fff;animation:popIn .55s cubic-bezier(.68,-.6,.32,1.6)">
       <div style="font-size:52px">✅</div><div class="b8" style="margin-top:6px">Sale Successful</div></div></div>`;
-  toast('交易完成！收益 $5 已入帳 🎉');
+  toast('Sale complete! $5 added to your earnings 🎉');
   setTimeout(()=>go('f-nice'),1400);
 }
 
@@ -828,27 +827,27 @@ reg('f-sales', {nav:'box', html:()=>`
         <button class="btn ghost sm" style="color:var(--red)" onclick="cancelCard(this)">Cancel</button>
       </div>
     </div>`).join('')}
-    <div class="sect">最近完成</div>
+    <div class="sect">Recently completed</div>
     <div class="card">
       <div class="listrow"><div class="av" style="background:#faeab5">🌽</div><div style="flex:1"><div class="b7 f13">Sweet Corn · 28 kg</div><div class="f11 muted">Rotary Foodbank · 09 Aug</div></div><div class="b8 f13" style="color:var(--green-600)">$9</div></div>
       <div class="listrow"><div class="av" style="background:#f9c5bd">🍎</div><div style="flex:1"><div class="b7 f13">Apples · 18 kg</div><div class="f11 muted">Hope Kitchen · 05 Aug</div></div><div class="b8 f13" style="color:var(--green-600)">$7</div></div>
     </div>
   </div>`});
-function cancelCard(b){ const c=b.closest('.card'); c.style.transition='.35s'; c.style.opacity='0'; c.style.transform='scale(.9)'; setTimeout(()=>{c.remove();toast('已取消 lock-in，刊登重新開放');},340); }
+function cancelCard(b){ const c=b.closest('.card'); c.style.transition='.35s'; c.style.opacity='0'; c.style.transform='scale(.9)'; setTimeout(()=>{c.remove();toast('Lock-in cancelled — listing is available again');},340); }
 
 /* -- Chat list + thread ------------------------------------------------- */
 reg('f-chatlist', {nav:'chat', html:()=>`
   ${bar('Messages', null, bellBtn('f-notif',3))}
   <div class="body">
-    <div class="search">${I.search}<input placeholder="搜尋對話"></div>
-    ${[['🍲','Hope Kitchen','取貨時間可以改成下午兩點嗎？','2',true],
-       ['🏥','FoodShare Sydney','我們已完成 lock-in，謝謝！','',false],
-       ['🤝','Rotary Foodbank','附上上次的收據 PDF 📎','',false]]
+    <div class="search">${I.search}<input placeholder="Search conversations"></div>
+    ${[['🍲','Hope Kitchen','Could we move the pickup to 2pm?','2',true],
+       ['🏥','FoodShare Sydney','We have locked it in, thank you!','',false],
+       ['🤝','Rotary Foodbank','Attaching last week\\'s receipt PDF 📎','',false]]
       .map(([e,n,m,u,f],i)=>`
       <div class="thread" style="animation:tileIn .4s ${i*.07}s both" onclick="go('f-chat')">
         <div class="av">${e}</div>
         <div style="flex:1;min-width:0">
-          <div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:24':'昨天'}</div></div>
+          <div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:24':'Yesterday'}</div></div>
           <div class="f12 muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m}</div>
         </div>
         ${u?`<div class="unread">${u}</div>`:''}
@@ -860,55 +859,55 @@ reg('f-chat', {nav:false, html:()=>`
     <button class="iconbtn" onclick="go('f-chatlist',true)">${I.back}</button>
     <div class="av" style="width:36px;height:36px;font-size:17px;border-radius:11px">🍲</div>
     <div style="flex:1"><div class="b8 f13">Hope Kitchen</div><div class="f11" style="color:var(--green-600)">● online</div></div>
-    <button class="iconbtn" onclick="toast('撥號：0412 345 678 已貼入撥號鍵盤')">${I.phone}</button>
+    <button class="iconbtn" onclick="toast('Calling 0412 345 678 — number pasted into dialler')">${I.phone}</button>
     <button class="iconbtn" onclick="openLockSheet()">${I.lock}</button>
   </div>
   <div class="msgs" id="msgs">
-    <div class="f11 muted" style="text-align:center;margin:4px 0">今天</div>
-    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">Hi Dave！我們看到 Leafy Greens Mix 的刊登，還有嗎？<div class="time">10:02</div></div>
-    <div class="bub me">還有的，12 kg 都可以給你們 🙂<div class="time">10:05</div></div>
-    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">太好了。取貨時間可以改成下午兩點嗎？<div class="time">10:24</div></div>
+    <div class="f11 muted" style="text-align:center;margin:4px 0">Today</div>
+    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">Hi Dave! We saw your Leafy Greens Mix listing — is it still available?<div class="time">10:02</div></div>
+    <div class="bub me">Yes it is, all 12 kg is yours 🙂<div class="time">10:05</div></div>
+    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">Wonderful. Could we move the pickup to 2pm?<div class="time">10:24</div></div>
     <div class="bub you" onclick="setReply(this,'Hope Kitchen')">📎 pickup-plan.pdf · 240 KB<div class="time">10:24</div></div>
   </div>
   <div class="reply-strip" id="replyStrip"></div>
   <div class="composer">
     <button class="iconbtn" onclick="openAttachSheet()">${I.clip}</button>
-    <input id="chatInput" placeholder="輸入訊息…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <input id="chatInput" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()">
     <button class="iconbtn" style="background:var(--green-700);color:#fff" onclick="sendMsg()">${I.send}</button>
   </div>`,
   mount(){ const m=document.getElementById('msgs'); m.scrollTop=m.scrollHeight; }});
 
-function setReply(el,who){ replyTo = {who, text: el.childNodes[0].textContent.trim()}; const s=document.getElementById('replyStrip'); s.innerHTML=`<b>回覆 ${who}</b><br><span class="muted">${replyTo.text.slice(0,42)}…</span>`; s.classList.add('on'); document.getElementById('chatInput').focus(); }
+function setReply(el,who){ replyTo = {who, text: el.childNodes[0].textContent.trim()}; const s=document.getElementById('replyStrip'); s.innerHTML=`<b>Replying to ${who}</b><br><span class="muted">${replyTo.text.slice(0,42)}…</span>`; s.classList.add('on'); document.getElementById('chatInput').focus(); }
 function sendMsg(){
   const i=document.getElementById('chatInput'), m=document.getElementById('msgs');
-  const t=i.value.trim()||'好的，兩點可以！'; i.value='';
+  const t=i.value.trim()||'Sure, 2pm works!'; i.value='';
   const q = replyTo ? `<div class="quote">${replyTo.who} · ${replyTo.text.slice(0,34)}…</div>` : '';
-  m.insertAdjacentHTML('beforeend', `<div class="bub me">${q}${t}<div class="time">現在 ✓✓</div></div>`);
+  m.insertAdjacentHTML('beforeend', `<div class="bub me">${q}${t}<div class="time">Now ✓✓</div></div>`);
   replyTo=null; document.getElementById('replyStrip').classList.remove('on');
   m.scrollTop=m.scrollHeight;
   setTimeout(()=>{ m.insertAdjacentHTML('beforeend','<div class="typing" id="tp"><i></i><i></i><i></i></div>'); m.scrollTop=m.scrollHeight; },500);
   setTimeout(()=>{ const tp=document.getElementById('tp'); if(tp)tp.remove();
-    m.insertAdjacentHTML('beforeend','<div class="bub you">謝謝！我們兩點準時到 🙏<div class="time">現在</div></div>'); m.scrollTop=m.scrollHeight; },2000);
+    m.insertAdjacentHTML('beforeend','<div class="bub you">Thank you! We will be there at 2pm sharp 🙏<div class="time">Now</div></div>'); m.scrollTop=m.scrollHeight; },2000);
 }
-function openAttachSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">附加檔案</div>
+function openAttachSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">Attach a file</div>
   <div class="tiles" style="margin:0">
-    ${[['📷','照片','JPEG / PNG'],['📄','PDF','文件、收據'],['📍','位置','取貨地點'],['🧾','出貨單','自動帶入刊登']]
-    .map(([e,t,s])=>`<div class="tile" onclick="closeSheet();toast('已附加 ${t}')"><span class="ic">${e}</span><div class="t">${t}</div><div class="s">${s}</div></div>`).join('')}
+    ${[['📷','Photo','JPEG / PNG'],['📄','PDF','Docs, receipts'],['📍','Location','Pickup point'],['🧾','Docket','Pulled from listing']]
+    .map(([e,t,s])=>`<div class="tile" onclick="closeSheet();toast('${t} attached')"><span class="ic">${e}</span><div class="t">${t}</div><div class="s">${s}</div></div>`).join('')}
   </div>`); }
-function openLockSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">此對話的交易狀態</div>
+function openLockSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">Deal status for this chat</div>
   <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Hope Kitchen</div>
-  <button class="btn" onclick="closeSheet();toast('已標記為 Locked-in 🔒')">${I.lock} 標記為 Locked-in</button>
-  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('f-scan')">${I.qr} 掃描 QR 完成交易</button>
-  <button class="btn ghost danger" style="margin-top:10px;background:none;color:var(--red);border:1px solid #f0cdcb" onclick="closeSheet();toast('已取消 lock-in')">取消 lock-in</button>`); }
+  <button class="btn" onclick="closeSheet();toast('Marked as locked-in 🔒')">${I.lock} Mark as locked-in</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('f-scan')">${I.qr} Scan QR to complete</button>
+  <button class="btn ghost danger" style="margin-top:10px;background:none;color:var(--red);border:1px solid #f0cdcb" onclick="closeSheet();toast('Lock-in cancelled')">Cancel lock-in</button>`); }
 
 /* -- Notifications ------------------------------------------------------ */
 reg('f-notif', {nav:false, html:()=>`
-  ${bar('Notifications','f-home', `<button class="iconbtn" onclick="toast('全部標記為已讀')">${I.check}</button>`)}
+  ${bar('Notifications','f-home', `<button class="iconbtn" onclick="toast('All marked as read')">${I.check}</button>`)}
   <div class="body">
-    <div class="sect">聯絡請求</div>
+    <div class="sect">Contact requests</div>
     <div class="notif fresh">
       <div class="av">🍲</div>
-      <div style="flex:1"><div class="b7 f13">Hope Kitchen 想與你聯絡</div><div class="f11 muted">關於 Leafy Greens Mix · 12 kg</div></div>
+      <div style="flex:1"><div class="b7 f13">Hope Kitchen wants to contact you</div><div class="f11 muted">About Leafy Greens Mix · 12 kg</div></div>
       <div class="row" style="gap:6px">
         <button class="act yes" onclick="decide(this,true)">✓</button>
         <button class="act no" onclick="decide(this,false)">✕</button>
@@ -916,33 +915,33 @@ reg('f-notif', {nav:false, html:()=>`
     </div>
     <div class="notif fresh">
       <div class="av" style="background:#e0eefb">🏥</div>
-      <div style="flex:1"><div class="b7 f13">FoodShare Sydney 想與你聯絡</div><div class="f11 muted">關於 Roma Tomatoes · 35 kg</div></div>
+      <div style="flex:1"><div class="b7 f13">FoodShare Sydney wants to contact you</div><div class="f11 muted">About Roma Tomatoes · 35 kg</div></div>
       <div class="row" style="gap:6px">
         <button class="act yes" onclick="decide(this,true)">✓</button>
         <button class="act no" onclick="decide(this,false)">✕</button>
       </div>
     </div>
 
-    <div class="sect">交易更新</div>
-    <div class="notif"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">Sale successful</div><div class="f11 muted">Sweet Corn · QR 已驗證 · $9</div><div class="f11 muted">2 小時前</div></div></div>
-    <div class="notif"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Listing locked-in</div><div class="f11 muted">Leafy Greens Mix → Hope Kitchen</div><div class="f11 muted">昨天</div></div></div>
-    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">Lock-in cancelled</div><div class="f11 muted">Pumpkins 已重新開放刊登</div><div class="f11 muted">3 天前</div></div></div>
+    <div class="sect">Deal updates</div>
+    <div class="notif"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">Sale successful</div><div class="f11 muted">Sweet Corn · QR verified · $9</div><div class="f11 muted">2 hours ago</div></div></div>
+    <div class="notif"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Listing locked-in</div><div class="f11 muted">Leafy Greens Mix → Hope Kitchen</div><div class="f11 muted">Yesterday</div></div></div>
+    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">Lock-in cancelled</div><div class="f11 muted">Pumpkins is available again</div><div class="f11 muted">3 days ago</div></div></div>
 
-    <div class="sect">補助資訊</div>
+    <div class="sect">Subsidies</div>
     <div class="card row" style="gap:12px">
       <div style="font-size:26px">💰</div>
-      <div style="flex:1"><div class="b7 f13">你符合 Surplus Rebate 資格</div><div class="f11 muted">本月捐贈已達 200 kg，可申請 $120 補助</div></div>
-      <button class="btn sm" onclick="toast('申請已送出')">申請</button>
+      <div style="flex:1"><div class="b7 f13">You qualify for the Surplus Rebate</div><div class="f11 muted">200 kg donated this month — claim up to $120</div></div>
+      <button class="btn sm" onclick="toast('Application submitted')">Apply</button>
     </div>
   </div>`});
-function decide(btn,ok){ const n=btn.closest('.notif'); n.classList.add('gone'); setTimeout(()=>n.remove(),320); toast(ok?'已允許聊天 ✅':'已婉拒聯絡請求'); }
+function decide(btn,ok){ const n=btn.closest('.notif'); n.classList.add('gone'); setTimeout(()=>n.remove(),320); toast(ok?'Chat allowed ✅':'Contact request declined'); }
 
 /* -- Stats -------------------------------------------------------------- */
-reg('f-stats', {nav:'chart', html:()=>statsHTML('Sales Stats',['Total revenue','Completed sales','Produce sold','vs. 上期']),
+reg('f-stats', {nav:'chart', html:()=>statsHTML('Sales Stats',['Total revenue','Completed sales','Produce sold','vs. last period']),
   mount(){ drawChart('weekly'); }});
 
 function statsHTML(title, labels){
-  return `${bar(title, null, `<button class="iconbtn" onclick="toast('匯出 CSV 報表')">⤓</button>`)}
+  return `${bar(title, null, `<button class="iconbtn" onclick="toast('Exporting CSV report')">⤓</button>`)}
   <div class="body">
     <div class="chips">
       ${['weekly','monthly','annual','custom'].map((p,i)=>`<button class="chip ${i?'':'on'}" onclick="switchPeriod(this,'${p}')">${{weekly:'Weekly',monthly:'Monthly',annual:'Annual',custom:'Custom…'}[p]}</button>`).join('')}
@@ -951,10 +950,10 @@ function statsHTML(title, labels){
       ${labels.map((l,i)=>`<div class="kpi"><div class="v" id="kpi${i}">–</div><div class="l">${l}</div></div>`).join('')}
     </div>
     <div class="card" style="margin-top:12px">
-      <div class="row"><div class="b8 f13">趨勢</div><div class="sp"></div><div class="trend">${I.up} <span id="trendVal">+18%</span></div></div>
+      <div class="row"><div class="b8 f13">Trend</div><div class="sp"></div><div class="trend">${I.up} <span id="trendVal">+18%</span></div></div>
       <div class="chart" id="chart"></div>
     </div>
-    <div class="sect">${title==='Sales Stats'?'依產品分類':'依產品分類'}</div>
+    <div class="sect">By produce category</div>
     <div class="card">
       ${[['🥕','Root vegetables',42,'#e8a95c'],['🥬','Leafy greens',28,'#8cc474'],['🍅','Fruit vegetables',19,'#e0665a'],['🌽','Grains',11,'#e0c153']]
         .map(([e,n,p,c])=>`<div style="padding:9px 0">
@@ -967,10 +966,10 @@ function statsHTML(title, labels){
 }
 function switchPeriod(btn,p){
   [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on');
-  if(p==='custom'){ openSheet(`<div class="b8" style="margin-bottom:12px">自訂區間</div>
-    <div class="field"><label>${I.cal} 開始</label><input type="date" value="2026-06-01"></div>
-    <div class="field"><label>${I.cal} 結束</label><input type="date" value="2026-08-31"></div>
-    <button class="btn" style="margin-top:8px" onclick="closeSheet();drawChart('annual');toast('已套用自訂區間')">套用</button>`); return; }
+  if(p==='custom'){ openSheet(`<div class="b8" style="margin-bottom:12px">Custom period</div>
+    <div class="field"><label>${I.cal} From</label><input type="date" value="2026-06-01"></div>
+    <div class="field"><label>${I.cal} To</label><input type="date" value="2026-08-31"></div>
+    <button class="btn" style="margin-top:8px" onclick="closeSheet();drawChart('annual');toast('Custom period applied')">Apply</button>`); return; }
   drawChart(p);
 }
 function drawChart(p){
@@ -988,55 +987,55 @@ reg('c-profile', {nav:'user', html:()=>profileHTML('charity'), mount(){ countUp(
 
 function profileHTML(role){
   const isF = role==='farmer';
-  return `${bar('Profile', null, `<button class="iconbtn" onclick="toast('設定')">⚙︎</button>`)}
+  return `${bar('Profile', null, `<button class="iconbtn" onclick="toast('Settings')">⚙︎</button>`)}
   <div class="body">
     <div class="card" style="text-align:center;padding:20px">
       <div style="font-size:52px">${isF?'👨‍🌾':'🤝'}</div>
       <div class="b8" style="font-size:18px;margin-top:6px">${isF?'Dave Miller':'Hope Kitchen'}</div>
       <div class="verified" style="justify-content:center;margin-top:4px">${I.check} ${isF?'Verified grower':'Registered charity'}</div>
       <div class="row" style="gap:9px;margin-top:14px">
-        <button class="btn ghost sm" style="flex:1" onclick="openEditSheet()">${I.edit} 編輯資料</button>
-        <button class="btn ghost sm" style="flex:1" onclick="go('${isF?'f-stats':'c-stats'}')">📈 ${isF?'銷售':'採購'}統計</button>
+        <button class="btn ghost sm" style="flex:1" onclick="openEditSheet()">${I.edit} Edit details</button>
+        <button class="btn ghost sm" style="flex:1" onclick="go('${isF?'f-stats':'c-stats'}')">📈 ${isF?'Sales':'Procurement'} stats</button>
       </div>
     </div>
 
-    <div class="sect">個人資料</div>
+    <div class="sect">Personal details</div>
     <div class="card">
       ${[['Name', isF?'Dave Miller':'Hope Kitchen Inc.'],['Number','0412 345 678'],['Address', isF?'23 Ridge Rd, Camden NSW':'8 Elder St, Sydney NSW'],['ABN','54 221 887 903']]
         .map(([k,v])=>`<div class="listrow"><div style="flex:1"><div class="f11 muted">${k}</div><div class="b7 f13">${v}</div></div>${I.edit}</div>`).join('')}
     </div>
 
-    <div class="sect">${isF?'銷售量':'採購量'}總覽</div>
+    <div class="sect">${isF?'Sales':'Procurement'} volume</div>
     <div class="kpis">
-      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?412:389}" data-pre="$">0</span></div><div class="l">本週${isF?'收益':'支出'}</div></div>
-      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?1840:1620}" data-pre="$">0</span></div><div class="l">本月${isF?'收益':'支出'}</div></div>
-      <div class="kpi"><div class="v"><span class="cnt" data-to="742">0</span> kg</div><div class="l">本月${isF?'售出':'領取'}</div></div>
-      <div class="kpi"><div class="v"><span class="cnt" data-to="37">0</span></div><div class="l">完成${isF?'交易':'採購'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?412:389}" data-pre="$">0</span></div><div class="l">This week ${isF?'earned':'spent'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?1840:1620}" data-pre="$">0</span></div><div class="l">This month ${isF?'earned':'spent'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="742">0</span> kg</div><div class="l">${isF?'Sold':'Collected'} this month</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="37">0</span></div><div class="l">Completed ${isF?'sales':'pickups'}</div></div>
     </div>
 
-    <div class="sect">最近${isF?'銷售':'採購'}紀錄</div>
+    <div class="sect">Recent ${isF?'sales':'procurements'}</div>
     <div id="recent"></div>
-    <button class="btn ghost" onclick="lazyMore('recent')">載入更多（5 筆）</button>
+    <button class="btn ghost" onclick="lazyMore('recent')">Load 5 more</button>
 
-    <div class="sect">帳號</div>
+    <div class="sect">Account</div>
     <div class="card">
-      <div class="listrow"><div style="flex:1"><div class="b7 f13">推播通知</div><div class="f11 muted">交易狀態與新訊息</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="listrow"><div style="flex:1"><div class="b7 f13">顯示我的距離</div><div class="f11 muted">讓對方看到大約距離</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">Push notifications</div><div class="f11 muted">Deal status and new messages</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">Show my distance</div><div class="f11 muted">Let others see roughly how far you are</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
     </div>
     <button class="btn danger" style="margin-top:14px" onclick="confirmDelete()">${I.trash} Delete Account</button>
     <div class="f11 muted" style="text-align:center;margin-top:10px">FarmLink v0.9 · Prototype</div>
   </div>`;
 }
-function openEditSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">編輯個人資料</div>
+function openEditSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">Edit personal details</div>
   <div class="field"><label>Name</label><input value="Dave Miller"></div>
   <div class="field"><label>Number</label><input value="0412 345 678"></div>
   <div class="field"><label>Address</label><input value="23 Ridge Rd, Camden NSW"></div>
   <div class="field"><label>ABN</label><input value="54 221 887 903"></div>
-  <button class="btn" style="margin-top:8px" onclick="closeSheet();toast('資料已更新 ✅')">儲存</button>`); }
-function confirmDelete(){ openSheet(`<div style="text-align:center">${cow(110)}<div class="b8" style="font-size:17px;margin-top:6px">確定要刪除帳號嗎？</div>
-  <div class="f12 muted" style="margin:8px 0 16px">所有刊登、交易紀錄與統計資料將永久移除，此操作無法復原。</div></div>
-  <button class="btn danger" onclick="closeSheet();toast('帳號刪除請求已送出')">永久刪除帳號</button>
-  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">再想想</button>`); }
+  <button class="btn" style="margin-top:8px" onclick="closeSheet();toast('Details updated ✅')">Save</button>`); }
+function confirmDelete(){ openSheet(`<div style="text-align:center">${cow(110)}<div class="b8" style="font-size:17px;margin-top:6px">Delete your account?</div>
+  <div class="f12 muted" style="margin:8px 0 16px">All listings, transaction history and stats will be permanently removed. This cannot be undone.</div></div>
+  <button class="btn danger" onclick="closeSheet();toast('Account deletion request sent')">Delete permanently</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Never mind</button>`); }
 
 /* =======================================================================
    CHARITY SCREENS
@@ -1049,7 +1048,7 @@ reg('c-home', {nav:'home', html:()=>`
   <div class="body">
     <div class="hero" onclick="go('c-browse')">
       <div style="flex:1"><div class="b8" style="font-size:17px">Make a difference today.</div>
-      <div class="f11" style="opacity:.85;margin-top:3px">12 個新刊登在你附近 20 km 內</div></div>
+      <div class="f11" style="opacity:.85;margin-top:3px">12 new listings within 20 km of you</div></div>
       <div class="arrow">→</div>
     </div>
     <div class="tiles">
@@ -1059,15 +1058,15 @@ reg('c-home', {nav:'home', html:()=>`
       <div class="tile" style="animation-delay:.23s" onclick="go('c-stats')"><span class="ic">👥</span><div class="t">Community Impact</div><div class="s">See the difference</div></div>
     </div>
 
-    <div class="sect">即將到期的刊登</div>
+    <div class="sect">Closing soon</div>
     ${LISTINGS.filter(l=>l.status==='avail').slice(0,2).map(l=>listingCard(l,`openListing(${l.id},'charity')`)).join('')}
 
-    <div class="sect">你的影響力</div>
+    <div class="sect">Your impact</div>
     <div class="card row" style="gap:14px">
       <div>${cow(70,{basket:true})}</div>
       <div style="flex:1">
-        <div class="b8" style="font-size:19px"><span class="cnt" data-to="1620">0</span> 份餐點</div>
-        <div class="f11 muted">本月已分送 · 節省採購成本 <b>$1,240</b></div>
+        <div class="b8" style="font-size:19px"><span class="cnt" data-to="1620">0</span> meals</div>
+        <div class="f11 muted">served this month · <b>$1,240</b> saved on procurement</div>
       </div>
     </div>
   </div>`,
@@ -1076,22 +1075,22 @@ reg('c-home', {nav:'home', html:()=>`
 reg('c-browse', {nav:'search', html:()=>`
   ${bar('Available Listings', null, `<button class="iconbtn" onclick="openFilterSheet()">${I.filter}</button>`)}
   <div class="body">
-    <div class="search">${I.search}<input placeholder="搜尋產品、農場…" oninput="searchC(this.value)"></div>
+    <div class="search">${I.search}<input placeholder="Search produce or farms…" oninput="searchC(this.value)"></div>
     <div class="chips">
-      <button class="chip on" onclick="sortC(this,'dist')">最近距離</button>
-      <button class="chip" onclick="sortC(this,'price')">價格低到高</button>
-      <button class="chip" onclick="sortC(this,'qty')">數量多到少</button>
-      <button class="chip" onclick="sortC(this,'dl')">即將到期</button>
+      <button class="chip on" onclick="sortC(this,'dist')">Nearest</button>
+      <button class="chip" onclick="sortC(this,'price')">Price: low to high</button>
+      <button class="chip" onclick="sortC(this,'qty')">Largest quantity</button>
+      <button class="chip" onclick="sortC(this,'dl')">Closing soon</button>
     </div>
     <div id="cList"></div>
-    <button class="btn ghost" onclick="lazyMore('cList')">載入更多刊登</button>
+    <button class="btn ghost" onclick="lazyMore('cList')">Load more listings</button>
   </div>`,
   mount(){ renderC(LISTINGS.filter(l=>l.status==='avail')); }});
 
 function renderC(rows){
   const el=document.getElementById('cList'); if(!el) return;
   el.innerHTML = rows.map((l,i)=>`<div style="animation:tileIn .45s ${i*.06}s both">${listingCard(l,`openListing(${l.id},'charity')`)}</div>`).join('')
-    || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">找不到符合的刊登</div></div>`;
+    || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">No listings match your search</div></div>`;
 }
 function searchC(q){ const s=q.toLowerCase(); renderC(LISTINGS.filter(l=>l.status==='avail'&&(l.name.toLowerCase().includes(s)||l.farm.toLowerCase().includes(s)))); }
 function sortC(btn,key){
@@ -1104,18 +1103,18 @@ function sortC(btn,key){
   if(key==='dl') rows.sort((a,b)=>new Date(a.dl)-new Date(b.dl));
   renderC(rows);
 }
-function openFilterSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">篩選</div>
-  <div class="f11 muted b8" style="margin-bottom:7px">產品類型</div>
+function openFilterSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">Filters</div>
+  <div class="f11 muted b8" style="margin-bottom:7px">Produce type</div>
   <div class="chips" style="flex-wrap:wrap;overflow:visible">${['Root Veg','Leafy','Fruit Veg','Grain','Squash'].map((t,i)=>`<button class="chip ${i<2?'on':''}" onclick="this.classList.toggle('on')">${t}</button>`).join('')}</div>
-  <div class="f11 muted b8" style="margin:12px 0 7px">距離上限</div>
+  <div class="f11 muted b8" style="margin:12px 0 7px">Max distance</div>
   <input type="range" min="5" max="100" value="30" style="width:100%;accent-color:var(--green-600)">
-  <div class="f11 muted b8" style="margin:12px 0 7px">價格</div>
-  <div class="chips" style="overflow:visible">${['免費','≤ $10','≤ $20','不限'].map((t,i)=>`<button class="chip ${i===1?'on':''}" onclick="[...this.parentNode.children].forEach(c=>c.classList.remove('on'));this.classList.add('on')">${t}</button>`).join('')}</div>
-  <button class="btn" style="margin-top:16px" onclick="closeSheet();toast('已套用篩選條件')">顯示結果</button>`); }
+  <div class="f11 muted b8" style="margin:12px 0 7px">Price</div>
+  <div class="chips" style="overflow:visible">${['Free','≤ $10','≤ $20','Any'].map((t,i)=>`<button class="chip ${i===1?'on':''}" onclick="[...this.parentNode.children].forEach(c=>c.classList.remove('on'));this.classList.add('on')">${t}</button>`).join('')}</div>
+  <button class="btn" style="margin-top:16px" onclick="closeSheet();toast('Filters applied')">Show results</button>`); }
 
 reg('c-detail', {nav:false, html:()=>{
   const l=currentListing;
-  return `${bar('Listing Details','c-browse', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('已收藏')">${I.heart}</button>`)}
+  return `${bar('Listing Details','c-browse', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('Saved to favourites')">${I.heart}</button>`)}
   <div class="body">
     <div class="gallery" style="background:${l.bg}"><span class="em">${l.emo}</span><span class="count">1/3</span></div>
     <div class="row" style="margin-top:13px"><div class="b8" style="font-size:19px">${l.name}</div><div class="sp"></div><div class="b8" style="font-size:19px;color:var(--green-600)">${l.price}</div></div>
@@ -1125,11 +1124,11 @@ reg('c-detail', {nav:false, html:()=>{
     <div class="grower">
       <div class="av" style="background:#d8ecd2">👨‍🌾</div>
       <div style="flex:1"><div class="f11 muted">Posted by</div><div class="b8 f13">${l.farm}</div><div class="verified">${I.check} Verified grower</div></div>
-      <button class="iconbtn" onclick="toast('撥號：0412 345 678')">${I.phone}</button>
+      <button class="iconbtn" onclick="toast('Calling 0412 345 678')">${I.phone}</button>
     </div>
-    <div class="sect">關於這批產品</div>
+    <div class="sect">About this produce</div>
     <div class="card f13" style="line-height:1.6;color:#48544c">
-      外觀不規則但品質良好的${l.name}，適合湯品與備餐使用。請自備容器，可於農場 Gate B 取貨，8am–5pm。
+      Irregular-looking but good quality ${l.name}, ideal for soups and meal prep. Please bring your own containers. Collect at the farm's Gate B, 8am–5pm.
     </div>
     <div class="row" style="gap:9px;margin-top:16px">
       <button class="btn ghost" onclick="go('c-chat')">💬 Contact</button>
@@ -1142,17 +1141,17 @@ reg('c-claimed', {nav:false, html:()=>`
   <div class="celebrate" id="confettiHost2">
     ${cow(180,{basket:true})}
     <div class="big-title" style="margin-top:8px">Claimed!</div>
-    <div class="f13 muted" style="margin-top:6px">農場已收到你的申請。</div>
-    <div class="note">🌱 <div>取貨時請出示 QR code<br><span class="f11 muted">農場掃描後交易才會完成</span></div></div>
-    <button class="btn" style="margin-top:24px" onclick="go('c-qr')">${I.qr} 查看取貨 QR</button>
-    <button class="btn ghost" style="margin-top:10px" onclick="go('c-chat')">與農場聊聊</button>
+    <div class="f13 muted" style="margin-top:6px">The farm has received your request.</div>
+    <div class="note">🌱 <div>Show your QR code at pickup<br><span class="f11 muted">The deal completes once the farm scans it</span></div></div>
+    <button class="btn" style="margin-top:24px" onclick="go('c-qr')">${I.qr} View pickup QR</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="go('c-chat')">Chat with the farm</button>
   </div>`,
   mount(){ confetti(document.getElementById('confettiHost2')); }});
 
 reg('c-qr', {nav:false, html:()=>`
   ${bar('Procurement QR','c-proc')}
   <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-    <div class="f13 muted" style="text-align:center;margin-bottom:18px">請於取貨時出示此 QR code</div>
+    <div class="f13 muted" style="text-align:center;margin-bottom:18px">Show this QR code when you collect</div>
     <div class="qrbox" id="qrbox"></div>
     <div class="b8" style="margin-top:16px;letter-spacing:2px">FL-2X9K-77QA</div>
     <div class="card" style="margin-top:18px;width:100%">
@@ -1160,7 +1159,7 @@ reg('c-qr', {nav:false, html:()=>`
         <div style="flex:1"><div class="b7 f13">Leafy Greens Mix · 12 kg</div><div class="f11 muted">Green Valley Farm · 10 Aug 2:00 pm</div></div>
         <span class="pill lock">Locked-in</span></div>
     </div>
-    <button class="btn ghost" style="margin-top:14px;color:var(--red)" onclick="toast('已從你這端取消 lock-in')">Cancel this pickup</button>
+    <button class="btn ghost" style="margin-top:14px;color:var(--red)" onclick="toast('Lock-in cancelled from your side')">Cancel this pickup</button>
   </div>`,
   mount(){
     const N=21, q=document.getElementById('qrbox');
@@ -1194,13 +1193,13 @@ reg('c-proc', {nav:'box', html:()=>`
           <span class="pill lock">Locked-in</span></div>
         <div class="f11 muted" style="margin-top:10px">${I.cal} ${t}</div>
         <div class="row" style="gap:7px;margin-top:11px">
-          <button class="btn sm" onclick="go('c-qr')">${I.qr} 出示 QR</button>
+          <button class="btn sm" onclick="go('c-qr')">${I.qr} Show QR</button>
           <button class="btn ghost sm" onclick="go('c-chat')">💬 Chat</button>
           <div class="sp"></div>
           <button class="btn ghost sm" style="color:var(--red)" onclick="cancelCard(this)">Cancel</button>
         </div>
       </div>`).join('')}
-    <div class="sect">已完成採購</div>
+    <div class="sect">Completed procurements</div>
     <div class="card">
       <div class="listrow"><div class="av" style="background:#faeab5">🌽</div><div style="flex:1"><div class="b7 f13">Sweet Corn · 28 kg</div><div class="f11 muted">Green Valley Farm · 09 Aug</div></div><span class="pill done">Completed</span></div>
       <div class="listrow"><div class="av" style="background:#e7d6b6">🥔</div><div style="flex:1"><div class="b7 f13">Potatoes · 50 kg</div><div class="f11 muted">Hill Ridge · 02 Aug</div></div><span class="pill done">Completed</span></div>
@@ -1210,14 +1209,14 @@ reg('c-proc', {nav:'box', html:()=>`
 reg('c-chatlist', {nav:'chat', html:()=>`
   ${bar('Messages', null, bellBtn('c-notif',2))}
   <div class="body">
-    <div class="search">${I.search}<input placeholder="搜尋農場"></div>
-    ${[['👨‍🌾','Green Valley Farm','沒問題，兩點見！','1',true],
-       ['🚜','Sunrise Acres','番茄還有 35 kg 可以留給你們','',false],
-       ['🌾','Hill Ridge Produce','收據已寄出 📎','',false]]
+    <div class="search">${I.search}<input placeholder="Search farms"></div>
+    ${[['👨‍🌾','Green Valley Farm','No problem, see you at 2pm!','1',true],
+       ['🚜','Sunrise Acres','We can still set aside 35 kg of tomatoes','',false],
+       ['🌾','Hill Ridge Produce','Receipt has been sent 📎','',false]]
       .map(([e,n,m,u,f],i)=>`
       <div class="thread" style="animation:tileIn .4s ${i*.07}s both" onclick="go('c-chat')">
         <div class="av">${e}</div>
-        <div style="flex:1;min-width:0"><div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:31':'昨天'}</div></div>
+        <div style="flex:1;min-width:0"><div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:31':'Yesterday'}</div></div>
         <div class="f12 muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m}</div></div>
         ${u?`<div class="unread">${u}</div>`:''}
       </div>`).join('')}
@@ -1228,46 +1227,46 @@ reg('c-chat', {nav:false, html:()=>`
     <button class="iconbtn" onclick="go('c-chatlist',true)">${I.back}</button>
     <div class="av" style="width:36px;height:36px;font-size:17px;border-radius:11px">👨‍🌾</div>
     <div style="flex:1"><div class="b8 f13">Green Valley Farm</div><div class="f11" style="color:var(--green-600)">● online</div></div>
-    <button class="iconbtn" onclick="toast('撥號：0412 345 678 已貼入撥號鍵盤')">${I.phone}</button>
+    <button class="iconbtn" onclick="toast('Calling 0412 345 678 — number pasted into dialler')">${I.phone}</button>
     <button class="iconbtn" onclick="openCancelSheet()">${I.lock}</button>
   </div>
   <div class="msgs" id="msgs">
-    <div class="f11 muted" style="text-align:center;margin:4px 0">今天</div>
-    <div class="bub me">Hi！Leafy Greens Mix 還有嗎？我們是 Hope Kitchen<div class="time">10:02</div></div>
-    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">還有的，12 kg 都可以給你們 🙂<div class="time">10:05</div></div>
-    <div class="bub me">太好了，取貨可以改下午兩點嗎？<div class="time">10:24</div></div>
-    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">沒問題，兩點見！已幫你 lock-in 🔒<div class="time">10:31</div></div>
+    <div class="f11 muted" style="text-align:center;margin:4px 0">Today</div>
+    <div class="bub me">Hi! Is the Leafy Greens Mix still available? We're Hope Kitchen<div class="time">10:02</div></div>
+    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">Yes it is, all 12 kg is yours 🙂<div class="time">10:05</div></div>
+    <div class="bub me">Wonderful — could we collect at 2pm instead?<div class="time">10:24</div></div>
+    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">No problem, see you at 2pm! Locked in for you 🔒<div class="time">10:31</div></div>
   </div>
   <div class="reply-strip" id="replyStrip"></div>
   <div class="composer">
     <button class="iconbtn" onclick="openAttachSheet()">${I.clip}</button>
-    <input id="chatInput" placeholder="輸入訊息…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <input id="chatInput" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()">
     <button class="iconbtn" style="background:var(--green-700);color:#fff" onclick="sendMsg()">${I.send}</button>
   </div>`,
   mount(){ const m=document.getElementById('msgs'); m.scrollTop=m.scrollHeight; }});
 
-function openCancelSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">此對話的交易狀態</div>
+function openCancelSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">Deal status for this chat</div>
   <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Green Valley Farm</div>
-  <button class="btn" onclick="closeSheet();go('c-qr')">${I.qr} 出示取貨 QR</button>
-  <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="closeSheet();toast('已從你這端取消 lock-in')">取消這筆 lock-in</button>`); }
+  <button class="btn" onclick="closeSheet();go('c-qr')">${I.qr} Show pickup QR</button>
+  <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="closeSheet();toast('Lock-in cancelled from your side')">Cancel this lock-in</button>`); }
 
 reg('c-notif', {nav:false, html:()=>`
-  ${bar('Notifications','c-home', `<button class="iconbtn" onclick="toast('全部標記為已讀')">${I.check}</button>`)}
+  ${bar('Notifications','c-home', `<button class="iconbtn" onclick="toast('All marked as read')">${I.check}</button>`)}
   <div class="body">
-    <div class="sect">交易更新</div>
-    <div class="notif fresh"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Locked-in 已確認</div><div class="f11 muted">Green Valley Farm · Leafy Greens Mix</div><div class="f11 muted">10 分鐘前</div></div></div>
-    <div class="notif fresh"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">採購完成</div><div class="f11 muted">Sweet Corn · 28 kg · QR 已驗證</div><div class="f11 muted">昨天</div></div></div>
-    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">農場取消了 lock-in</div><div class="f11 muted">Pumpkins · Sunrise Acres</div><div class="f11 muted">3 天前</div></div></div>
-    <div class="sect">新刊登提醒</div>
-    <div class="notif"><div class="av" style="background:#f7d9a8">🥕</div><div style="flex:1"><div class="b7 f13">你附近有新刊登</div><div class="f11 muted">Carrots (Imperfect) · 20 kg · 12 km</div></div><button class="btn sm" onclick="openListing(1,'charity')">查看</button></div>
+    <div class="sect">Deal updates</div>
+    <div class="notif fresh"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Lock-in confirmed</div><div class="f11 muted">Green Valley Farm · Leafy Greens Mix</div><div class="f11 muted">10 minutes ago</div></div></div>
+    <div class="notif fresh"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">Procurement complete</div><div class="f11 muted">Sweet Corn · 28 kg · QR verified</div><div class="f11 muted">Yesterday</div></div></div>
+    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">Farm cancelled the lock-in</div><div class="f11 muted">Pumpkins · Sunrise Acres</div><div class="f11 muted">3 days ago</div></div></div>
+    <div class="sect">New listing alerts</div>
+    <div class="notif"><div class="av" style="background:#f7d9a8">🥕</div><div style="flex:1"><div class="b7 f13">New listing near you</div><div class="f11 muted">Carrots (Imperfect) · 20 kg · 12 km</div></div><button class="btn sm" onclick="openListing(1,'charity')">View</button></div>
     <div class="card row" style="gap:12px;margin-top:14px">
       <div style="font-size:24px">🔔</div>
-      <div style="flex:1"><div class="b7 f13">推播通知</div><div class="f11 muted">新刊登、狀態變更即時提醒</div></div>
+      <div style="flex:1"><div class="b7 f13">Push notifications</div><div class="f11 muted">Instant alerts for new listings and status changes</div></div>
       <div class="switch on" onclick="this.classList.toggle('on')"></div>
     </div>
   </div>`});
 
-reg('c-stats', {nav:'chart', html:()=>statsHTML('Community Impact',['Total spending','Completed pickups','Produce procured','vs. 上期']),
+reg('c-stats', {nav:'chart', html:()=>statsHTML('Community Impact',['Total spending','Completed pickups','Produce procured','vs. last period']),
   mount(){ drawChart('weekly'); }});
 
 /* =======================================================================
@@ -1278,8 +1277,8 @@ const NAVS = {
   charity:[['c-home','Home','home'],['c-browse','Browse','search'],['c-proc','Pickups','box'],['c-chatlist','Messages','chat'],['c-profile','Profile','user']]
 };
 const JUMPS = {
-  farmer:[['splash','啟動 / Splash'],['f-home','首頁 Dashboard'],['f-post','刊登 Post Surplus'],['f-success','成功 Hurray!'],['f-nice','完成 Nice!'],['f-listings','Active Listings'],['f-detail','刊登詳情'],['f-scan','QR 掃描'],['f-sales','Ongoing Sales'],['f-chatlist','聊天列表'],['f-chat','聊天對話'],['f-notif','通知'],['f-stats','銷售統計'],['f-profile','個人檔案']],
-  charity:[['splash','啟動 / Splash'],['c-home','首頁 Dashboard'],['c-browse','Available Listings'],['c-detail','刊登詳情'],['c-claimed','認領成功'],['c-qr','取貨 QR'],['c-proc','Ongoing Procurements'],['c-chatlist','聊天列表'],['c-chat','聊天對話'],['c-notif','通知'],['c-stats','Community Impact'],['c-profile','個人檔案']]
+  farmer:[['splash','Splash'],['f-home','Home Dashboard'],['f-post','Post Surplus'],['f-success','Hurray!'],['f-nice','Nice!'],['f-listings','Active Listings'],['f-detail','Listing Details'],['f-scan','QR Scanner'],['f-sales','Ongoing Sales'],['f-chatlist','Messages'],['f-chat','Chat Thread'],['f-notif','Notifications'],['f-stats','Sales Stats'],['f-profile','Profile']],
+  charity:[['splash','Splash'],['c-home','Home Dashboard'],['c-browse','Available Listings'],['c-detail','Listing Details'],['c-claimed','Claimed!'],['c-qr','Pickup QR'],['c-proc','Ongoing Procurements'],['c-chatlist','Messages'],['c-chat','Chat Thread'],['c-notif','Notifications'],['c-stats','Community Impact'],['c-profile','Profile']]
 };
 
 function renderTabbar(){
@@ -1311,18 +1310,23 @@ function go(id, back=false){
   views.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('active'));
   activeScreen=id;
+  // file:// documents have an opaque origin and reject replaceState, so URL sync is best-effort
+  try{ if(location.hash.slice(1)!==id) history.replaceState(null,'','#'+id); }catch(_){}
   renderTabbar(); renderJump();
   if(SCREENS[id].mount) setTimeout(()=>SCREENS[id].mount(),40);
   countUp();
 }
 
-function setRole(r){
+function applyRole(r){
   ROLE=r;
   document.getElementById('roleSwitch').dataset.role=r;
   [...document.querySelectorAll('#roleSwitch button')].forEach((b,i)=>b.classList.toggle('on', (i===0)===(r==='farmer')));
-  const rl=document.getElementById('roleLabel'); if(rl) rl.textContent = r==='farmer'?'農民 / 生產者':'慈善 / 志工';
+  const rl=document.getElementById('roleLabel'); if(rl) rl.textContent = r==='farmer'?'Farmer / Producer':'Charity / Volunteer';
+}
+function setRole(r){
+  applyRole(r);
   go(r==='farmer'?'f-home':'c-home');
-  toast(r==='farmer'?'已切換到農民端 🚜':'已切換到慈善／志工端 🤝');
+  toast(r==='farmer'?'Switched to the farmer side 🚜':'Switched to the charity / volunteer side 🤝');
 }
 
 function openListing(id, side){
@@ -1386,7 +1390,7 @@ function lazyMore(hostId){
         <span class="pill done">Completed</span></div>
       </div>`).join('');
     lazyCount++;
-    toast('已載入 3 筆較舊的紀錄');
+    toast('Loaded 3 older records');
   },900);
 }
 
@@ -1407,8 +1411,10 @@ setInterval(()=>{
   document.getElementById('clock').textContent = d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
 },1000);
 
-/* boot */
-go('splash');
+/* boot — an optional #screen-id in the URL deep-links straight to that screen */
+const boot = location.hash.slice(1);
+if(SCREENS[boot]){ if(boot.startsWith('c-')) applyRole('charity'); go(boot); }
+else go('splash');
 </script>
 </body>
 </html>
