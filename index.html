@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmLink · Interactive Prototype</title>
+<style>
+:root{
+  --green-900:#1f4d27;
+  --green-700:#2e6b34;
+  --green-600:#3a7d43;
+  --green-500:#4c9a56;
+  --green-100:#e4f0e2;
+  --green-050:#f1f7ef;
+  --cream:#f7f3e8;
+  --ink:#25302a;
+  --muted:#7c8a80;
+  --line:#e6e3d8;
+  --red:#d8544f;
+  --amber:#e0a32e;
+  --purple:#6b4fa8;
+  --radius:20px;
+  --shadow:0 10px 30px rgba(31,77,39,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",Helvetica,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 500px at 12% 8%, #cfe6f7 0%, transparent 60%),
+    radial-gradient(900px 600px at 88% 92%, #d8ecd2 0%, transparent 60%),
+    linear-gradient(160deg,#eaf5ff 0%,#eef7e9 45%,#f7f3e8 100%);
+  min-height:100%;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:28px;
+  padding:32px 24px 60px;
+  overflow-x:hidden;
+}
+
+/* ---------- decorative background ---------- */
+.bg-hills{position:fixed;inset:auto 0 0 0;height:38vh;pointer-events:none;z-index:0;opacity:.55}
+.bg-hills svg{width:100%;height:100%}
+.floaty{position:fixed;pointer-events:none;z-index:0;opacity:.5;animation:drift 18s ease-in-out infinite}
+.floaty:nth-child(2){animation-duration:23s;animation-delay:-6s}
+.floaty:nth-child(3){animation-duration:27s;animation-delay:-12s}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(24px,-28px) rotate(12deg)}}
+
+/* ---------- side panel ---------- */
+.panel{
+  position:relative;z-index:2;width:260px;flex:0 0 auto;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.8);border-radius:24px;padding:20px;
+  box-shadow:var(--shadow);position:sticky;top:32px;
+}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.brand-mark{width:34px;height:34px;flex:0 0 auto}
+.brand h1{font-size:22px;margin:0;letter-spacing:-.5px}
+.brand h1 .lk{color:var(--green-600)}
+.brand h1 .fm{color:var(--green-900)}
+.tagline{font-size:11.5px;color:var(--muted);margin:0 0 16px;line-height:1.5}
+
+.role-switch{display:flex;background:var(--green-050);border-radius:14px;padding:4px;margin-bottom:16px;position:relative}
+.role-switch button{
+  flex:1;border:0;background:transparent;padding:9px 6px;border-radius:11px;
+  font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:color .25s;z-index:1;
+}
+.role-switch button.on{color:#fff}
+.role-thumb{position:absolute;top:4px;left:4px;width:calc(50% - 4px);height:calc(100% - 8px);
+  background:linear-gradient(135deg,var(--green-600),var(--green-700));border-radius:11px;
+  transition:transform .38s cubic-bezier(.68,-.4,.27,1.4);box-shadow:0 4px 12px rgba(46,107,52,.35)}
+.role-switch[data-role="charity"] .role-thumb{transform:translateX(100%)}
+
+.panel h3{font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin:14px 0 8px}
+.jump{display:flex;flex-direction:column;gap:3px}
+.jump a{
+  display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink);text-decoration:none;
+  padding:8px 10px;border-radius:11px;transition:.2s;cursor:pointer;
+}
+.jump a:hover{background:var(--green-050);transform:translateX(4px)}
+.jump a.active{background:var(--green-700);color:#fff;font-weight:600}
+.jump a .dot{width:7px;height:7px;border-radius:50%;background:var(--green-500);flex:0 0 auto;transition:.2s}
+.jump a.active .dot{background:#ffd76b;box-shadow:0 0 0 4px rgba(255,215,107,.25)}
+.hint{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+
+/* ---------- phone ---------- */
+.stage{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:14px}
+.phone{
+  width:378px;height:800px;border-radius:52px;background:#111;padding:11px;
+  box-shadow:0 40px 80px -20px rgba(20,50,25,.45),0 0 0 2px rgba(255,255,255,.35);
+  position:relative;flex:0 0 auto;
+}
+.phone::after{content:"";position:absolute;left:50%;bottom:9px;transform:translateX(-50%);
+  width:120px;height:5px;border-radius:3px;background:rgba(255,255,255,.55)}
+.screen-wrap{
+  width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--cream);
+  position:relative;display:flex;flex-direction:column;
+}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:132px;height:26px;
+  background:#111;border-radius:0 0 18px 18px;z-index:60}
+.statusbar{
+  height:44px;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;font-size:12.5px;font-weight:700;z-index:55;position:relative;color:var(--ink);
+}
+.statusbar .icons{display:flex;gap:5px;align-items:center}
+
+/* screens */
+.views{flex:1;position:relative;overflow:hidden}
+.screen{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;
+}
+.screen.active{visibility:visible;opacity:1;pointer-events:auto;animation:screenIn .42s cubic-bezier(.22,.9,.3,1)}
+.screen.leaving{visibility:visible;opacity:0;animation:screenOut .3s ease forwards}
+@keyframes screenIn{from{opacity:0;transform:translateX(26px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes screenOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-18px) scale(.985)}}
+.screen[data-dir="back"].active{animation:screenInBack .42s cubic-bezier(.22,.9,.3,1)}
+@keyframes screenInBack{from{opacity:0;transform:translateX(-26px) scale(.985)}to{opacity:1;transform:none}}
+
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 20px 26px;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.body.flush{padding:0}
+
+/* headers */
+.appbar{display:flex;align-items:center;gap:12px;padding:4px 18px 12px;flex:0 0 auto}
+.appbar .title{font-size:17px;font-weight:800;flex:1;text-align:center}
+.iconbtn{
+  width:36px;height:36px;border-radius:12px;border:0;background:rgba(255,255,255,.9);
+  display:grid;place-items:center;cursor:pointer;color:var(--ink);flex:0 0 auto;
+  transition:transform .18s,background .18s;box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.iconbtn:hover{background:#fff;transform:translateY(-1px)}
+.iconbtn:active{transform:scale(.9)}
+.bell{position:relative}
+.bell .badge{
+  position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;
+  background:var(--red);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;
+  border:2px solid var(--cream);animation:pop .5s cubic-bezier(.68,-.6,.32,1.6)
+}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+/* generic ui */
+.card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(31,77,39,.07);border:1px solid rgba(230,227,216,.7)}
+.btn{
+  width:100%;border:0;border-radius:15px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--green-600),var(--green-800,#265a2c));color:#fff;
+  position:relative;overflow:hidden;transition:transform .16s,box-shadow .16s;
+  box-shadow:0 8px 20px -6px rgba(46,107,52,.55);font-family:inherit;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px -8px rgba(46,107,52,.6)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:#efeadd;color:var(--green-900);box-shadow:none;border:1px solid var(--line)}
+.btn.ghost:hover{background:#e8e2d2}
+.btn.danger{background:linear-gradient(135deg,#e0645f,#c33f3a);box-shadow:0 8px 20px -6px rgba(200,60,55,.5)}
+.btn.sm{padding:10px 14px;font-size:13px;border-radius:12px;width:auto}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:ripple .6s ease-out;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+.row{display:flex;align-items:center;gap:10px}
+.sp{flex:1}
+.muted{color:var(--muted)}
+.f11{font-size:11px}.f12{font-size:12px}.f13{font-size:13px}.f15{font-size:15px}
+.b7{font-weight:700}.b8{font-weight:800}
+.sect{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin:18px 0 9px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.3px}
+.pill.avail{background:var(--green-100);color:var(--green-700)}
+.pill.lock{background:#fdf0d6;color:#8a6414}
+.pill.done{background:#e0eefb;color:#255f9c}
+.pill.cancel{background:#fbe3e2;color:#a83b36}
+
+/* bottom nav */
+.tabbar{
+  flex:0 0 auto;height:74px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:flex;padding:0 6px 10px;position:relative;
+}
+.tabbar button{
+  flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding-top:11px;cursor:pointer;color:var(--muted);font-size:9.5px;font-weight:700;
+  font-family:inherit;transition:color .22s;position:relative;
+}
+.tabbar button.on{color:var(--green-700)}
+.tabbar button svg{transition:transform .34s cubic-bezier(.68,-.5,.27,1.5)}
+.tabbar button.on svg{transform:translateY(-3px) scale(1.14)}
+.tabbar button.on::before{
+  content:"";position:absolute;top:4px;width:26px;height:3px;border-radius:2px;
+  background:var(--green-600);animation:tabIn .34s cubic-bezier(.68,-.5,.27,1.5)
+}
+@keyframes tabIn{from{width:0;opacity:0}to{width:26px;opacity:1}}
+
+/* mascot */
+.cow{display:block}
+.cow-bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-9px) rotate(1.5deg)}}
+.ear-l{animation:earL 2.6s ease-in-out infinite;transform-origin:62px 78px}
+.ear-r{animation:earR 2.6s ease-in-out infinite;transform-origin:138px 78px}
+@keyframes earL{0%,100%{transform:rotate(0)}45%{transform:rotate(-9deg)}}
+@keyframes earR{0%,100%{transform:rotate(0)}45%{transform:rotate(9deg)}}
+.heart-beat{animation:beat 1.5s ease-in-out infinite;transform-origin:100px 150px}
+@keyframes beat{0%,100%{transform:scale(1)}25%{transform:scale(1.12)}40%{transform:scale(1)}}
+
+/* splash */
+.splash-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 30px;gap:6px}
+.logo-big{font-size:44px;font-weight:900;letter-spacing:-1.5px;animation:fadeUp .7s ease both}
+.logo-big .fm{color:var(--green-900)}.logo-big .lk{color:var(--green-500)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.leaf-sway{animation:sway 3s ease-in-out infinite;transform-origin:bottom left}
+@keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
+
+/* forms */
+.field{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:12px 13px;margin-bottom:10px;transition:.22s}
+.field:focus-within{border-color:var(--green-500);box-shadow:0 0 0 4px rgba(76,154,86,.14);transform:translateY(-1px)}
+.field label{font-size:12.5px;font-weight:700;min-width:104px;display:flex;align-items:center;gap:7px;color:var(--ink)}
+.field input,.field select{border:0;outline:0;flex:1;font-size:13px;font-family:inherit;background:transparent;color:var(--ink);text-align:right;min-width:0}
+.field input::placeholder{color:#b9c2bb}
+.dropzone{
+  background:#efeadd;border:2px dashed #cfc7b3;border-radius:16px;height:104px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:.25s;margin-bottom:14px;
+}
+.dropzone:hover{background:var(--green-050);border-color:var(--green-500);color:var(--green-700);transform:scale(1.015)}
+
+/* home tiles */
+.hero{
+  background:linear-gradient(135deg,var(--green-600) 0%,var(--green-900) 100%);
+  border-radius:20px;padding:18px;color:#fff;display:flex;align-items:center;gap:12px;
+  box-shadow:0 12px 26px -10px rgba(31,77,39,.7);cursor:pointer;transition:transform .22s;
+  position:relative;overflow:hidden;
+}
+.hero::after{content:"";position:absolute;top:-40%;left:-30%;width:60%;height:180%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:skewX(-18deg);animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{0%{left:-40%}55%,100%{left:130%}}
+.hero:hover{transform:translateY(-3px)}
+.hero .arrow{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;flex:0 0 auto}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:12px}
+.tile{
+  background:#fff;border-radius:18px;padding:15px 13px;box-shadow:0 4px 14px rgba(31,77,39,.07);
+  cursor:pointer;transition:transform .22s,box-shadow .22s;border:1px solid rgba(230,227,216,.8);
+  animation:tileIn .5s cubic-bezier(.2,.9,.3,1.2) both;
+}
+@keyframes tileIn{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}
+.tile:hover{transform:translateY(-4px);box-shadow:0 14px 26px -8px rgba(31,77,39,.2)}
+.tile .ic{font-size:24px;margin-bottom:8px;display:block;transition:transform .3s}
+.tile:hover .ic{transform:scale(1.18) rotate(-7deg)}
+.tile .t{font-size:13px;font-weight:800}
+.tile .s{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+/* listing cards */
+.listing{
+  background:#fff;border-radius:18px;overflow:hidden;margin-bottom:12px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(31,77,39,.07);transition:transform .22s,box-shadow .22s;
+  border:1px solid rgba(230,227,216,.8);animation:tileIn .45s cubic-bezier(.2,.9,.3,1.2) both;
+}
+.listing:hover{transform:translateY(-3px);box-shadow:0 14px 24px -10px rgba(31,77,39,.25)}
+.listing .thumb{height:96px;display:grid;place-items:center;font-size:40px;position:relative;overflow:hidden}
+.listing .thumb .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
+  transform:translateX(-100%);transition:transform .7s}
+.listing:hover .thumb .shine{transform:translateX(100%)}
+.listing .info{padding:11px 13px}
+
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:11.5px;
+  font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;transition:.2s;font-family:inherit;
+}
+.chip:hover{border-color:var(--green-500);color:var(--green-700)}
+.chip.on{background:var(--green-700);border-color:var(--green-700);color:#fff;box-shadow:0 4px 12px -4px rgba(46,107,52,.6)}
+
+.search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin-bottom:10px;transition:.22s}
+.search:focus-within{border-color:var(--green-500);box-shadow:0 0 0 4px rgba(76,154,86,.14)}
+.search input{border:0;outline:0;flex:1;font-size:13px;font-family:inherit;background:transparent}
+
+/* skeleton */
+.skel{background:#fff;border-radius:16px;padding:13px;margin-bottom:10px;border:1px solid var(--line)}
+.sk{background:linear-gradient(90deg,#eee 25%,#f7f7f7 50%,#eee 75%);background-size:200% 100%;
+  animation:shimmer 1.3s infinite;border-radius:7px;height:11px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* chat */
+.msgs{flex:1;overflow-y:auto;padding:6px 16px 12px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.msgs::-webkit-scrollbar{display:none}
+.bub{max-width:76%;padding:9px 13px;border-radius:17px;font-size:13px;line-height:1.45;position:relative;
+  animation:bubIn .35s cubic-bezier(.2,.9,.3,1.3) both;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+@keyframes bubIn{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+.bub.me{align-self:flex-end;background:var(--green-700);color:#fff;border-bottom-right-radius:5px}
+.bub.you{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+.bub .quote{border-left:3px solid rgba(255,255,255,.6);padding-left:8px;font-size:11px;opacity:.85;margin-bottom:4px}
+.bub.you .quote{border-left-color:var(--green-500);color:var(--muted)}
+.bub .time{font-size:9.5px;opacity:.7;margin-top:3px;text-align:right}
+.typing{align-self:flex-start;background:#fff;border:1px solid var(--line);border-radius:17px;padding:11px 15px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:dot 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+.composer{flex:0 0 auto;padding:9px 14px 14px;background:rgba(255,255,255,.95);border-top:1px solid var(--line);display:flex;gap:8px;align-items:center}
+.composer input{flex:1;border:1px solid var(--line);border-radius:999px;padding:11px 15px;outline:0;font-size:13px;font-family:inherit}
+.composer input:focus{border-color:var(--green-500)}
+.reply-strip{background:var(--green-050);border-left:3px solid var(--green-500);padding:6px 10px;font-size:11px;margin:0 14px;border-radius:0 8px 8px 0;display:none}
+.reply-strip.on{display:block;animation:fadeUp .25s ease}
+
+.thread{display:flex;gap:11px;align-items:center;padding:11px;border-radius:16px;cursor:pointer;transition:.2s;background:#fff;margin-bottom:8px;border:1px solid rgba(230,227,216,.8)}
+.thread:hover{background:var(--green-050);transform:translateX(4px)}
+.av{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:20px;flex:0 0 auto;background:var(--green-100)}
+.unread{min-width:19px;height:19px;border-radius:10px;background:var(--green-600);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 5px}
+
+/* notifications */
+.notif{display:flex;gap:11px;padding:13px;border-radius:16px;background:#fff;margin-bottom:9px;
+  border:1px solid rgba(230,227,216,.8);animation:tileIn .4s cubic-bezier(.2,.9,.3,1.2) both;transition:.3s}
+.notif.fresh{background:var(--green-050);border-color:#cfe4cb}
+.notif.gone{opacity:0;transform:translateX(60px);height:0;padding:0;margin:0;border:0;overflow:hidden}
+.act{width:34px;height:34px;border-radius:11px;border:0;cursor:pointer;display:grid;place-items:center;font-size:15px;font-weight:900;transition:transform .18s}
+.act:hover{transform:scale(1.14)}
+.act.yes{background:var(--green-100);color:var(--green-700)}
+.act.no{background:#fbe3e2;color:var(--red)}
+
+/* stats */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(230,227,216,.8);box-shadow:0 4px 12px rgba(31,77,39,.06)}
+.kpi .v{font-size:23px;font-weight:900;letter-spacing:-.5px;color:var(--green-800,#2a5f31)}
+.kpi .l{font-size:10.5px;color:var(--muted);font-weight:700;margin-top:2px}
+.chart{display:flex;align-items:flex-end;gap:9px;height:150px;padding:10px 4px 0}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:26px;border-radius:8px 8px 4px 4px;
+  background:linear-gradient(180deg,var(--green-500),var(--green-700));height:0;
+  transition:height .9s cubic-bezier(.2,.9,.3,1.1);position:relative}
+.bar:hover{filter:brightness(1.12)}
+.bar-col .lb{font-size:9.5px;color:var(--muted);font-weight:700}
+.trend{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:var(--green-600)}
+
+/* success / confetti */
+.celebrate{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 34px;text-align:center;position:relative;overflow:hidden}
+.big-title{font-size:33px;font-weight:900;color:var(--green-900);letter-spacing:-1px;animation:popIn .6s cubic-bezier(.68,-.55,.27,1.55) both}
+@keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.confetti{position:absolute;width:9px;height:14px;border-radius:2px;top:-20px;opacity:0}
+@keyframes fall{0%{opacity:1;transform:translateY(-20px) rotate(0)}100%{opacity:0;transform:translateY(660px) rotate(720deg)}}
+.note{background:var(--green-050);border:1px solid #d8e8d4;border-radius:14px;padding:12px 14px;
+  display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--green-900);margin-top:18px;
+  animation:fadeUp .6s .35s both;text-align:left}
+
+/* QR */
+.qrbox{width:198px;height:198px;background:#fff;border-radius:18px;padding:14px;margin:0 auto;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);display:grid;grid-template-columns:repeat(21,1fr);gap:0}
+.qrbox i{animation:qrIn .45s both}
+@keyframes qrIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.scanner{width:220px;height:220px;margin:0 auto;border-radius:22px;position:relative;
+  background:linear-gradient(150deg,#20301f,#0e1a0e);overflow:hidden;box-shadow:inset 0 0 40px rgba(0,0,0,.6)}
+.scanner .corner{position:absolute;width:34px;height:34px;border:3px solid var(--green-500)}
+.scanner .c1{top:12px;left:12px;border-right:0;border-bottom:0;border-radius:8px 0 0 0}
+.scanner .c2{top:12px;right:12px;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+.scanner .c3{bottom:12px;left:12px;border-right:0;border-top:0;border-radius:0 0 0 8px}
+.scanner .c4{bottom:12px;right:12px;border-left:0;border-top:0;border-radius:0 0 8px 0}
+.scanline{position:absolute;left:12px;right:12px;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,transparent,#7ee08a,transparent);
+  box-shadow:0 0 16px 4px rgba(126,224,138,.5);animation:scan 2.1s ease-in-out infinite}
+@keyframes scan{0%,100%{top:20px}50%{top:196px}}
+
+/* misc */
+.stepper{display:flex;align-items:center;gap:0;margin:6px 0 16px}
+.step{flex:1;height:4px;background:var(--line);border-radius:3px;position:relative;overflow:hidden}
+.step::after{content:"";position:absolute;inset:0;background:var(--green-600);transform:scaleX(0);transform-origin:left;transition:transform .6s ease}
+.step.done::after{transform:scaleX(1)}
+.step+.step{margin-left:5px}
+
+.toast{
+  position:absolute;left:50%;bottom:92px;transform:translate(-50%,24px);opacity:0;
+  background:rgba(31,48,42,.95);color:#fff;padding:11px 18px;border-radius:14px;font-size:12.5px;
+  font-weight:700;z-index:80;pointer-events:none;transition:.35s cubic-bezier(.2,.9,.3,1.3);max-width:84%;text-align:center;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.sheet-mask{position:absolute;inset:0;background:rgba(20,32,24,.45);opacity:0;pointer-events:none;transition:.3s;z-index:70;backdrop-filter:blur(2px)}
+.sheet-mask.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;padding:20px 20px 26px;
+  transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.9,.3,1.1);z-index:75;max-height:72%;overflow-y:auto}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+
+.heart{cursor:pointer;transition:transform .2s}
+.heart.on{animation:heartPop .45s cubic-bezier(.68,-.6,.32,1.6)}
+@keyframes heartPop{0%{transform:scale(1)}45%{transform:scale(1.45)}100%{transform:scale(1)}}
+
+.gallery{position:relative;border-radius:18px;overflow:hidden;height:180px;background:linear-gradient(160deg,#e9d5a8,#cdb27a);display:grid;place-items:center}
+.gallery .count{position:absolute;right:11px;bottom:11px;background:rgba(0,0,0,.55);color:#fff;font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:999px}
+.gallery .em{font-size:74px;animation:floaty 4s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+
+.meta{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted);padding:6px 0}
+.grower{display:flex;align-items:center;gap:10px;background:var(--green-050);border-radius:15px;padding:11px;margin-top:12px}
+.verified{color:var(--green-600);font-size:10.5px;font-weight:800;display:flex;align-items:center;gap:3px}
+
+.listrow{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:.2s}
+.listrow:hover{padding-left:5px}
+.listrow:last-child{border-bottom:0}
+
+.switch{width:44px;height:26px;border-radius:15px;background:var(--line);position:relative;cursor:pointer;transition:.28s;flex:0 0 auto}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.28s cubic-bezier(.68,-.4,.27,1.4);box-shadow:0 2px 5px rgba(0,0,0,.2)}
+.switch.on{background:var(--green-600)}
+.switch.on::after{transform:translateX(18px)}
+
+@media (max-width:860px){
+  body{flex-direction:column;align-items:center}
+  .panel{position:static;width:378px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-hills">
+  <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+    <path d="M0 160 Q150 90 300 150 T600 140 T900 155 T1200 120 L1200 300 L0 300Z" fill="#bcd9b0"/>
+    <path d="M0 210 Q200 150 420 200 T820 195 T1200 180 L1200 300 L0 300Z" fill="#a5cd97"/>
+  </svg>
+</div>
+<div class="floaty" style="top:14%;left:6%">🥕</div>
+<div class="floaty" style="top:26%;right:5%;font-size:26px">🥬</div>
+<div class="floaty" style="bottom:22%;left:4%;font-size:24px">🍅</div>
+
+<!-- ============ SIDE PANEL ============ -->
+<aside class="panel">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="#2e6b34"/>
+      <path d="M50 74c0-18 10-30 26-32 2 18-8 30-26 32z" fill="#8fd18a"/>
+      <path d="M50 74c0-14-8-24-21-26-2 15 6 24 21 26z" fill="#c8e9c0"/>
+      <rect x="47" y="60" width="6" height="22" rx="3" fill="#8fd18a"/>
+    </svg>
+    <h1><span class="fm">Farm</span><span class="lk">Link</span></h1>
+  </div>
+  <p class="tagline">Connecting fresh produce to brighter tomorrows.<br>互動式原型 · 依 Components 文件建構</p>
+
+  <div class="role-switch" id="roleSwitch" data-role="farmer">
+    <div class="role-thumb"></div>
+    <button class="on" onclick="setRole('farmer')">🚜 農民端</button>
+    <button onclick="setRole('charity')">🤝 慈善端</button>
+  </div>
+
+  <h3>畫面導覽</h3>
+  <nav class="jump" id="jumpList"></nav>
+
+  <p class="hint">💡 每個畫面都可點擊操作：貼文表單、鎖定交易、QR 掃描、聊天引用回覆、統計圖表都有動畫回饋。</p>
+</aside>
+
+<!-- ============ PHONE ============ -->
+<div class="stage">
+<div class="phone">
+  <div class="screen-wrap">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span id="clock">9:41</span>
+      <span class="icons">
+        <svg width="16" height="11" viewBox="0 0 16 11"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.3" y="5" width="3" height="6" rx="1"/><rect x="8.6" y="2.5" width="3" height="8.5" rx="1"/><rect x="12.9" y="0" width="3" height="11" rx="1" opacity=".35"/></svg>
+        <svg width="15" height="11" viewBox="0 0 15 11"><path d="M7.5 9.6 9.9 7a3.4 3.4 0 0 0-4.8 0z"/><path d="M7.5 4.1a6 6 0 0 1 4.2 1.7l1.5-1.6a8.2 8.2 0 0 0-11.4 0l1.5 1.6A6 6 0 0 1 7.5 4.1z" opacity=".55"/></svg>
+        <svg width="24" height="11" viewBox="0 0 24 11"><rect x="0" y="0" width="21" height="11" rx="3.4" fill="none" stroke="currentColor" stroke-width="1"/><rect x="1.8" y="1.8" width="14" height="7.4" rx="2" /><path d="M22.4 3.6v3.8a2 2 0 0 0 0-3.8z"/></svg>
+      </span>
+    </div>
+
+    <div class="views" id="views"></div>
+
+    <div id="tabbarHost"></div>
+
+    <div class="toast" id="toast"></div>
+    <div class="sheet-mask" id="sheetMask" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+  </div>
+</div>
+<div class="f11 muted" style="text-align:center;max-width:378px">FarmLink 高保真原型 · 農民端與慈善／志工端雙角色 · 單一 HTML 檔可離線開啟</div>
+</div>
+
+<script>
+/* =======================================================================
+   Icons
+======================================================================= */
+const I = {
+  back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  bell:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  home:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
+  list:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
+  search:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  box:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 8 12 3 3 8l9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/></svg>',
+  chat:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12Z"/></svg>',
+  chart:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  user:'<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>',
+  phone:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>',
+  clip:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L10 17.9a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/></svg>',
+  send:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 3 3 10.5l7.5 3L14 21 21 3Z"/></svg>',
+  qr:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM19 19h2v2h-2z"/></svg>',
+  heart:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.8 5.8a5 5 0 0 0-7.1 0L12 7.5l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 21.5l8.8-8.6a5 5 0 0 0 0-7.1Z"/></svg>',
+  plus:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  filter:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>',
+  pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg>',
+  cal:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  check:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg>',
+  lock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  trash:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M9 6V4h6v2M6 6l1 15h10l1-15"/></svg>',
+  edit:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/></svg>',
+  up:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></svg>'
+};
+
+/* Mascot ---------------------------------------------------------------- */
+function cow(size, opts={}){
+  const heart = opts.heart ? `
+    <path d="M58 156q12 28 34 32" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M142 156q-12 28-34 32" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <g class="heart-beat">
+      <path d="M100 214c-20-15-34-24-34-40a16 16 0 0 1 34-8 16 16 0 0 1 34 8c0 16-14 25-34 40z" fill="#e2635e" stroke="#c04a45" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="83" cy="176" rx="7" ry="4.5" fill="#fff" opacity=".38" transform="rotate(-28 83 176)"/>
+    </g>` : '';
+  const basket = opts.basket ? `
+    <path d="M56 156q12 22 30 26" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M144 156q-12 22-30 26" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="80" cy="176" r="11" fill="#e8604c" stroke="#b8453a" stroke-width="2.5"/>
+    <circle cx="103" cy="171" r="12" fill="#e8a33a" stroke="#b8762a" stroke-width="2.5"/>
+    <path d="M119 164q14-14 22 2t-14 14z" fill="#6fbf5f" stroke="#3f8a37" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M62 180h76l-8 27a9 9 0 0 1-9 7H79a9 9 0 0 1-9-7z" fill="#cf9350" stroke="#8a5a2b" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M78 182v31M100 182v33M122 182v31" stroke="#8a5a2b" stroke-width="2.2" opacity=".55"/>` : '';
+  const tall = opts.heart || opts.basket;
+  const vb = tall ? '0 0 200 228' : '0 0 200 172';
+  return `<svg class="cow ${opts.still?'':'cow-bob'}" width="${size}" height="${size*(tall?1.14:.86)}" viewBox="${vb}">
+    <ellipse cx="100" cy="${tall?221:166}" rx="${tall?52:48}" ry="6.5" fill="#1f4d27" opacity=".1"/>
+    <path class="ear-l" d="M56 92C38 80 20 82 18 93s14 22 32 21z" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4" stroke-linejoin="round"/>
+    <path class="ear-r" d="M144 92c18-12 36-10 38 1s-14 22-32 21z" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4" stroke-linejoin="round"/>
+    <path class="ear-l" d="M40 92c-9-5-16-4-17 1s6 10 15 10z" fill="#f4b9b6"/>
+    <path class="ear-r" d="M160 92c9-5 16-4 17 1s-6 10-15 10z" fill="#f4b9b6"/>
+    <path d="M72 48c-7-12 5-19 12-9" stroke="#c69a68" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M128 48c7-12-5-19-12-9" stroke="#c69a68" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <ellipse cx="100" cy="96" rx="54" ry="48" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4"/>
+    <ellipse cx="70" cy="63" rx="20" ry="14" fill="#3a3a3a" transform="rotate(-16 70 63)"/>
+    <ellipse cx="133" cy="59" rx="13" ry="9" fill="#3a3a3a" transform="rotate(18 133 59)"/>
+    <path d="M74 95q10-12 20 0" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M106 95q10-12 20 0" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="62" cy="110" rx="9" ry="5.5" fill="#f4b9b6" opacity=".9"/>
+    <ellipse cx="138" cy="110" rx="9" ry="5.5" fill="#f4b9b6" opacity=".9"/>
+    <ellipse cx="100" cy="122" rx="30" ry="20" fill="#fbd3ce" stroke="#3a3a3a" stroke-width="3.4"/>
+    <ellipse cx="89" cy="117" rx="3.4" ry="4.6" fill="#3a3a3a"/><ellipse cx="111" cy="117" rx="3.4" ry="4.6" fill="#3a3a3a"/>
+    <path d="M88 126q12 12 24 0z" fill="#8c4a48" stroke="#3a3a3a" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M66 138q34 17 68 0l-7 16q-27 11-54 0z" fill="#4c9a56" stroke="#2e6b34" stroke-width="3.2" stroke-linejoin="round"/>
+    ${heart}${basket}
+  </svg>`;
+}
+
+/* =======================================================================
+   Data
+======================================================================= */
+const LISTINGS = [
+  {id:1, name:'Carrots (Imperfect)', emo:'🥕', bg:'linear-gradient(150deg,#f7d9a8,#e8a95c)', qty:'20 kg', price:'$5', dl:'12 Aug 2026', loc:'Camden, NSW', dist:'12 km', farm:'Green Valley Farm', status:'avail', type:'Root Veg'},
+  {id:2, name:'Leafy Greens Mix', emo:'🥬', bg:'linear-gradient(150deg,#d5eec4,#8cc474)', qty:'12 kg', price:'Free', dl:'10 Aug 2026', loc:'Richmond, NSW', dist:'24 km', farm:'Green Valley Farm', status:'lock', type:'Leafy'},
+  {id:3, name:'Roma Tomatoes', emo:'🍅', bg:'linear-gradient(150deg,#f9c5bd,#e0665a)', qty:'35 kg', price:'$12', dl:'14 Aug 2026', loc:'Windsor, NSW', dist:'31 km', farm:'Sunrise Acres', status:'avail', type:'Fruit Veg'},
+  {id:4, name:'Table Potatoes', emo:'🥔', bg:'linear-gradient(150deg,#e7d6b6,#bb9a68)', qty:'50 kg', price:'$18', dl:'18 Aug 2026', loc:'Bathurst, NSW', dist:'55 km', farm:'Hill Ridge Produce', status:'avail', type:'Root Veg'},
+  {id:5, name:'Sweet Corn', emo:'🌽', bg:'linear-gradient(150deg,#faeab5,#e0c153)', qty:'28 kg', price:'$9', dl:'09 Aug 2026', loc:'Camden, NSW', dist:'12 km', farm:'Green Valley Farm', status:'done', type:'Grain'},
+  {id:6, name:'Pumpkins', emo:'🎃', bg:'linear-gradient(150deg,#fbd9ad,#e08b3d)', qty:'40 kg', price:'$14', dl:'20 Aug 2026', loc:'Orange, NSW', dist:'78 km', farm:'Sunrise Acres', status:'avail', type:'Squash'}
+];
+const STATUS_LABEL = {avail:['Available','avail'], lock:['Locked-in','lock'], done:['Completed','done'], cancel:['Cancelled','cancel']};
+
+const CHART = {
+  weekly:{labels:['M','T','W','T','F','S','S'], vals:[35,52,44,70,88,62,40], kpi:['$412','9','186 kg','+18%']},
+  monthly:{labels:['W1','W2','W3','W4'], vals:[58,74,46,92], kpi:['$1,840','37','742 kg','+24%']},
+  annual:{labels:['Q1','Q2','Q3','Q4'], vals:[62,80,55,94], kpi:['$21,350','412','8.4 t','+31%']}
+};
+
+let ROLE = 'farmer';
+let activeScreen = '';
+let history = [];
+let currentListing = LISTINGS[0];
+let replyTo = null;
+
+/* =======================================================================
+   Screen registry
+======================================================================= */
+const SCREENS = {};
+function reg(id, opts){ SCREENS[id] = opts; }
+
+/* ---------- shared partials ---------- */
+const bar = (title, backTo, right='') => `
+  <div class="appbar">
+    ${backTo!==null ? `<button class="iconbtn" onclick="go('${backTo}',true)">${I.back}</button>` : '<span style="width:36px"></span>'}
+    <div class="title">${title}</div>
+    ${right || '<span style="width:36px"></span>'}
+  </div>`;
+
+const bellBtn = (screen,n=3) => `<button class="iconbtn bell" onclick="go('${screen}')">${I.bell}<span class="badge">${n}</span></button>`;
+
+function statusPill(s){ const [t,c]=STATUS_LABEL[s]; return `<span class="pill ${c}">${t}</span>`; }
+
+function listingCard(l, onclick){
+  return `<div class="listing" onclick="${onclick}">
+    <div class="thumb" style="background:${l.bg}"><span>${l.emo}</span><span class="shine"></span></div>
+    <div class="info">
+      <div class="row"><div class="b8 f15">${l.name}</div><div class="sp"></div><div class="b8" style="color:var(--green-600)">${l.price}</div></div>
+      <div class="row f12 muted" style="margin-top:4px">
+        <span>${l.qty}</span><span>·</span><span>${I.pin} ${l.dist}</span><div class="sp"></div>${statusPill(l.status)}
+      </div>
+      <div class="f11 muted" style="margin-top:5px">${I.cal} Collect by ${l.dl} · ${l.farm}</div>
+    </div>
+  </div>`;
+}
+
+/* =======================================================================
+   SHARED · Splash
+======================================================================= */
+reg('splash', {nav:false, html:()=>`
+  <div class="splash-body" style="background:linear-gradient(180deg,#eaf6ff 0%,#eef7e9 60%,#f7f3e8 100%)">
+    <div class="logo-big"><span class="fm">Farm</span><span class="lk">Link</span>
+      <span class="leaf-sway" style="display:inline-block">🌿</span></div>
+    <div class="f12 muted" style="text-align:center;animation:fadeUp .8s .15s both">Connecting fresh produce<br>to brighter tomorrows.</div>
+    <div style="margin:18px 0 26px;animation:popIn .8s .2s both">${cow(190,{heart:true})}</div>
+    <button class="btn" onclick="go('${'home'}')">Get Started</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('登入畫面（原型示意）')">Log In</button>
+    <div class="f11 muted" style="margin-top:16px">目前身分：<b id="roleLabel">農民 / 生產者</b> · 可於左側切換</div>
+  </div>`});
+
+/* =======================================================================
+   FARMER SCREENS
+======================================================================= */
+reg('f-home', {nav:'home', html:()=>`
+  <div class="appbar">
+    <div style="flex:1">
+      <div class="b8" style="font-size:22px">Hello, Dave 👋</div>
+      <div class="f12 muted">Good food finds a home.</div>
+    </div>
+    ${bellBtn('f-notif',3)}
+  </div>
+  <div class="body">
+    <div class="hero" onclick="go('f-post')">
+      <div style="flex:1">
+        <div class="b8" style="font-size:17px">Make a difference today.</div>
+        <div class="f11" style="opacity:.85;margin-top:3px">Post your surplus in under a minute</div>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="tiles">
+      <div class="tile" style="animation-delay:.05s" onclick="go('f-post')"><span class="ic">🥕</span><div class="t">Post Surplus</div><div class="s">List your produce</div></div>
+      <div class="tile" style="animation-delay:.11s" onclick="go('f-listings')"><span class="ic">📋</span><div class="t">Active Listings</div><div class="s">4 live right now</div></div>
+      <div class="tile" style="animation-delay:.17s" onclick="go('f-sales')"><span class="ic">📍</span><div class="t">Ongoing Sales</div><div class="s">2 locked-in</div></div>
+      <div class="tile" style="animation-delay:.23s" onclick="go('f-stats')"><span class="ic">📈</span><div class="t">Sales Stats</div><div class="s">See the difference</div></div>
+    </div>
+
+    <div class="sect">今日待辦</div>
+    <div class="card">
+      <div class="listrow" onclick="go('f-scan')">
+        <div class="av" style="background:#fdf0d6">${I.qr}</div>
+        <div style="flex:1"><div class="b7 f13">掃描取貨 QR</div><div class="f11 muted">Hope Kitchen · Leafy Greens Mix</div></div>
+        <div class="pill lock">待掃描</div>
+      </div>
+      <div class="listrow" onclick="go('f-chat')">
+        <div class="av">💬</div>
+        <div style="flex:1"><div class="b7 f13">2 則未讀訊息</div><div class="f11 muted">Hope Kitchen 想協商取貨時間</div></div>
+        <div class="unread">2</div>
+      </div>
+    </div>
+
+    <div class="sect">社群影響力</div>
+    <div class="card row" style="gap:14px">
+      <div>${cow(70,{still:false})}</div>
+      <div style="flex:1">
+        <div class="b8" style="font-size:19px"><span class="cnt" data-to="742">0</span> kg</div>
+        <div class="f11 muted">已避免的食物浪費 · 相當於 <b class="cnt" data-to="1484">0</b> 份餐點</div>
+      </div>
+    </div>
+  </div>`});
+
+/* -- Active Listings ---------------------------------------------------- */
+reg('f-listings', {nav:'list', html:()=>`
+  ${bar('Active Listings', null, `<button class="iconbtn" onclick="go('f-post')">${I.plus}</button>`)}
+  <div class="body">
+    <div class="chips" id="fChips">
+      <button class="chip on" onclick="filterF(this,'all')">全部 6</button>
+      <button class="chip" onclick="filterF(this,'avail')">Available</button>
+      <button class="chip" onclick="filterF(this,'lock')">Locked-in</button>
+      <button class="chip" onclick="filterF(this,'done')">Completed</button>
+    </div>
+    <div id="fList"></div>
+    <button class="btn ghost" style="margin-top:4px" onclick="lazyMore('fList')">載入更多（Lazy loading）</button>
+  </div>`,
+  mount(){ renderF('all'); }});
+
+function renderF(f){
+  const el = document.getElementById('fList'); if(!el) return;
+  const rows = LISTINGS.filter(l=>f==='all'||l.status===f);
+  el.innerHTML = rows.map((l,i)=>`
+    <div class="listing" style="animation-delay:${i*.06}s" onclick="openListing(${l.id},'farmer')">
+      <div class="thumb" style="background:${l.bg}"><span>${l.emo}</span><span class="shine"></span></div>
+      <div class="info">
+        <div class="row"><div class="b8 f15">${l.name}</div><div class="sp"></div><div class="b8" style="color:var(--green-600)">${l.price}</div></div>
+        <div class="row f12 muted" style="margin-top:4px"><span>${l.qty}</span><span>·</span><span>Collect by ${l.dl}</span><div class="sp"></div>${statusPill(l.status)}</div>
+        <div class="row" style="margin-top:9px;gap:7px" onclick="event.stopPropagation()">
+          <button class="btn ghost sm" onclick="toast('編輯 ${l.name}')">${I.edit} Edit</button>
+          <button class="btn ghost sm" onclick="lockIn(${l.id})">${I.lock} Lock-in</button>
+          <div class="sp"></div>
+          <button class="btn ghost sm" style="color:var(--red)" onclick="delListing(this,'${l.name}')">${I.trash}</button>
+        </div>
+      </div>
+    </div>`).join('') || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">這個分類目前沒有刊登</div></div>`;
+}
+function filterF(btn,f){ [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on'); renderF(f); }
+function delListing(btn,name){ const card = btn.closest('.listing'); card.style.transition='.35s'; card.style.transform='translateX(-110%)'; card.style.opacity='0'; setTimeout(()=>{card.remove(); toast('已刪除「'+name+'」');},340); }
+function lockIn(id){ const l = LISTINGS.find(x=>x.id===id); l.status='lock'; renderF('all'); toast('已標記為 Locked-in 🔒'); }
+
+/* -- Post Surplus ------------------------------------------------------- */
+reg('f-post', {nav:false, html:()=>`
+  ${bar('Post Surplus','f-home')}
+  <div class="body">
+    <div class="f12 muted" style="text-align:center;margin-bottom:12px">Share your surplus produce with local food-relief organisations.</div>
+    <div class="stepper"><div class="step done"></div><div class="step" id="st2"></div><div class="step" id="st3"></div></div>
+
+    <div class="dropzone" onclick="photoAdd(this)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8h3.5L8 5.5h8L17.5 8H21v12H3z"/><circle cx="12" cy="13.5" r="3.7"/></svg>
+      <span>Add a photo</span>
+    </div>
+
+    <div class="field"><label>🥕 Produce type</label><input placeholder="e.g. Carrots" oninput="stepUp()"></div>
+    <div class="field"><label>🧺 Quantity</label><input placeholder="e.g. 20 kg" oninput="stepUp()"></div>
+    <div class="field"><label>${I.cal} Deadline</label><input type="date" value="2026-08-12"></div>
+    <div class="field"><label>${I.pin} Farm location</label><input placeholder="Camden, NSW" value="Camden, NSW"></div>
+    <div class="field"><label>🏷️ Price</label><input placeholder="e.g. $5 (optional)"></div>
+    <div class="field"><label>🚚 Pickup info</label><input placeholder="Gate B, 8am–5pm"></div>
+
+    <div class="card row" style="margin:12px 0 16px">
+      <div style="flex:1"><div class="b7 f13">允許慈善單位直接聯絡</div><div class="f11 muted">關閉時需先通過通知審核</div></div>
+      <div class="switch on" onclick="this.classList.toggle('on')"></div>
+    </div>
+
+    <button class="btn" onclick="go('f-success')">Post Listing</button>
+  </div>`});
+
+function photoAdd(el){ el.innerHTML = '<div style="font-size:38px;animation:popIn .5s cubic-bezier(.68,-.6,.32,1.6)">🥕</div><span style="color:var(--green-700)">照片已加入 · 1/3</span>'; el.style.background='var(--green-050)'; el.style.borderColor='var(--green-500)'; stepUp(); }
+function stepUp(){ const a=document.getElementById('st2'), b=document.getElementById('st3'); if(a) a.classList.add('done'); setTimeout(()=>b&&b.classList.add('done'),260); }
+
+/* -- Success screens ---------------------------------------------------- */
+reg('f-success', {nav:false, html:()=>`
+  <div class="appbar"><span style="width:36px"></span><div class="title"></div><button class="iconbtn" onclick="go('f-nice')">✕</button></div>
+  <div class="celebrate" id="confettiHost">
+    ${cow(180)}
+    <div class="big-title" style="margin-top:8px">Hurray!</div>
+    <div class="f13 muted" style="margin-top:6px">Your listing has been posted.</div>
+    <div class="note">🌱 <div>You're helping reduce food waste!<br><span class="f11 muted">附近 8 個慈善單位已收到通知</span></div></div>
+    <button class="btn" style="margin-top:24px" onclick="openListing(1,'farmer')">View Listing</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="go('f-nice')">Done</button>
+  </div>`,
+  mount(){ confetti(document.getElementById('confettiHost')); }});
+
+reg('f-nice', {nav:false, html:()=>`
+  ${bar('','f-home')}
+  <div class="celebrate">
+    ${cow(190,{basket:true})}
+    <div class="big-title" style="margin-top:4px">Nice!</div>
+    <div class="f13 muted" style="margin-top:6px">This produce is on its way<br>to a better future.</div>
+    <div class="note">🌿 <div>Small actions make a big difference.</div></div>
+    <button class="btn" style="margin-top:26px" onclick="go('f-home')">Back to Home</button>
+  </div>`});
+
+/* -- Listing detail (farmer) -------------------------------------------- */
+reg('f-detail', {nav:false, html:()=>{
+  const l = currentListing;
+  return `${bar('Listing Details','f-listings', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('已加入關注')">${I.heart}</button>`)}
+  <div class="body">
+    <div class="gallery" style="background:${l.bg}"><span class="em">${l.emo}</span><span class="count">1/3</span></div>
+    <div class="row" style="margin-top:13px"><div class="b8" style="font-size:19px">${l.name}</div><div class="sp"></div><div class="b8" style="font-size:19px;color:var(--green-600)">${l.price}</div></div>
+    <div class="f13 muted">${l.qty}</div>
+    <div style="margin-top:8px">${statusPill(l.status)}</div>
+    <div class="meta">${I.cal} Collect by ${l.dl}</div>
+    <div class="meta">${I.pin} ${l.loc} (${l.dist} away)</div>
+    <div class="meta">🚚 Pickup: Gate B, 8am–5pm</div>
+    <div class="grower">
+      <div class="av" style="background:#d8ecd2">👨‍🌾</div>
+      <div style="flex:1"><div class="f11 muted">Posted by</div><div class="b8 f13">${l.farm}</div><div class="verified">${I.check} Verified grower</div></div>
+      <button class="iconbtn" onclick="toast('撥號：0412 345 678')">${I.phone}</button>
+    </div>
+
+    <div class="sect">交易流程</div>
+    <div class="card">
+      <div class="listrow"><div class="av" style="background:var(--green-100)">1</div><div style="flex:1"><div class="b7 f13">Published</div><div class="f11 muted">刊登已上架，慈善單位可瀏覽</div></div>${I.check}</div>
+      <div class="listrow"><div class="av" style="background:#fdf0d6">2</div><div style="flex:1"><div class="b7 f13">Locked-in</div><div class="f11 muted">與對方協商後鎖定</div></div><button class="btn ghost sm" onclick="toast('已鎖定給 Hope Kitchen 🔒')">Mark</button></div>
+      <div class="listrow"><div class="av" style="background:#e0eefb">3</div><div style="flex:1"><div class="b7 f13">QR Verified</div><div class="f11 muted">掃描對方 QR 才算完成</div></div><button class="btn ghost sm" onclick="go('f-scan')">Scan</button></div>
+    </div>
+
+    <div class="row" style="gap:9px;margin-top:16px">
+      <button class="btn ghost" onclick="go('f-chat')">💬 Chat</button>
+      <button class="btn" onclick="go('f-scan')">${I.qr} Scan QR</button>
+    </div>
+    <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="toast('已取消 lock-in，重新開放刊登')">Cancel lock-in</button>
+  </div>`;}});
+
+/* -- QR scanner --------------------------------------------------------- */
+reg('f-scan', {nav:false, html:()=>`
+  ${bar('Scan Procurement QR','f-detail')}
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="scanner" id="scanner">
+      <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
+      <div class="scanline"></div>
+    </div>
+    <div class="f13 muted" style="text-align:center;margin-top:20px">請對方出示取貨 QR code。<br>掃描成功後交易才會標記為 <b>Successful</b>。</div>
+    <button class="btn" style="margin-top:26px" onclick="scanDone()">模擬掃描成功</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('已手動輸入代碼')">手動輸入代碼</button>
+  </div>`});
+
+function scanDone(){
+  const s = document.getElementById('scanner');
+  s.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,#2e6b34,#1f4d27)">
+    <div style="text-align:center;color:#fff;animation:popIn .55s cubic-bezier(.68,-.6,.32,1.6)">
+      <div style="font-size:52px">✅</div><div class="b8" style="margin-top:6px">Sale Successful</div></div></div>`;
+  toast('交易完成！收益 $5 已入帳 🎉');
+  setTimeout(()=>go('f-nice'),1400);
+}
+
+/* -- Ongoing sales ------------------------------------------------------ */
+reg('f-sales', {nav:'box', html:()=>`
+  ${bar('Ongoing Sales', null, bellBtn('f-notif',3))}
+  <div class="body">
+    <div class="chips">
+      <button class="chip on">Locked-in 2</button><button class="chip">Pending 1</button><button class="chip">History</button>
+    </div>
+    ${['Hope Kitchen','FoodShare Sydney'].map((n,i)=>`
+    <div class="card" style="margin-bottom:11px;animation:tileIn .45s ${i*.08}s both">
+      <div class="row">
+        <div class="av" style="background:${i?'#e0eefb':'#d8ecd2'}">${i?'🏥':'🍲'}</div>
+        <div style="flex:1"><div class="b8 f13">${n}</div><div class="f11 muted">${i?'Roma Tomatoes · 35 kg':'Leafy Greens Mix · 12 kg'}</div></div>
+        <span class="pill lock">Locked-in</span>
+      </div>
+      <div class="f11 muted" style="margin:10px 0 0">${I.cal} Pickup ${i?'14':'10'} Aug 2026 · 2:00 pm</div>
+      <div class="row" style="gap:7px;margin-top:11px">
+        <button class="btn ghost sm" onclick="go('f-chat')">💬 Chat</button>
+        <button class="btn sm" onclick="go('f-scan')">${I.qr} Scan</button>
+        <div class="sp"></div>
+        <button class="btn ghost sm" style="color:var(--red)" onclick="cancelCard(this)">Cancel</button>
+      </div>
+    </div>`).join('')}
+    <div class="sect">最近完成</div>
+    <div class="card">
+      <div class="listrow"><div class="av" style="background:#faeab5">🌽</div><div style="flex:1"><div class="b7 f13">Sweet Corn · 28 kg</div><div class="f11 muted">Rotary Foodbank · 09 Aug</div></div><div class="b8 f13" style="color:var(--green-600)">$9</div></div>
+      <div class="listrow"><div class="av" style="background:#f9c5bd">🍎</div><div style="flex:1"><div class="b7 f13">Apples · 18 kg</div><div class="f11 muted">Hope Kitchen · 05 Aug</div></div><div class="b8 f13" style="color:var(--green-600)">$7</div></div>
+    </div>
+  </div>`});
+function cancelCard(b){ const c=b.closest('.card'); c.style.transition='.35s'; c.style.opacity='0'; c.style.transform='scale(.9)'; setTimeout(()=>{c.remove();toast('已取消 lock-in，刊登重新開放');},340); }
+
+/* -- Chat list + thread ------------------------------------------------- */
+reg('f-chatlist', {nav:'chat', html:()=>`
+  ${bar('Messages', null, bellBtn('f-notif',3))}
+  <div class="body">
+    <div class="search">${I.search}<input placeholder="搜尋對話"></div>
+    ${[['🍲','Hope Kitchen','取貨時間可以改成下午兩點嗎？','2',true],
+       ['🏥','FoodShare Sydney','我們已完成 lock-in，謝謝！','',false],
+       ['🤝','Rotary Foodbank','附上上次的收據 PDF 📎','',false]]
+      .map(([e,n,m,u,f],i)=>`
+      <div class="thread" style="animation:tileIn .4s ${i*.07}s both" onclick="go('f-chat')">
+        <div class="av">${e}</div>
+        <div style="flex:1;min-width:0">
+          <div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:24':'昨天'}</div></div>
+          <div class="f12 muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m}</div>
+        </div>
+        ${u?`<div class="unread">${u}</div>`:''}
+      </div>`).join('')}
+  </div>`});
+
+reg('f-chat', {nav:false, html:()=>`
+  <div class="appbar">
+    <button class="iconbtn" onclick="go('f-chatlist',true)">${I.back}</button>
+    <div class="av" style="width:36px;height:36px;font-size:17px;border-radius:11px">🍲</div>
+    <div style="flex:1"><div class="b8 f13">Hope Kitchen</div><div class="f11" style="color:var(--green-600)">● online</div></div>
+    <button class="iconbtn" onclick="toast('撥號：0412 345 678 已貼入撥號鍵盤')">${I.phone}</button>
+    <button class="iconbtn" onclick="openLockSheet()">${I.lock}</button>
+  </div>
+  <div class="msgs" id="msgs">
+    <div class="f11 muted" style="text-align:center;margin:4px 0">今天</div>
+    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">Hi Dave！我們看到 Leafy Greens Mix 的刊登，還有嗎？<div class="time">10:02</div></div>
+    <div class="bub me">還有的，12 kg 都可以給你們 🙂<div class="time">10:05</div></div>
+    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">太好了。取貨時間可以改成下午兩點嗎？<div class="time">10:24</div></div>
+    <div class="bub you" onclick="setReply(this,'Hope Kitchen')">📎 pickup-plan.pdf · 240 KB<div class="time">10:24</div></div>
+  </div>
+  <div class="reply-strip" id="replyStrip"></div>
+  <div class="composer">
+    <button class="iconbtn" onclick="openAttachSheet()">${I.clip}</button>
+    <input id="chatInput" placeholder="輸入訊息…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="iconbtn" style="background:var(--green-700);color:#fff" onclick="sendMsg()">${I.send}</button>
+  </div>`,
+  mount(){ const m=document.getElementById('msgs'); m.scrollTop=m.scrollHeight; }});
+
+function setReply(el,who){ replyTo = {who, text: el.childNodes[0].textContent.trim()}; const s=document.getElementById('replyStrip'); s.innerHTML=`<b>回覆 ${who}</b><br><span class="muted">${replyTo.text.slice(0,42)}…</span>`; s.classList.add('on'); document.getElementById('chatInput').focus(); }
+function sendMsg(){
+  const i=document.getElementById('chatInput'), m=document.getElementById('msgs');
+  const t=i.value.trim()||'好的，兩點可以！'; i.value='';
+  const q = replyTo ? `<div class="quote">${replyTo.who} · ${replyTo.text.slice(0,34)}…</div>` : '';
+  m.insertAdjacentHTML('beforeend', `<div class="bub me">${q}${t}<div class="time">現在 ✓✓</div></div>`);
+  replyTo=null; document.getElementById('replyStrip').classList.remove('on');
+  m.scrollTop=m.scrollHeight;
+  setTimeout(()=>{ m.insertAdjacentHTML('beforeend','<div class="typing" id="tp"><i></i><i></i><i></i></div>'); m.scrollTop=m.scrollHeight; },500);
+  setTimeout(()=>{ const tp=document.getElementById('tp'); if(tp)tp.remove();
+    m.insertAdjacentHTML('beforeend','<div class="bub you">謝謝！我們兩點準時到 🙏<div class="time">現在</div></div>'); m.scrollTop=m.scrollHeight; },2000);
+}
+function openAttachSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">附加檔案</div>
+  <div class="tiles" style="margin:0">
+    ${[['📷','照片','JPEG / PNG'],['📄','PDF','文件、收據'],['📍','位置','取貨地點'],['🧾','出貨單','自動帶入刊登']]
+    .map(([e,t,s])=>`<div class="tile" onclick="closeSheet();toast('已附加 ${t}')"><span class="ic">${e}</span><div class="t">${t}</div><div class="s">${s}</div></div>`).join('')}
+  </div>`); }
+function openLockSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">此對話的交易狀態</div>
+  <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Hope Kitchen</div>
+  <button class="btn" onclick="closeSheet();toast('已標記為 Locked-in 🔒')">${I.lock} 標記為 Locked-in</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('f-scan')">${I.qr} 掃描 QR 完成交易</button>
+  <button class="btn ghost danger" style="margin-top:10px;background:none;color:var(--red);border:1px solid #f0cdcb" onclick="closeSheet();toast('已取消 lock-in')">取消 lock-in</button>`); }
+
+/* -- Notifications ------------------------------------------------------ */
+reg('f-notif', {nav:false, html:()=>`
+  ${bar('Notifications','f-home', `<button class="iconbtn" onclick="toast('全部標記為已讀')">${I.check}</button>`)}
+  <div class="body">
+    <div class="sect">聯絡請求</div>
+    <div class="notif fresh">
+      <div class="av">🍲</div>
+      <div style="flex:1"><div class="b7 f13">Hope Kitchen 想與你聯絡</div><div class="f11 muted">關於 Leafy Greens Mix · 12 kg</div></div>
+      <div class="row" style="gap:6px">
+        <button class="act yes" onclick="decide(this,true)">✓</button>
+        <button class="act no" onclick="decide(this,false)">✕</button>
+      </div>
+    </div>
+    <div class="notif fresh">
+      <div class="av" style="background:#e0eefb">🏥</div>
+      <div style="flex:1"><div class="b7 f13">FoodShare Sydney 想與你聯絡</div><div class="f11 muted">關於 Roma Tomatoes · 35 kg</div></div>
+      <div class="row" style="gap:6px">
+        <button class="act yes" onclick="decide(this,true)">✓</button>
+        <button class="act no" onclick="decide(this,false)">✕</button>
+      </div>
+    </div>
+
+    <div class="sect">交易更新</div>
+    <div class="notif"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">Sale successful</div><div class="f11 muted">Sweet Corn · QR 已驗證 · $9</div><div class="f11 muted">2 小時前</div></div></div>
+    <div class="notif"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Listing locked-in</div><div class="f11 muted">Leafy Greens Mix → Hope Kitchen</div><div class="f11 muted">昨天</div></div></div>
+    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">Lock-in cancelled</div><div class="f11 muted">Pumpkins 已重新開放刊登</div><div class="f11 muted">3 天前</div></div></div>
+
+    <div class="sect">補助資訊</div>
+    <div class="card row" style="gap:12px">
+      <div style="font-size:26px">💰</div>
+      <div style="flex:1"><div class="b7 f13">你符合 Surplus Rebate 資格</div><div class="f11 muted">本月捐贈已達 200 kg，可申請 $120 補助</div></div>
+      <button class="btn sm" onclick="toast('申請已送出')">申請</button>
+    </div>
+  </div>`});
+function decide(btn,ok){ const n=btn.closest('.notif'); n.classList.add('gone'); setTimeout(()=>n.remove(),320); toast(ok?'已允許聊天 ✅':'已婉拒聯絡請求'); }
+
+/* -- Stats -------------------------------------------------------------- */
+reg('f-stats', {nav:'chart', html:()=>statsHTML('Sales Stats',['Total revenue','Completed sales','Produce sold','vs. 上期']),
+  mount(){ drawChart('weekly'); }});
+
+function statsHTML(title, labels){
+  return `${bar(title, null, `<button class="iconbtn" onclick="toast('匯出 CSV 報表')">⤓</button>`)}
+  <div class="body">
+    <div class="chips">
+      ${['weekly','monthly','annual','custom'].map((p,i)=>`<button class="chip ${i?'':'on'}" onclick="switchPeriod(this,'${p}')">${{weekly:'Weekly',monthly:'Monthly',annual:'Annual',custom:'Custom…'}[p]}</button>`).join('')}
+    </div>
+    <div class="kpis" id="kpis">
+      ${labels.map((l,i)=>`<div class="kpi"><div class="v" id="kpi${i}">–</div><div class="l">${l}</div></div>`).join('')}
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="row"><div class="b8 f13">趨勢</div><div class="sp"></div><div class="trend">${I.up} <span id="trendVal">+18%</span></div></div>
+      <div class="chart" id="chart"></div>
+    </div>
+    <div class="sect">${title==='Sales Stats'?'依產品分類':'依產品分類'}</div>
+    <div class="card">
+      ${[['🥕','Root vegetables',42,'#e8a95c'],['🥬','Leafy greens',28,'#8cc474'],['🍅','Fruit vegetables',19,'#e0665a'],['🌽','Grains',11,'#e0c153']]
+        .map(([e,n,p,c])=>`<div style="padding:9px 0">
+          <div class="row f12"><span>${e}</span><span class="b7">${n}</span><div class="sp"></div><span class="muted">${p}%</span></div>
+          <div style="height:7px;background:var(--line);border-radius:4px;margin-top:6px;overflow:hidden">
+            <div class="growbar" data-w="${p}" style="height:100%;width:0;background:${c};border-radius:4px;transition:width 1s cubic-bezier(.2,.9,.3,1)"></div>
+          </div></div>`).join('')}
+    </div>
+  </div>`;
+}
+function switchPeriod(btn,p){
+  [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on');
+  if(p==='custom'){ openSheet(`<div class="b8" style="margin-bottom:12px">自訂區間</div>
+    <div class="field"><label>${I.cal} 開始</label><input type="date" value="2026-06-01"></div>
+    <div class="field"><label>${I.cal} 結束</label><input type="date" value="2026-08-31"></div>
+    <button class="btn" style="margin-top:8px" onclick="closeSheet();drawChart('annual');toast('已套用自訂區間')">套用</button>`); return; }
+  drawChart(p);
+}
+function drawChart(p){
+  const d = CHART[p]; const c = document.getElementById('chart'); if(!c) return;
+  c.innerHTML = d.labels.map((l,i)=>`<div class="bar-col"><div class="bar" data-h="${d.vals[i]}"></div><div class="lb">${l}</div></div>`).join('');
+  requestAnimationFrame(()=>c.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h+'%', i*70)));
+  d.kpi.forEach((v,i)=>{ const el=document.getElementById('kpi'+i); if(el){ el.textContent=v; el.style.animation='none'; void el.offsetWidth; el.style.animation='popIn .45s cubic-bezier(.68,-.4,.27,1.4)'; }});
+  const t=document.getElementById('trendVal'); if(t) t.textContent = d.kpi[3];
+  setTimeout(()=>document.querySelectorAll('.growbar').forEach((g,i)=>setTimeout(()=>g.style.width=g.dataset.w+'%',i*90)),200);
+}
+
+/* -- Profile ------------------------------------------------------------ */
+reg('f-profile', {nav:'user', html:()=>profileHTML('farmer'), mount(){ countUp(); }});
+reg('c-profile', {nav:'user', html:()=>profileHTML('charity'), mount(){ countUp(); }});
+
+function profileHTML(role){
+  const isF = role==='farmer';
+  return `${bar('Profile', null, `<button class="iconbtn" onclick="toast('設定')">⚙︎</button>`)}
+  <div class="body">
+    <div class="card" style="text-align:center;padding:20px">
+      <div style="font-size:52px">${isF?'👨‍🌾':'🤝'}</div>
+      <div class="b8" style="font-size:18px;margin-top:6px">${isF?'Dave Miller':'Hope Kitchen'}</div>
+      <div class="verified" style="justify-content:center;margin-top:4px">${I.check} ${isF?'Verified grower':'Registered charity'}</div>
+      <div class="row" style="gap:9px;margin-top:14px">
+        <button class="btn ghost sm" style="flex:1" onclick="openEditSheet()">${I.edit} 編輯資料</button>
+        <button class="btn ghost sm" style="flex:1" onclick="go('${isF?'f-stats':'c-stats'}')">📈 ${isF?'銷售':'採購'}統計</button>
+      </div>
+    </div>
+
+    <div class="sect">個人資料</div>
+    <div class="card">
+      ${[['Name', isF?'Dave Miller':'Hope Kitchen Inc.'],['Number','0412 345 678'],['Address', isF?'23 Ridge Rd, Camden NSW':'8 Elder St, Sydney NSW'],['ABN','54 221 887 903']]
+        .map(([k,v])=>`<div class="listrow"><div style="flex:1"><div class="f11 muted">${k}</div><div class="b7 f13">${v}</div></div>${I.edit}</div>`).join('')}
+    </div>
+
+    <div class="sect">${isF?'銷售量':'採購量'}總覽</div>
+    <div class="kpis">
+      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?412:389}" data-pre="$">0</span></div><div class="l">本週${isF?'收益':'支出'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="${isF?1840:1620}" data-pre="$">0</span></div><div class="l">本月${isF?'收益':'支出'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="742">0</span> kg</div><div class="l">本月${isF?'售出':'領取'}</div></div>
+      <div class="kpi"><div class="v"><span class="cnt" data-to="37">0</span></div><div class="l">完成${isF?'交易':'採購'}</div></div>
+    </div>
+
+    <div class="sect">最近${isF?'銷售':'採購'}紀錄</div>
+    <div id="recent"></div>
+    <button class="btn ghost" onclick="lazyMore('recent')">載入更多（5 筆）</button>
+
+    <div class="sect">帳號</div>
+    <div class="card">
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">推播通知</div><div class="f11 muted">交易狀態與新訊息</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">顯示我的距離</div><div class="f11 muted">讓對方看到大約距離</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <button class="btn danger" style="margin-top:14px" onclick="confirmDelete()">${I.trash} Delete Account</button>
+    <div class="f11 muted" style="text-align:center;margin-top:10px">FarmLink v0.9 · Prototype</div>
+  </div>`;
+}
+function openEditSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">編輯個人資料</div>
+  <div class="field"><label>Name</label><input value="Dave Miller"></div>
+  <div class="field"><label>Number</label><input value="0412 345 678"></div>
+  <div class="field"><label>Address</label><input value="23 Ridge Rd, Camden NSW"></div>
+  <div class="field"><label>ABN</label><input value="54 221 887 903"></div>
+  <button class="btn" style="margin-top:8px" onclick="closeSheet();toast('資料已更新 ✅')">儲存</button>`); }
+function confirmDelete(){ openSheet(`<div style="text-align:center">${cow(110)}<div class="b8" style="font-size:17px;margin-top:6px">確定要刪除帳號嗎？</div>
+  <div class="f12 muted" style="margin:8px 0 16px">所有刊登、交易紀錄與統計資料將永久移除，此操作無法復原。</div></div>
+  <button class="btn danger" onclick="closeSheet();toast('帳號刪除請求已送出')">永久刪除帳號</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">再想想</button>`); }
+
+/* =======================================================================
+   CHARITY SCREENS
+======================================================================= */
+reg('c-home', {nav:'home', html:()=>`
+  <div class="appbar">
+    <div style="flex:1"><div class="b8" style="font-size:22px">Hello! 👋</div><div class="f12 muted">Good food finds a home.</div></div>
+    ${bellBtn('c-notif',2)}
+  </div>
+  <div class="body">
+    <div class="hero" onclick="go('c-browse')">
+      <div style="flex:1"><div class="b8" style="font-size:17px">Make a difference today.</div>
+      <div class="f11" style="opacity:.85;margin-top:3px">12 個新刊登在你附近 20 km 內</div></div>
+      <div class="arrow">→</div>
+    </div>
+    <div class="tiles">
+      <div class="tile" style="animation-delay:.05s" onclick="go('c-browse')"><span class="ic">🔍</span><div class="t">Browse Listings</div><div class="s">Find fresh produce</div></div>
+      <div class="tile" style="animation-delay:.11s" onclick="go('c-proc')"><span class="ic">📍</span><div class="t">My Pickups</div><div class="s">View your claims</div></div>
+      <div class="tile" style="animation-delay:.17s" onclick="go('c-chatlist')"><span class="ic">💬</span><div class="t">Messages</div><div class="s">Talk to growers</div></div>
+      <div class="tile" style="animation-delay:.23s" onclick="go('c-stats')"><span class="ic">👥</span><div class="t">Community Impact</div><div class="s">See the difference</div></div>
+    </div>
+
+    <div class="sect">即將到期的刊登</div>
+    ${LISTINGS.filter(l=>l.status==='avail').slice(0,2).map(l=>listingCard(l,`openListing(${l.id},'charity')`)).join('')}
+
+    <div class="sect">你的影響力</div>
+    <div class="card row" style="gap:14px">
+      <div>${cow(70,{basket:true})}</div>
+      <div style="flex:1">
+        <div class="b8" style="font-size:19px"><span class="cnt" data-to="1620">0</span> 份餐點</div>
+        <div class="f11 muted">本月已分送 · 節省採購成本 <b>$1,240</b></div>
+      </div>
+    </div>
+  </div>`,
+  mount(){ countUp(); }});
+
+reg('c-browse', {nav:'search', html:()=>`
+  ${bar('Available Listings', null, `<button class="iconbtn" onclick="openFilterSheet()">${I.filter}</button>`)}
+  <div class="body">
+    <div class="search">${I.search}<input placeholder="搜尋產品、農場…" oninput="searchC(this.value)"></div>
+    <div class="chips">
+      <button class="chip on" onclick="sortC(this,'dist')">最近距離</button>
+      <button class="chip" onclick="sortC(this,'price')">價格低到高</button>
+      <button class="chip" onclick="sortC(this,'qty')">數量多到少</button>
+      <button class="chip" onclick="sortC(this,'dl')">即將到期</button>
+    </div>
+    <div id="cList"></div>
+    <button class="btn ghost" onclick="lazyMore('cList')">載入更多刊登</button>
+  </div>`,
+  mount(){ renderC(LISTINGS.filter(l=>l.status==='avail')); }});
+
+function renderC(rows){
+  const el=document.getElementById('cList'); if(!el) return;
+  el.innerHTML = rows.map((l,i)=>`<div style="animation:tileIn .45s ${i*.06}s both">${listingCard(l,`openListing(${l.id},'charity')`)}</div>`).join('')
+    || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">找不到符合的刊登</div></div>`;
+}
+function searchC(q){ const s=q.toLowerCase(); renderC(LISTINGS.filter(l=>l.status==='avail'&&(l.name.toLowerCase().includes(s)||l.farm.toLowerCase().includes(s)))); }
+function sortC(btn,key){
+  [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on');
+  const rows=[...LISTINGS.filter(l=>l.status==='avail')];
+  const num=s=>parseFloat(String(s).replace(/[^0-9.]/g,''))||0;
+  if(key==='dist') rows.sort((a,b)=>num(a.dist)-num(b.dist));
+  if(key==='price') rows.sort((a,b)=>num(a.price)-num(b.price));
+  if(key==='qty') rows.sort((a,b)=>num(b.qty)-num(a.qty));
+  if(key==='dl') rows.sort((a,b)=>new Date(a.dl)-new Date(b.dl));
+  renderC(rows);
+}
+function openFilterSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">篩選</div>
+  <div class="f11 muted b8" style="margin-bottom:7px">產品類型</div>
+  <div class="chips" style="flex-wrap:wrap;overflow:visible">${['Root Veg','Leafy','Fruit Veg','Grain','Squash'].map((t,i)=>`<button class="chip ${i<2?'on':''}" onclick="this.classList.toggle('on')">${t}</button>`).join('')}</div>
+  <div class="f11 muted b8" style="margin:12px 0 7px">距離上限</div>
+  <input type="range" min="5" max="100" value="30" style="width:100%;accent-color:var(--green-600)">
+  <div class="f11 muted b8" style="margin:12px 0 7px">價格</div>
+  <div class="chips" style="overflow:visible">${['免費','≤ $10','≤ $20','不限'].map((t,i)=>`<button class="chip ${i===1?'on':''}" onclick="[...this.parentNode.children].forEach(c=>c.classList.remove('on'));this.classList.add('on')">${t}</button>`).join('')}</div>
+  <button class="btn" style="margin-top:16px" onclick="closeSheet();toast('已套用篩選條件')">顯示結果</button>`); }
+
+reg('c-detail', {nav:false, html:()=>{
+  const l=currentListing;
+  return `${bar('Listing Details','c-browse', `<button class="iconbtn heart" onclick="this.classList.toggle('on');toast('已收藏')">${I.heart}</button>`)}
+  <div class="body">
+    <div class="gallery" style="background:${l.bg}"><span class="em">${l.emo}</span><span class="count">1/3</span></div>
+    <div class="row" style="margin-top:13px"><div class="b8" style="font-size:19px">${l.name}</div><div class="sp"></div><div class="b8" style="font-size:19px;color:var(--green-600)">${l.price}</div></div>
+    <div class="f13 muted">${l.qty}</div>
+    <div class="meta">${I.cal} Collect by ${l.dl}</div>
+    <div class="meta">${I.pin} ${l.loc} (${l.dist} away)</div>
+    <div class="grower">
+      <div class="av" style="background:#d8ecd2">👨‍🌾</div>
+      <div style="flex:1"><div class="f11 muted">Posted by</div><div class="b8 f13">${l.farm}</div><div class="verified">${I.check} Verified grower</div></div>
+      <button class="iconbtn" onclick="toast('撥號：0412 345 678')">${I.phone}</button>
+    </div>
+    <div class="sect">關於這批產品</div>
+    <div class="card f13" style="line-height:1.6;color:#48544c">
+      外觀不規則但品質良好的${l.name}，適合湯品與備餐使用。請自備容器，可於農場 Gate B 取貨，8am–5pm。
+    </div>
+    <div class="row" style="gap:9px;margin-top:16px">
+      <button class="btn ghost" onclick="go('c-chat')">💬 Contact</button>
+      <button class="btn" onclick="go('c-claimed')">Claim Listing</button>
+    </div>
+  </div>`;}});
+
+reg('c-claimed', {nav:false, html:()=>`
+  <div class="appbar"><span style="width:36px"></span><div class="title"></div><button class="iconbtn" onclick="go('c-proc')">✕</button></div>
+  <div class="celebrate" id="confettiHost2">
+    ${cow(180,{basket:true})}
+    <div class="big-title" style="margin-top:8px">Claimed!</div>
+    <div class="f13 muted" style="margin-top:6px">農場已收到你的申請。</div>
+    <div class="note">🌱 <div>取貨時請出示 QR code<br><span class="f11 muted">農場掃描後交易才會完成</span></div></div>
+    <button class="btn" style="margin-top:24px" onclick="go('c-qr')">${I.qr} 查看取貨 QR</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="go('c-chat')">與農場聊聊</button>
+  </div>`,
+  mount(){ confetti(document.getElementById('confettiHost2')); }});
+
+reg('c-qr', {nav:false, html:()=>`
+  ${bar('Procurement QR','c-proc')}
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="f13 muted" style="text-align:center;margin-bottom:18px">請於取貨時出示此 QR code</div>
+    <div class="qrbox" id="qrbox"></div>
+    <div class="b8" style="margin-top:16px;letter-spacing:2px">FL-2X9K-77QA</div>
+    <div class="card" style="margin-top:18px;width:100%">
+      <div class="row"><div class="av" style="background:#d8ecd2">🥬</div>
+        <div style="flex:1"><div class="b7 f13">Leafy Greens Mix · 12 kg</div><div class="f11 muted">Green Valley Farm · 10 Aug 2:00 pm</div></div>
+        <span class="pill lock">Locked-in</span></div>
+    </div>
+    <button class="btn ghost" style="margin-top:14px;color:var(--red)" onclick="toast('已從你這端取消 lock-in')">Cancel this pickup</button>
+  </div>`,
+  mount(){
+    const N=21, q=document.getElementById('qrbox');
+    // 7x7 finder patterns in three corners, timing lines on row/col 6, deterministic data fill
+    const finderAt=[[0,0],[0,14],[14,0]];
+    const inFinder=(r,c)=>finderAt.find(([fr,fc])=>r>=fr&&r<fr+7&&c>=fc&&c<fc+7);
+    const inQuiet=(r,c)=>finderAt.some(([fr,fc])=>r>=fr-1&&r<=fr+7&&c>=fc-1&&c<=fc+7);
+    let s='';
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+      let on;
+      const f=inFinder(r,c);
+      if(f){ const dr=r-f[0], dc=c-f[1];
+        on = dr===0||dr===6||dc===0||dc===6 || (dr>=2&&dr<=4&&dc>=2&&dc<=4);
+      } else if(inQuiet(r,c)) on=false;
+      else if(r===6||c===6) on=(r+c)%2===0;
+      else on=((r*7+c*13+((r*c)%5))%3)===0;
+      s+=`<i style="background:${on?'#1f4d27':'transparent'};animation-delay:${(r+c)*8}ms"></i>`;
+    }
+    q.innerHTML=s; }});
+
+reg('c-proc', {nav:'box', html:()=>`
+  ${bar('Ongoing Procurements', null, bellBtn('c-notif',2))}
+  <div class="body">
+    <div class="chips"><button class="chip on">Locked-in 2</button><button class="chip">Completed</button><button class="chip">Cancelled</button></div>
+    ${[['🥬','Leafy Greens Mix · 12 kg','Green Valley Farm','10 Aug · 2:00 pm'],
+       ['🍅','Roma Tomatoes · 35 kg','Sunrise Acres','14 Aug · 9:30 am']]
+      .map(([e,n,f,t],i)=>`
+      <div class="card" style="margin-bottom:11px;animation:tileIn .45s ${i*.08}s both">
+        <div class="row"><div class="av">${e}</div>
+          <div style="flex:1"><div class="b8 f13">${n}</div><div class="f11 muted">${f}</div></div>
+          <span class="pill lock">Locked-in</span></div>
+        <div class="f11 muted" style="margin-top:10px">${I.cal} ${t}</div>
+        <div class="row" style="gap:7px;margin-top:11px">
+          <button class="btn sm" onclick="go('c-qr')">${I.qr} 出示 QR</button>
+          <button class="btn ghost sm" onclick="go('c-chat')">💬 Chat</button>
+          <div class="sp"></div>
+          <button class="btn ghost sm" style="color:var(--red)" onclick="cancelCard(this)">Cancel</button>
+        </div>
+      </div>`).join('')}
+    <div class="sect">已完成採購</div>
+    <div class="card">
+      <div class="listrow"><div class="av" style="background:#faeab5">🌽</div><div style="flex:1"><div class="b7 f13">Sweet Corn · 28 kg</div><div class="f11 muted">Green Valley Farm · 09 Aug</div></div><span class="pill done">Completed</span></div>
+      <div class="listrow"><div class="av" style="background:#e7d6b6">🥔</div><div style="flex:1"><div class="b7 f13">Potatoes · 50 kg</div><div class="f11 muted">Hill Ridge · 02 Aug</div></div><span class="pill done">Completed</span></div>
+    </div>
+  </div>`});
+
+reg('c-chatlist', {nav:'chat', html:()=>`
+  ${bar('Messages', null, bellBtn('c-notif',2))}
+  <div class="body">
+    <div class="search">${I.search}<input placeholder="搜尋農場"></div>
+    ${[['👨‍🌾','Green Valley Farm','沒問題，兩點見！','1',true],
+       ['🚜','Sunrise Acres','番茄還有 35 kg 可以留給你們','',false],
+       ['🌾','Hill Ridge Produce','收據已寄出 📎','',false]]
+      .map(([e,n,m,u,f],i)=>`
+      <div class="thread" style="animation:tileIn .4s ${i*.07}s both" onclick="go('c-chat')">
+        <div class="av">${e}</div>
+        <div style="flex:1;min-width:0"><div class="row"><div class="b8 f13">${n}</div><div class="sp"></div><div class="f11 muted">${f?'10:31':'昨天'}</div></div>
+        <div class="f12 muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m}</div></div>
+        ${u?`<div class="unread">${u}</div>`:''}
+      </div>`).join('')}
+  </div>`});
+
+reg('c-chat', {nav:false, html:()=>`
+  <div class="appbar">
+    <button class="iconbtn" onclick="go('c-chatlist',true)">${I.back}</button>
+    <div class="av" style="width:36px;height:36px;font-size:17px;border-radius:11px">👨‍🌾</div>
+    <div style="flex:1"><div class="b8 f13">Green Valley Farm</div><div class="f11" style="color:var(--green-600)">● online</div></div>
+    <button class="iconbtn" onclick="toast('撥號：0412 345 678 已貼入撥號鍵盤')">${I.phone}</button>
+    <button class="iconbtn" onclick="openCancelSheet()">${I.lock}</button>
+  </div>
+  <div class="msgs" id="msgs">
+    <div class="f11 muted" style="text-align:center;margin:4px 0">今天</div>
+    <div class="bub me">Hi！Leafy Greens Mix 還有嗎？我們是 Hope Kitchen<div class="time">10:02</div></div>
+    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">還有的，12 kg 都可以給你們 🙂<div class="time">10:05</div></div>
+    <div class="bub me">太好了，取貨可以改下午兩點嗎？<div class="time">10:24</div></div>
+    <div class="bub you" onclick="setReply(this,'Green Valley Farm')">沒問題，兩點見！已幫你 lock-in 🔒<div class="time">10:31</div></div>
+  </div>
+  <div class="reply-strip" id="replyStrip"></div>
+  <div class="composer">
+    <button class="iconbtn" onclick="openAttachSheet()">${I.clip}</button>
+    <input id="chatInput" placeholder="輸入訊息…" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="iconbtn" style="background:var(--green-700);color:#fff" onclick="sendMsg()">${I.send}</button>
+  </div>`,
+  mount(){ const m=document.getElementById('msgs'); m.scrollTop=m.scrollHeight; }});
+
+function openCancelSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">此對話的交易狀態</div>
+  <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Green Valley Farm</div>
+  <button class="btn" onclick="closeSheet();go('c-qr')">${I.qr} 出示取貨 QR</button>
+  <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="closeSheet();toast('已從你這端取消 lock-in')">取消這筆 lock-in</button>`); }
+
+reg('c-notif', {nav:false, html:()=>`
+  ${bar('Notifications','c-home', `<button class="iconbtn" onclick="toast('全部標記為已讀')">${I.check}</button>`)}
+  <div class="body">
+    <div class="sect">交易更新</div>
+    <div class="notif fresh"><div class="av" style="background:#fdf0d6">🔒</div><div style="flex:1"><div class="b7 f13">Locked-in 已確認</div><div class="f11 muted">Green Valley Farm · Leafy Greens Mix</div><div class="f11 muted">10 分鐘前</div></div></div>
+    <div class="notif fresh"><div class="av" style="background:#d8ecd2">✅</div><div style="flex:1"><div class="b7 f13">採購完成</div><div class="f11 muted">Sweet Corn · 28 kg · QR 已驗證</div><div class="f11 muted">昨天</div></div></div>
+    <div class="notif"><div class="av" style="background:#fbe3e2">↩️</div><div style="flex:1"><div class="b7 f13">農場取消了 lock-in</div><div class="f11 muted">Pumpkins · Sunrise Acres</div><div class="f11 muted">3 天前</div></div></div>
+    <div class="sect">新刊登提醒</div>
+    <div class="notif"><div class="av" style="background:#f7d9a8">🥕</div><div style="flex:1"><div class="b7 f13">你附近有新刊登</div><div class="f11 muted">Carrots (Imperfect) · 20 kg · 12 km</div></div><button class="btn sm" onclick="openListing(1,'charity')">查看</button></div>
+    <div class="card row" style="gap:12px;margin-top:14px">
+      <div style="font-size:24px">🔔</div>
+      <div style="flex:1"><div class="b7 f13">推播通知</div><div class="f11 muted">新刊登、狀態變更即時提醒</div></div>
+      <div class="switch on" onclick="this.classList.toggle('on')"></div>
+    </div>
+  </div>`});
+
+reg('c-stats', {nav:'chart', html:()=>statsHTML('Community Impact',['Total spending','Completed pickups','Produce procured','vs. 上期']),
+  mount(){ drawChart('weekly'); }});
+
+/* =======================================================================
+   Navigation
+======================================================================= */
+const NAVS = {
+  farmer:[['f-home','Home','home'],['f-listings','Listings','list'],['f-sales','Sales','box'],['f-chatlist','Messages','chat'],['f-profile','Profile','user']],
+  charity:[['c-home','Home','home'],['c-browse','Browse','search'],['c-proc','Pickups','box'],['c-chatlist','Messages','chat'],['c-profile','Profile','user']]
+};
+const JUMPS = {
+  farmer:[['splash','啟動 / Splash'],['f-home','首頁 Dashboard'],['f-post','刊登 Post Surplus'],['f-success','成功 Hurray!'],['f-nice','完成 Nice!'],['f-listings','Active Listings'],['f-detail','刊登詳情'],['f-scan','QR 掃描'],['f-sales','Ongoing Sales'],['f-chatlist','聊天列表'],['f-chat','聊天對話'],['f-notif','通知'],['f-stats','銷售統計'],['f-profile','個人檔案']],
+  charity:[['splash','啟動 / Splash'],['c-home','首頁 Dashboard'],['c-browse','Available Listings'],['c-detail','刊登詳情'],['c-claimed','認領成功'],['c-qr','取貨 QR'],['c-proc','Ongoing Procurements'],['c-chatlist','聊天列表'],['c-chat','聊天對話'],['c-notif','通知'],['c-stats','Community Impact'],['c-profile','個人檔案']]
+};
+
+function renderTabbar(){
+  const host=document.getElementById('tabbarHost');
+  const cfg=SCREENS[activeScreen];
+  if(!cfg || cfg.nav===false){ host.innerHTML=''; return; }
+  host.innerHTML = `<div class="tabbar">${NAVS[ROLE].map(([id,label,ic])=>
+    `<button class="${id===activeScreen?'on':''}" onclick="go('${id}')">${I[ic]}<span>${label}</span></button>`).join('')}</div>`;
+}
+function renderJump(){
+  document.getElementById('jumpList').innerHTML = JUMPS[ROLE].map(([id,label])=>
+    `<a class="${id===activeScreen?'active':''}" onclick="go('${id}')"><span class="dot"></span>${label}</a>`).join('');
+}
+
+function go(id, back=false){
+  if(id==='home') id = ROLE==='farmer'?'f-home':'c-home';
+  if(!SCREENS[id]) return;
+  const views=document.getElementById('views');
+  views.querySelectorAll('.screen').forEach(s=>{
+    if(s.classList.contains('active')){
+      s.classList.remove('active'); s.classList.add('leaving'); setTimeout(()=>s.remove(),300);
+    } else {
+      s.remove(); // not yet promoted to .active (rapid navigation) — drop it immediately
+    }
+  });
+  const el=document.createElement('div');
+  el.className='screen'; el.id='scr-'+id; if(back) el.dataset.dir='back';
+  el.innerHTML = SCREENS[id].html();
+  views.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('active'));
+  activeScreen=id;
+  renderTabbar(); renderJump();
+  if(SCREENS[id].mount) setTimeout(()=>SCREENS[id].mount(),40);
+  countUp();
+}
+
+function setRole(r){
+  ROLE=r;
+  document.getElementById('roleSwitch').dataset.role=r;
+  [...document.querySelectorAll('#roleSwitch button')].forEach((b,i)=>b.classList.toggle('on', (i===0)===(r==='farmer')));
+  const rl=document.getElementById('roleLabel'); if(rl) rl.textContent = r==='farmer'?'農民 / 生產者':'慈善 / 志工';
+  go(r==='farmer'?'f-home':'c-home');
+  toast(r==='farmer'?'已切換到農民端 🚜':'已切換到慈善／志工端 🤝');
+}
+
+function openListing(id, side){
+  currentListing = LISTINGS.find(l=>l.id===id) || LISTINGS[0];
+  go(side==='farmer'?'f-detail':'c-detail');
+}
+
+/* =======================================================================
+   Effects
+======================================================================= */
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('on'),2100);
+}
+function openSheet(html){ document.getElementById('sheetBody').innerHTML=html; document.getElementById('sheet').classList.add('on'); document.getElementById('sheetMask').classList.add('on'); }
+function closeSheet(){ document.getElementById('sheet').classList.remove('on'); document.getElementById('sheetMask').classList.remove('on'); }
+
+function confetti(host){
+  if(!host) return;
+  const colors=['#4c9a56','#e0a32e','#e2635e','#6b4fa8','#3a7d43','#f0c674'];
+  for(let i=0;i<44;i++){
+    const c=document.createElement('div'); c.className='confetti';
+    c.style.left=Math.random()*100+'%';
+    c.style.background=colors[i%colors.length];
+    c.style.animation=`fall ${1.8+Math.random()*1.6}s ${Math.random()*1.2}s cubic-bezier(.25,.6,.5,1) forwards`;
+    if(i%3===0){ c.style.borderRadius='50%'; c.style.height='9px'; }
+    host.appendChild(c);
+  }
+}
+
+function countUp(){
+  document.querySelectorAll('.cnt:not([data-done])').forEach(el=>{
+    el.dataset.done='1';
+    const to=+el.dataset.to, pre=el.dataset.pre||'';
+    let start=null;
+    const step=ts=>{
+      if(!start) start=ts;
+      const p=Math.min((ts-start)/1100,1);
+      const e=1-Math.pow(1-p,3);
+      el.textContent = pre + Math.round(to*e).toLocaleString();
+      if(p<1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+let lazyCount=0;
+function lazyMore(hostId){
+  const host=document.getElementById(hostId); if(!host) return;
+  const sk=document.createElement('div');
+  sk.innerHTML = Array(3).fill(`<div class="skel"><div class="sk" style="width:58%"></div><div class="sk" style="width:38%;margin-top:8px;height:9px"></div></div>`).join('');
+  host.appendChild(sk);
+  setTimeout(()=>{
+    const items=['🍐 Pears · 22 kg','🥦 Broccoli · 15 kg','🍆 Eggplant · 19 kg','🧅 Onions · 44 kg','🍇 Grapes · 12 kg'];
+    sk.innerHTML = items.slice(0,3).map((t,i)=>`
+      <div class="card" style="margin-bottom:10px;animation:tileIn .4s ${i*.07}s both">
+        <div class="row"><div class="av">${t.split(' ')[0]}</div>
+        <div style="flex:1"><div class="b7 f13">${t.slice(2)}</div><div class="f11 muted">${['Green Valley Farm','Sunrise Acres','Hill Ridge Produce'][i]} · 0${i+1} Aug 2026</div></div>
+        <span class="pill done">Completed</span></div>
+      </div>`).join('');
+    lazyCount++;
+    toast('已載入 3 筆較舊的紀錄');
+  },900);
+}
+
+/* ripple on every button */
+document.addEventListener('pointerdown', e=>{
+  const b=e.target.closest('.btn'); if(!b) return;
+  const r=document.createElement('span'); r.className='ripple';
+  const rect=b.getBoundingClientRect(); const d=Math.max(rect.width,rect.height);
+  r.style.width=r.style.height=d+'px';
+  r.style.left=(e.clientX-rect.left-d/2)+'px';
+  r.style.top=(e.clientY-rect.top-d/2)+'px';
+  b.appendChild(r); setTimeout(()=>r.remove(),600);
+});
+
+/* clock */
+setInterval(()=>{
+  const d=new Date();
+  document.getElementById('clock').textContent = d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');
+},1000);
+
+/* boot */
+go('splash');
+</script>
+</body>
+</html>
