@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmLink — Screen Sketches &amp; Annotations</title>
+<style>
+@page { size: A4 portrait; margin: 14mm 15mm; }
+
+:root{
+  --ink:#1c1c1c;
+  --grey:#6b6b6b;
+  --light:#a9a9a9;
+  --hair:#d6d6d6;
+  --fill:#f0f0f0;
+  --accent:#2e6b34;
+  --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Helvetica Neue",Helvetica,Arial,"PingFang TC","Noto Sans TC",sans-serif;
+  color:var(--ink);background:#e8e8e6;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+
+/* ---------- page shell ---------- */
+.page{
+  width:210mm;min-height:297mm;background:var(--paper);
+  margin:0 auto 8mm;padding:14mm 15mm;position:relative;
+  box-shadow:0 2px 14px rgba(0,0,0,.16);
+  display:flex;flex-direction:column;
+}
+.page + .page{break-before:page}
+.pg-head{
+  display:flex;align-items:baseline;gap:8px;
+  border-bottom:1.5px solid var(--ink);padding-bottom:5px;margin-bottom:10px;flex:0 0 auto;
+}
+.pg-head .num{font-size:10pt;font-weight:800;letter-spacing:.5px}
+.pg-head .nm{font-size:13pt;font-weight:800;letter-spacing:-.2px}
+.pg-head .sp{flex:1}
+.badge{
+  font-size:7pt;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+  border:1.2px solid var(--ink);border-radius:2px;padding:2px 6px;white-space:nowrap;
+}
+.badge.charity{background:var(--ink);color:#fff}
+.pg-foot{
+  margin-top:auto;padding-top:6px;border-top:1px solid var(--hair);
+  font-size:7.5pt;color:var(--light);display:flex;justify-content:space-between;flex:0 0 auto;
+}
+
+/* ---------- two-column screen layout ---------- */
+.split{display:flex;gap:8mm;flex:1;align-items:flex-start}
+.col-wf{flex:0 0 78mm}
+.col-notes{flex:1;min-width:0}
+
+/* ---------- wireframe device ---------- */
+.wf{
+  width:78mm;border:2px solid var(--ink);border-radius:7mm;
+  padding:2.2mm;background:#fff;
+}
+/* Fixed device proportions so every sketch reads as the same phone and the
+   bottom nav anchors to the bottom edge as it does in the prototype. */
+.wf-inner{
+  border:1px solid var(--hair);border-radius:5mm;background:#fff;
+  min-height:160mm;display:flex;flex-direction:column;
+}
+.wf-inner > .at-bottom{margin-top:auto}
+.wf-cap{
+  text-align:center;font-size:7pt;color:var(--light);margin-top:3px;letter-spacing:.4px;
+}
+
+/* wireframe primitives */
+.b{position:relative;margin:0 0 2mm}
+.pad{padding:0 3mm}
+.status{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.6mm 3.4mm 1mm;font-size:6pt;color:var(--light);font-weight:700;
+}
+.status .sig{display:flex;gap:1.2px;align-items:flex-end}
+.status .sig i{width:1.2px;height:3px;background:var(--light);display:block}
+.status .sig i:nth-child(2){height:4px}.status .sig i:nth-child(3){height:5px}
+.status .bat{width:9px;height:5px;border:.7px solid var(--light);border-radius:1px}
+
+.appbar{display:flex;align-items:center;gap:2mm;padding:1.4mm 3mm 2mm}
+.appbar .chev{
+  width:3mm;height:3mm;border-left:1.2px solid var(--ink);border-bottom:1.2px solid var(--ink);
+  transform:rotate(45deg);flex:0 0 auto;margin-left:.6mm;
+}
+.appbar .ttl{flex:1;text-align:center;font-size:8pt;font-weight:800}
+.appbar .sq{
+  width:5mm;height:5mm;border:1px solid var(--light);border-radius:1.4mm;flex:0 0 auto;
+  display:grid;place-items:center;font-size:5.5pt;color:var(--grey);
+}
+
+.h1{font-size:11pt;font-weight:800;letter-spacing:-.3px;padding:0 3mm}
+.h2{font-size:8.5pt;font-weight:800;padding:0 3mm}
+.sub{font-size:6.5pt;color:var(--grey);padding:0 3mm;line-height:1.4}
+.sect{
+  font-size:5.8pt;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--light);padding:0 3mm;margin:1.4mm 0 1mm;
+}
+
+.ln{height:1.6mm;background:var(--fill);border-radius:.8mm;margin-bottom:1mm}
+.img{
+  border:1px dashed var(--light);border-radius:1.6mm;position:relative;background:#fafafa;
+  display:grid;place-items:center;font-size:6pt;color:var(--light);overflow:hidden;
+}
+.img::before,.img::after{
+  content:"";position:absolute;inset:0;border-top:1px dashed #e2e2e2;
+  transform-origin:0 0;
+}
+.img::before{transform:rotate(var(--ang,0deg))}
+.img.x::before{width:141%;transform:rotate(35deg)}
+.img.x::after{width:141%;top:auto;bottom:0;transform:rotate(-35deg);transform-origin:0 100%}
+
+.field{
+  border:1px solid var(--hair);border-radius:1.4mm;padding:1.6mm 2mm;
+  display:flex;align-items:center;gap:2mm;font-size:6.5pt;margin-bottom:1.4mm;
+}
+.field .fl{font-weight:700;flex:0 0 auto}
+.field .fv{flex:1;text-align:right;color:var(--light)}
+
+.btn{
+  border:1.4px solid var(--ink);border-radius:1.6mm;text-align:center;
+  padding:2mm;font-size:7.5pt;font-weight:800;margin-bottom:1.4mm;
+}
+.btn.solid{background:var(--ink);color:#fff}
+.btn.ghost{border-style:dashed;color:var(--grey);border-color:var(--light);font-weight:700}
+/* destructive: solid outline, distinct from both filled primary and dashed secondary */
+.btn.danger{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.2px #fff, inset 0 0 0 2.6px var(--ink)}
+
+.card{border:1px solid var(--hair);border-radius:1.8mm;padding:2mm}
+.row{display:flex;align-items:center;gap:2mm}
+.av{
+  width:6mm;height:6mm;border:1px solid var(--light);border-radius:1.4mm;flex:0 0 auto;
+  display:grid;place-items:center;font-size:6pt;color:var(--grey);
+}
+.av.rd{border-radius:50%}
+.grow{flex:1;min-width:0}
+.tiny{font-size:6pt;color:var(--grey);line-height:1.35}
+.nano{font-size:5.5pt;color:var(--light)}
+.b7{font-weight:700}.b8{font-weight:800}
+.f7{font-size:7pt}.f65{font-size:6.5pt}
+
+.pill{
+  border:1px solid var(--light);border-radius:3mm;padding:.6mm 1.8mm;
+  font-size:5.5pt;font-weight:800;color:var(--grey);white-space:nowrap;
+}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.chips{display:flex;gap:1.4mm;padding:0 3mm;overflow:hidden}
+.chip{
+  border:1px solid var(--light);border-radius:3mm;padding:.8mm 2mm;
+  font-size:5.8pt;font-weight:700;color:var(--grey);white-space:nowrap;
+}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.8mm;padding:0 3mm}
+.tile{border:1px solid var(--hair);border-radius:1.8mm;padding:2mm;min-height:13mm}
+.tile .ic{width:4.5mm;height:4.5mm;border:1.2px solid var(--grey);border-radius:1mm;margin-bottom:1.4mm}
+.tile .tl{font-size:6.5pt;font-weight:800}
+.tile .ts{font-size:5.5pt;color:var(--light);margin-top:.4mm}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1.6mm;padding:0 3mm}
+.kpi{border:1px solid var(--hair);border-radius:1.6mm;padding:1.8mm}
+.kpi .kv{font-size:9pt;font-weight:800}
+.kpi .kl{font-size:5.3pt;color:var(--light);font-weight:700}
+
+.chart{display:flex;align-items:flex-end;gap:1.6mm;height:20mm;padding:0 1mm}
+.chart .bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:1mm;height:100%;justify-content:flex-end}
+.chart .bar{width:100%;background:var(--fill);border:1px solid var(--light);border-radius:.8mm .8mm 0 0}
+.chart .bl{font-size:5pt;color:var(--light)}
+
+.bub{
+  border:1px solid var(--light);border-radius:2.4mm;padding:1.4mm 2mm;font-size:6pt;
+  max-width:72%;margin-bottom:1.4mm;line-height:1.35;
+}
+.bub.me{margin-left:auto;background:var(--fill);border-color:var(--grey);border-bottom-right-radius:.6mm}
+.bub.you{border-bottom-left-radius:.6mm}
+.bub .q{border-left:1.4px solid var(--light);padding-left:1.4mm;color:var(--light);font-size:5.3pt;margin-bottom:.8mm}
+.composer{
+  display:flex;gap:1.6mm;align-items:center;padding:2mm 3mm;border-top:1px solid var(--hair);
+}
+.composer .inp{flex:1;border:1px solid var(--hair);border-radius:3mm;padding:1.4mm 2mm;font-size:6pt;color:var(--light)}
+
+.tabbar{display:flex;border-top:1px solid var(--hair);padding:1.6mm 0 2mm}
+.tabbar .t{flex:1;display:flex;flex-direction:column;align-items:center;gap:.8mm}
+.tabbar .t .ti{width:4mm;height:4mm;border:1.1px solid var(--light);border-radius:1mm}
+.tabbar .t .tl{font-size:4.8pt;color:var(--light);font-weight:700}
+.tabbar .t.on .ti{border-color:var(--ink);border-width:1.6px;background:var(--fill)}
+.tabbar .t.on .tl{color:var(--ink)}
+
+.qr{
+  width:32mm;height:32mm;margin:0 auto;padding:1.4mm;background:#fff;
+  border:1px solid var(--hair);border-radius:1.4mm;
+  display:grid;grid-template-columns:repeat(21,1fr);gap:0;
+}
+.qr i{background:transparent}
+.qr i.on{background:var(--ink)}
+.scan{
+  width:30mm;height:30mm;margin:0 auto;border:1px solid var(--ink);border-radius:2mm;
+  position:relative;background:#fafafa;
+}
+.scan .c{position:absolute;width:5mm;height:5mm;border:1.4px solid var(--ink)}
+.scan .c1{top:1.6mm;left:1.6mm;border-right:0;border-bottom:0}
+.scan .c2{top:1.6mm;right:1.6mm;border-left:0;border-bottom:0}
+.scan .c3{bottom:1.6mm;left:1.6mm;border-right:0;border-top:0}
+.scan .c4{bottom:1.6mm;right:1.6mm;border-left:0;border-top:0}
+.scan .sl{position:absolute;left:1.6mm;right:1.6mm;top:14mm;border-top:1.4px dashed var(--ink)}
+.scan .sl::after{
+  content:"scan";position:absolute;right:0;top:.6mm;font-size:4.6pt;color:var(--light);
+}
+
+.mascot{display:block;margin:0 auto}
+.confetti{display:flex;justify-content:center;gap:1.4mm;margin-bottom:1.4mm}
+.confetti i{width:1.2mm;height:2.4mm;border:.8px solid var(--light);border-radius:.4mm;display:block}
+.confetti i:nth-child(2n){transform:rotate(28deg)}
+.confetti i:nth-child(3n){transform:rotate(-34deg);border-radius:50%}
+
+/* ---------- callout markers ---------- */
+.co{
+  position:absolute;left:-4.6mm;top:0;
+  width:3.8mm;height:3.8mm;border-radius:50%;
+  border:1.2px solid var(--ink);background:#fff;
+  font-size:5.6pt;font-weight:800;display:grid;place-items:center;z-index:5;
+}
+.co.r{left:auto;right:-4.6mm}
+.wf{overflow:visible}
+.wf-inner{overflow:visible}
+
+/* ---------- annotations panel ---------- */
+.notes h4{
+  font-size:6pt;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--light);margin:0 0 2mm;padding-bottom:1mm;border-bottom:1px solid var(--hair);
+}
+.notes + .notes{margin-top:4.5mm}
+.purpose{font-size:8pt;line-height:1.5;margin:0}
+.alist{list-style:none;margin:0;padding:0}
+.alist li{
+  display:flex;gap:2.4mm;font-size:7.5pt;line-height:1.45;margin-bottom:2mm;
+}
+.alist .n{
+  flex:0 0 auto;width:3.8mm;height:3.8mm;border-radius:50%;border:1.2px solid var(--ink);
+  font-size:5.6pt;font-weight:800;display:grid;place-items:center;margin-top:.4mm;
+}
+.ilist{list-style:none;margin:0;padding:0;font-size:7.5pt;line-height:1.45}
+.ilist li{position:relative;padding-left:4mm;margin-bottom:1.6mm}
+.ilist li::before{
+  content:"";position:absolute;left:0;top:1.5mm;width:2mm;height:2mm;
+  border:1.2px solid var(--grey);border-radius:50%;
+}
+.ilist li.anim::before{background:var(--ink);border-color:var(--ink)}
+.specref{
+  font-size:7pt;line-height:1.5;background:#f7f7f5;border-left:2.4px solid var(--ink);
+  padding:2mm 2.6mm;margin:0;
+}
+.specref code{font-family:inherit;font-weight:800}
+
+/* ---------- cover ---------- */
+.cover{justify-content:center;text-align:center}
+.cover .logo{font-size:34pt;font-weight:800;letter-spacing:-1.5px;margin-bottom:2mm}
+.cover .logo .g{color:var(--accent)}
+.cover .tag{font-size:10pt;color:var(--grey);margin-bottom:14mm}
+.cover .title{font-size:19pt;font-weight:800;letter-spacing:-.4px;margin-bottom:3mm}
+.cover .meta{font-size:9pt;color:var(--grey);line-height:1.8;margin-top:14mm}
+.cover hr{border:0;border-top:1.5px solid var(--ink);width:34mm;margin:8mm auto}
+
+/* ---------- index / legend tables ---------- */
+table{width:100%;border-collapse:collapse;font-size:8pt}
+th{
+  text-align:left;font-size:6pt;letter-spacing:1px;text-transform:uppercase;color:var(--light);
+  border-bottom:1.2px solid var(--ink);padding:0 2mm 1.6mm;
+}
+td{padding:1.8mm 2mm;border-bottom:1px solid var(--hair);vertical-align:top;line-height:1.4}
+td.c{width:9mm;font-weight:800}
+td.r{width:22mm}
+.legend-grid{display:grid;grid-template-columns:1fr 1fr;gap:6mm 9mm;margin-top:3mm}
+.lg{display:flex;gap:3mm;align-items:flex-start}
+.lg .demo{flex:0 0 26mm}
+.lg .txt{font-size:7.5pt;line-height:1.45}
+.lg .txt b{display:block;font-size:8pt;margin-bottom:.6mm}
+
+/* ---------- flow map ---------- */
+.flow{display:flex;flex-direction:column;gap:3mm;margin-top:3mm}
+.frow{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.fbox{
+  border:1.4px solid var(--ink);border-radius:1.6mm;padding:2mm 2.6mm;
+  font-size:7pt;font-weight:700;text-align:center;min-width:26mm;
+}
+.fbox.alt{border-style:dashed;color:var(--grey)}
+.arr{
+  flex:0 0 8mm;height:0;border-top:1.2px solid var(--ink);position:relative;
+}
+.arr::after{
+  content:"";position:absolute;right:0;top:-1.4mm;
+  border-left:2mm solid var(--ink);border-top:1.4mm solid transparent;border-bottom:1.4mm solid transparent;
+}
+.flabel{font-size:6pt;color:var(--light);text-align:center;flex:0 0 8mm;margin-top:-3mm}
+
+/* ---------- screen-only toolbar ---------- */
+.bar-print{
+  position:fixed;top:0;left:0;right:0;z-index:99;
+  background:var(--ink);color:#fff;padding:8px 16px;
+  display:flex;align-items:center;gap:14px;font-size:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+.bar-print b{font-size:13px}
+.bar-print .sp{flex:1}
+.bar-print button{
+  background:#fff;color:var(--ink);border:0;border-radius:5px;
+  padding:6px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;
+}
+.bar-print button:hover{background:#e8e8e6}
+.bar-print span{opacity:.8}
+body{padding-top:44px}
+
+@media print{
+  body{background:#fff;padding-top:0}
+  .bar-print{display:none}
+  .page{margin:0;box-shadow:none;width:auto;min-height:0;padding:0}
+  .page + .page{break-before:page}
+  .split{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="bar-print">
+  <b>FarmLink — Screen Sketches</b>
+  <span>25 screens · A4 booklet</span>
+  <span id="overflow"></span>
+  <div class="sp"></div>
+  <span>Print / Save as PDF →</span>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div id="doc"></div>
+
+<script>
+/* =====================================================================
+   Wireframe primitives — each block may carry {note:n} to place a
+   numbered callout marker that matches the annotation list.
+   ===================================================================== */
+const co = b => b.note ? `<span class="co${b.side==='r'?' r':''}">${b.note}</span>` : '';
+const wrap = (b, inner, cls='') => `<div class="b ${cls}">${co(b)}${inner}</div>`;
+
+const P = {
+  status: b => `<div class="b">${co(b)}<div class="status">
+      <span>9:41</span>
+      <span class="row" style="gap:1.4mm">
+        <span class="sig"><i></i><i></i><i></i></span><span class="bat"></span>
+      </span></div></div>`,
+
+  appbar: b => wrap(b, `<div class="appbar">
+      ${b.back?'<span class="chev"></span>':'<span style="width:5mm"></span>'}
+      <span class="ttl">${b.title||''}</span>
+      ${b.right?`<span class="sq">${b.right}</span>`:'<span style="width:5mm"></span>'}
+    </div>`),
+
+  greet: b => wrap(b, `<div style="padding:1mm 3mm 2mm" class="row">
+      <div class="grow"><div class="h1" style="padding:0">${b.title}</div>
+      <div class="sub" style="padding:0;margin-top:.6mm">${b.sub||''}</div></div>
+      ${b.right?`<span class="sq">${b.right}</span>`:''}
+    </div>`),
+
+  h1:   b => wrap(b, `<div class="h1">${b.text}</div>`),
+  h2:   b => wrap(b, `<div class="h2">${b.text}</div>`),
+  sub:  b => wrap(b, `<div class="sub">${b.text}</div>`),
+  sect: b => wrap(b, `<div class="sect">${b.text}</div>`),
+
+  lines: b => wrap(b, `<div class="pad">${(b.w||[92,74,58]).map(w=>
+      `<div class="ln" style="width:${w}%"></div>`).join('')}</div>`),
+
+  img: b => wrap(b, `<div class="pad"><div class="img x" style="height:${b.h||18}mm">${b.label||''}</div></div>`),
+
+  field: b => wrap(b, `<div class="pad"><div class="field">
+      <span class="fl">${b.label}</span><span class="fv">${b.value||'—'}</span></div></div>`),
+
+  btn: b => wrap(b, `<div class="pad"><div class="btn ${b.style||'solid'}">${b.label}</div></div>`),
+
+  btnrow: b => wrap(b, `<div class="pad"><div class="row" style="gap:1.8mm;margin-bottom:1.4mm">
+      ${b.items.map(([l,st])=>`<div class="btn ${st||'solid'}" style="flex:1;margin:0">${l}</div>`).join('')}
+    </div></div>`),
+
+  hero: b => wrap(b, `<div class="pad"><div class="btn solid" style="text-align:left;padding:2.6mm 2.6mm">
+      <div style="font-size:8pt">${b.title}</div>
+      <div style="font-size:5.6pt;font-weight:600;opacity:.85;margin-top:.6mm">${b.sub||''}</div></div></div>`),
+
+  grid2: b => wrap(b, `<div class="grid2">${b.items.map(([t,s])=>
+      `<div class="tile"><div class="ic"></div><div class="tl">${t}</div><div class="ts">${s}</div></div>`).join('')}</div>`),
+
+  chips: b => wrap(b, `<div class="chips">${b.items.map((t,i)=>
+      `<div class="chip${i===(b.active??0)?' on':''}">${t}</div>`).join('')}</div>`),
+
+  search: b => wrap(b, `<div class="pad"><div class="field">
+      <span class="av" style="width:4mm;height:4mm;border-radius:50%">q</span>
+      <span class="fv" style="text-align:left">${b.label||'Search…'}</span></div></div>`),
+
+  listing: b => wrap(b, `<div class="pad"><div class="card" style="padding:0;overflow:hidden">
+      <div class="img" style="height:${b.h||13}mm;border:0;border-bottom:1px dashed var(--light);border-radius:0">${b.photo||'photo'}</div>
+      <div style="padding:1.8mm 2mm">
+        <div class="row"><span class="b8 f7">${b.name}</span><span class="grow"></span><span class="b8 f7">${b.price||''}</span></div>
+        <div class="row" style="margin-top:.8mm"><span class="nano">${b.meta||''}</span><span class="grow"></span>${b.pill?`<span class="pill">${b.pill}</span>`:''}</div>
+        ${b.foot?`<div class="nano" style="margin-top:.8mm">${b.foot}</div>`:''}
+        ${b.actions?`<div class="row" style="gap:1.4mm;margin-top:1.6mm">${b.actions.map(a=>
+          `<span class="pill">${a}</span>`).join('')}</div>`:''}
+      </div></div></div>`),
+
+  rowcard: b => wrap(b, `<div class="pad"><div class="card">
+      <div class="row"><span class="av">${b.icon||''}</span>
+      <span class="grow"><span class="b8 f65" style="display:block">${b.name}</span>
+      <span class="nano">${b.sub||''}</span></span>
+      ${b.pill?`<span class="pill">${b.pill}</span>`:''}</div>
+      ${b.foot?`<div class="nano" style="margin-top:1.2mm">${b.foot}</div>`:''}
+      ${b.actions?`<div class="row" style="gap:1.4mm;margin-top:1.6mm">${b.actions.map(a=>
+        `<span class="pill">${a}</span>`).join('')}</div>`:''}
+    </div></div>`),
+
+  listrows: b => wrap(b, `<div class="pad"><div class="card" style="padding:0">
+      ${b.items.map(([n,s,r],i)=>`<div class="row" style="padding:1.8mm 2mm;${i?'border-top:1px solid var(--hair)':''}">
+        ${b.icons?`<span class="av">${b.icons[i]}</span>`:b.numbered?`<span class="av">${i+1}</span>`:''}
+        <span class="grow"><span class="b7 f65" style="display:block">${n}</span><span class="nano">${s}</span></span>
+        ${r?`<span class="pill">${r}</span>`:''}</div>`).join('')}
+    </div></div>`),
+
+  detailmeta: b => wrap(b, `<div class="pad">${b.items.map(t=>
+      `<div class="row" style="margin-bottom:1.2mm"><span class="av" style="width:3.4mm;height:3.4mm"></span>
+      <span class="tiny">${t}</span></div>`).join('')}</div>`),
+
+  grower: b => wrap(b, `<div class="pad"><div class="card row">
+      <span class="av rd">👤</span>
+      <span class="grow"><span class="nano" style="display:block">Posted by</span>
+      <span class="b8 f65">${b.name}</span>
+      <span class="nano" style="display:block">✓ Verified grower</span></span>
+      <span class="sq">☎</span></div></div>`),
+
+  kpis: b => wrap(b, `<div class="kpis">${b.items.map(([v,l])=>
+      `<div class="kpi"><div class="kv">${v}</div><div class="kl">${l}</div></div>`).join('')}</div>`),
+
+  chart: b => wrap(b, `<div class="pad"><div class="card">
+      <div class="row"><span class="b8 f65">Trend</span><span class="grow"></span><span class="nano">▲ ${b.delta||'+18%'}</span></div>
+      <div class="chart">${(b.vals||[35,52,44,70,88,62,40]).map((v,i)=>
+        `<div class="bcol"><div class="bar" style="height:${v}%"></div><div class="bl">${(b.labels||['M','T','W','T','F','S','S'])[i]}</div></div>`).join('')}</div>
+    </div></div>`),
+
+  breakdown: b => wrap(b, `<div class="pad"><div class="card">${b.items.map(([n,p])=>
+      `<div style="margin-bottom:1.4mm"><div class="row"><span class="f65 b7">${n}</span><span class="grow"></span><span class="nano">${p}%</span></div>
+      <div class="ln" style="margin-top:.8mm;background:#e4e4e4"><div style="height:100%;width:${p}%;background:var(--grey);border-radius:.8mm"></div></div></div>`).join('')}
+    </div></div>`),
+
+  notif: b => wrap(b, `<div class="pad"><div class="card row" style="${b.fresh?'background:#f7f7f5':''}">
+      <span class="av">${b.icon||''}</span>
+      <span class="grow"><span class="b7 f65" style="display:block">${b.name}</span>
+      <span class="nano">${b.sub||''}</span></span>
+      ${b.decide?`<span class="row" style="gap:1.2mm"><span class="pill dark">✓</span><span class="pill">✕</span></span>`:''}
+      ${b.cta?`<span class="pill">${b.cta}</span>`:''}</div></div>`),
+
+  thread: b => wrap(b, `<div class="pad">${b.items.map(([n,m,u])=>
+      `<div class="card row" style="margin-bottom:1.4mm"><span class="av rd"></span>
+      <span class="grow"><span class="row"><span class="b8 f65">${n}</span><span class="grow"></span><span class="nano">10:24</span></span>
+      <span class="nano">${m}</span></span>
+      ${u?`<span class="pill dark">${u}</span>`:''}</div>`).join('')}</div>`),
+
+  chathead: b => wrap(b, `<div class="appbar">
+      <span class="chev"></span><span class="av rd"></span>
+      <span class="grow"><span class="b8 f65" style="display:block">${b.name}</span><span class="nano">● online</span></span>
+      <span class="sq">☎</span><span class="sq">🔒</span></div>`),
+
+  bubbles: b => wrap(b, `<div class="pad" style="display:flex;flex-direction:column">
+      ${b.items.map(([side,t,q])=>`<div class="bub ${side}">${q?`<div class="q">${q}</div>`:''}${t}</div>`).join('')}
+      ${b.typing?'<div class="bub you" style="width:14mm">· · ·</div>':''}</div>`),
+
+  composer: b => wrap(b, `<div class="composer">
+      <span class="sq">📎</span><span class="inp">Type a message…</span><span class="sq">➤</span></div>`, 'at-bottom'),
+
+  qr: b => wrap(b, `<div class="pad"><div class="qr">${(()=>{
+      const N=21, finders=[[0,0],[0,14],[14,0]];
+      const at=(r,c)=>finders.find(([fr,fc])=>r>=fr&&r<fr+7&&c>=fc&&c<fc+7);
+      const near=(r,c)=>finders.some(([fr,fc])=>r>=fr-1&&r<=fr+7&&c>=fc-1&&c<=fc+7);
+      let out='';
+      for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+        const f=at(r,c);
+        let on;
+        if(f){ const dr=r-f[0], dc=c-f[1];
+          on = dr===0||dr===6||dc===0||dc===6||(dr>=2&&dr<=4&&dc>=2&&dc<=4); }
+        else if(near(r,c)) on=false;
+        else if(r===6||c===6) on=(r+c)%2===0;
+        else on=((r*7+c*13+((r*c)%5))%3)===0;
+        out+=`<i class="${on?'on':''}"></i>`;
+      }
+      return out;
+    })()}</div>
+      <div class="tiny" style="text-align:center;margin-top:1.4mm;letter-spacing:1px">FL-2X9K-77QA</div></div>`),
+
+  scanner: b => wrap(b, `<div class="pad"><div class="scan">
+      <span class="c c1"></span><span class="c c2"></span><span class="c c3"></span><span class="c c4"></span>
+      <span class="sl"></span></div></div>`),
+
+  mascot: b => wrap(b, `<div class="pad">${cowWF(b.size||22, b.variant)}</div>`),
+
+  celebrate: b => wrap(b, `<div class="pad" style="text-align:center">
+      ${b.confetti?`<div class="confetti">${Array(11).fill('<i></i>').join('')}</div>`:''}
+      ${cowWF(b.size||20, b.variant)}
+      <div class="h1" style="padding:0;margin-top:1.6mm;font-size:14pt">${b.title}</div>
+      <div class="sub" style="padding:0;margin-top:.8mm">${b.sub||''}</div></div>`),
+
+  note: b => wrap(b, `<div class="pad"><div class="card row" style="background:#f7f7f5">
+      <span class="av" style="border-style:dashed"></span>
+      <span class="tiny grow">${b.text}</span></div></div>`),
+
+  toggle: b => wrap(b, `<div class="pad"><div class="card row">
+      <span class="grow"><span class="b7 f65" style="display:block">${b.name}</span><span class="nano">${b.sub||''}</span></span>
+      <span style="width:8mm;height:4.4mm;border:1px solid var(--ink);border-radius:2.2mm;position:relative">
+        <span style="position:absolute;top:.5mm;right:.5mm;width:3.4mm;height:3.4mm;border-radius:50%;background:var(--ink)"></span>
+      </span></div></div>`),
+
+  stepper: b => wrap(b, `<div class="pad"><div class="row" style="gap:1.2mm">${
+      [1,2,3].map(i=>`<span style="flex:1;height:1mm;border-radius:.5mm;background:${i<=(b.at||1)?'var(--ink)':'var(--fill)'}"></span>`).join('')
+    }</div></div>`),
+
+  tabbar: b => wrap(b, `<div class="tabbar">${b.items.map((t,i)=>
+      `<span class="t${i===b.active?' on':''}"><span class="ti"></span><span class="tl">${t}</span></span>`).join('')}</div>`, 'at-bottom'),
+
+  spacer: b => `<div style="height:${b.h||2}mm"></div>`
+};
+
+/* Simplified mascot for the wireframe — outline only, print-safe.
+   Head is drawn over the ears and horns so their inner ends are hidden;
+   the held object is drawn over the arms so the tips read as hands. */
+function cowWF(size, variant){
+  const S='#6b6b6b', F='#fff', P='#e4e4e4';
+  const arms = `<path d="M70 126q-8 32 18 44M130 126q8 32-18 44"
+      stroke="${S}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  const held = {
+    heart: `${arms}
+      <path d="M100 196c-16-12-28-20-28-32a14 14 0 0 1 28-7 14 14 0 0 1 28 7c0 12-12 20-28 32z"
+        fill="${P}" stroke="${S}" stroke-width="4" stroke-linejoin="round"/>`,
+    basket: `${arms}
+      <circle cx="88" cy="166" r="9" fill="${F}" stroke="${S}" stroke-width="3.4"/>
+      <circle cx="110" cy="163" r="10" fill="${P}" stroke="${S}" stroke-width="3.4"/>
+      <path d="M68 170h64l-8 28a9 9 0 0 1-9 6H85a9 9 0 0 1-9-6z"
+        fill="${F}" stroke="${S}" stroke-width="4" stroke-linejoin="round"/>`
+  }[variant] || '';
+  const h = variant==='heart' ? 210 : variant==='basket' ? 212 : 150;
+  return `<svg width="${size}mm" height="${size*h/200}mm" viewBox="0 0 200 ${h}" class="mascot">
+    <ellipse cx="40" cy="86" rx="17" ry="10" fill="${F}" stroke="${S}" stroke-width="4" transform="rotate(-18 40 86)"/>
+    <ellipse cx="160" cy="86" rx="17" ry="10" fill="${F}" stroke="${S}" stroke-width="4" transform="rotate(18 160 86)"/>
+    <path d="M76 46c-7-11 5-18 11-9M124 46c7-11-5-18-11-9" stroke="${S}" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="88" rx="52" ry="46" fill="${F}" stroke="${S}" stroke-width="4"/>
+    <ellipse cx="76" cy="62" rx="17" ry="11" fill="${P}" transform="rotate(-18 76 62)"/>
+    <ellipse cx="128" cy="58" rx="11" ry="7" fill="${P}" transform="rotate(18 128 58)"/>
+    <path d="M70 88q8-11 16 0M114 88q8-11 16 0" stroke="${S}" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="112" rx="28" ry="18" fill="#fafafa" stroke="${S}" stroke-width="3.4"/>
+    <path d="M90 112q10 9 20 0" stroke="${S}" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    ${held}
+  </svg>`;
+}
+
+const FARMER_TABS  = ['Home','Listings','Sales','Chat','Profile'];
+const CHARITY_TABS = ['Home','Browse','Pickups','Chat','Profile'];
+
+function render(blocks){
+  return blocks.map(b => P[b.t] ? P[b.t](b) : '').join('');
+}
+
+/* =====================================================================
+   The 25 screens
+   ===================================================================== */
+const SCREENS = [
+/* ---------------------------------------------------------------- 01 */
+{ id:'splash', role:'shared', name:'Splash / Welcome', file:'#splash',
+  wf:[
+    {t:'status'},{t:'spacer',h:8},
+    {t:'h1',text:'FarmLink 🌿',note:1},
+    {t:'sub',text:'Connecting fresh produce<br>to brighter tomorrows.'},
+    {t:'spacer',h:4},
+    {t:'mascot',size:24,variant:'heart',note:2},
+    {t:'spacer',h:6},
+    {t:'btn',label:'Get Started',note:3},
+    {t:'btn',label:'Log In',style:'ghost'},
+    {t:'sub',text:'Signed in as <b>Farmer / Producer</b>'}
+  ],
+  purpose:'First-run entry point. Establishes the brand and the emotional framing of the product — surplus produce finding a home rather than going to waste — before the user is asked to do anything.',
+  notes:[
+    'Wordmark with leaf glyph. The two-tone treatment (dark "Farm" / green "Link") is the primary brand asset and reappears in the sidebar of the interactive prototype.',
+    'Cow mascot holding a heart. Drawn as inline SVG rather than a raster image so it scales cleanly and stays under a single-file constraint.',
+    'Primary action leads to the role dashboard. "Log In" is a stub in the prototype — see the gap noted on the final page.'
+  ],
+  inter:[
+    ['Tapping <b>Get Started</b> transitions to the Home dashboard for the currently selected role.'],
+    ['Mascot performs a slow vertical bob with ear rotation; the heart pulses on a separate, slower cycle.',1],
+    ['Wordmark and tagline fade up in sequence on mount; leaf glyph sways continuously.',1]
+  ],
+  spec:'Not specified in the components document — added as a necessary entry point so the two role-specific navigation trees have a shared origin.' },
+
+/* ---------------------------------------------------------------- 02 */
+{ id:'f-home', role:'farmer', name:'Home Dashboard', file:'#f-home',
+  wf:[
+    {t:'status'},
+    {t:'greet',title:'Hello, Dave 👋',sub:'Good food finds a home.',right:'🔔',note:1},
+    {t:'hero',title:'Make a difference today.',sub:'Post your surplus in under a minute',note:2},
+    {t:'grid2',items:[['Post Surplus','List your produce'],['Active Listings','4 live right now'],['Ongoing Sales','2 locked-in'],['Sales Stats','See the difference']],note:3},
+    {t:'sect',text:'Today'},
+    {t:'listrows',icons:['🔍','💬'],items:[['Scan pickup QR','Hope Kitchen · Leafy Greens','To scan'],['2 unread messages','Wants to change pickup time','2']],note:4},
+    {t:'sect',text:'Community impact'},
+    {t:'rowcard',icon:'🐄',name:'742 kg',sub:'food waste avoided · ≈1,484 meals',note:5},
+    {t:'tabbar',items:FARMER_TABS,active:0}
+  ],
+  purpose:'Landing screen for the farmer. Surfaces the single highest-value action (posting surplus) above everything else, then triages what needs attention today, and closes with a reinforcement of cumulative impact.',
+  notes:[
+    'Personalised greeting plus a bell that badges unread notification count and routes to the Notifications screen.',
+    'Full-width primary call to action. Deliberately the largest target on screen because posting is the action that generates all downstream activity.',
+    'Four shortcut tiles mapping to the farmer\'s main nav destinations, so the dashboard is a hub rather than a dead end.',
+    'A "Today" queue of items requiring action — a pending QR scan and unread messages. This is the only place the two are combined.',
+    'Cumulative impact card. Framed in kilograms avoided and meal equivalents rather than revenue, to keep the pro-social motivation visible.'
+  ],
+  inter:[
+    ['Tiles animate in with a staggered rise; each lifts and its icon rotates slightly on hover.',1],
+    ['Impact figures count up from zero with an ease-out curve when the screen mounts.',1],
+    ['Hero banner carries a slow diagonal sheen sweep to draw the eye.',1],
+    ['Bell badge pops in with an overshoot on first render.',1]
+  ],
+  spec:'Not itemised in the components document. Added because the specified bottom-nav destinations are all task lists — a dashboard was needed to give the farmer an at-a-glance state of play.' },
+
+/* ---------------------------------------------------------------- 03 */
+{ id:'f-post', role:'farmer', name:'Post Surplus', file:'#f-post',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Post Surplus'},
+    {t:'sub',text:'Share your surplus produce with local food-relief organisations.'},
+    {t:'stepper',at:1,note:1},
+    {t:'img',h:16,label:'Add a photo',note:2},
+    {t:'field',label:'🥕 Produce type',value:'e.g. Carrots',note:3},
+    {t:'field',label:'🧺 Quantity',value:'e.g. 20 kg'},
+    {t:'field',label:'📅 Deadline',value:'12 Aug 2026'},
+    {t:'field',label:'📍 Farm location',value:'Camden, NSW'},
+    {t:'field',label:'🏷 Price',value:'optional'},
+    {t:'field',label:'🚚 Pickup info',value:'Gate B, 8am–5pm'},
+    {t:'toggle',name:'Let charities contact me directly',sub:'When off, requests need approval',note:4},
+    {t:'btn',label:'Post Listing',note:5}
+  ],
+  purpose:'Creation form for a new listing. Optimised for speed on a phone in a field: one column, large tap targets, sensible defaults pre-filled, and only two genuinely required fields.',
+  notes:[
+    'Three-segment progress indicator gives a sense of completion without paginating the form.',
+    'Photo upload. Produce photos materially affect whether a charity claims a listing, so this is placed first and given the largest area.',
+    'Produce details. Price is explicitly optional — the components document allows for free donation as well as sale.',
+    'Controls whether charities can open a chat immediately or must first appear as an approvable request in Notifications. This is the switch that drives screen 13.',
+    'Submit. Leads to the confirmation screen rather than straight back to the list, so the farmer gets clear closure.'
+  ],
+  inter:[
+    ['Tapping the photo area swaps it for a filled thumbnail state and advances the progress stepper.',1],
+    ['Focused fields lift slightly and gain a coloured ring.',1],
+    ['Typing in produce type or quantity advances the remaining stepper segments in sequence.',1]
+  ],
+  spec:'<code>1.a.ii.1</code> — "Farmer/producer can create, publish, and edit or delete new listings with produce details, photos, price, and pickup information."' },
+
+/* ---------------------------------------------------------------- 04 */
+{ id:'f-success', role:'farmer', name:'Confirmation — "Hurray!"', file:'#f-success',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'',right:'✕'},
+    {t:'spacer',h:6},
+    {t:'celebrate',title:'Hurray!',sub:'Your listing has been posted.',variant:'plain',size:22,confetti:true,note:1},
+    {t:'spacer',h:3},
+    {t:'note',text:'🌱 You\'re helping reduce food waste!<br><span class="nano">8 nearby charities have been notified</span>',note:2},
+    {t:'spacer',h:4},
+    {t:'btn',label:'View Listing',note:3},
+    {t:'btn',label:'Done',style:'ghost'}
+  ],
+  purpose:'Positive reinforcement immediately after posting. The goal is to make a mundane logistics action feel worthwhile, which matters for repeat engagement in a voluntary-participation marketplace.',
+  notes:[
+    'Celebratory mascot with a confetti burst. Deliberately full-screen rather than a toast, because this is the moment the farmer has done the thing the product exists for.',
+    'Concrete feedback on reach — how many charities were notified — so the celebration is backed by information rather than being purely decorative.',
+    'Two exits: inspect what was just created, or return to the flow.'
+  ],
+  inter:[
+    ['44 confetti pieces fall with randomised colour, delay, duration and rotation; mixed rectangles and circles.',1],
+    ['Headline scales in with a spring overshoot; the supporting note fades up on a delay.',1],
+    ['Mascot continues its idle bob throughout.',1]
+  ],
+  spec:'Not itemised. Supports <code>1.a.ii.1</code> ("publish") by confirming the publish step and reporting its reach.' },
+
+/* ---------------------------------------------------------------- 05 */
+{ id:'f-nice', role:'farmer', name:'Reinforcement — "Nice!"', file:'#f-nice',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:''},
+    {t:'spacer',h:8},
+    {t:'celebrate',title:'Nice!',sub:'This produce is on its way to a better future.',variant:'basket',size:24,note:1},
+    {t:'spacer',h:3},
+    {t:'note',text:'🌿 Small actions make a big difference.',note:2},
+    {t:'spacer',h:5},
+    {t:'btn',label:'Back to Home',note:3}
+  ],
+  purpose:'Closing beat of the posting flow, and the shared destination after a sale is completed by QR scan. Separates "the listing exists" from "the produce is genuinely going somewhere".',
+  notes:[
+    'Mascot carrying a basket of produce — a different pose from screen 04 so the two confirmations are visually distinguishable rather than feeling like a repeated dialog.',
+    'Short affirming line. Kept deliberately generic so the screen can be reused as the terminal state of both the posting flow and the completed-sale flow.',
+    'Single exit back to the dashboard.'
+  ],
+  inter:[
+    ['Reached both from the "Hurray!" screen and from a successful QR scan on screen 09.'],
+    ['Headline scales in with a spring; note fades up on delay.',1],
+    ['Mascot idles with a bob and ear twitch.',1]
+  ],
+  spec:'Not itemised. Terminal state shared by <code>1.a.ii.1</code> (publish) and <code>1.a.ii.3</code> (QR-verified completion).' },
+
+/* ---------------------------------------------------------------- 06 */
+{ id:'f-listings', role:'farmer', name:'Active Listings', file:'#f-listings',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Active Listings',right:'+',note:1},
+    {t:'chips',items:['All 6','Available','Locked-in','Completed'],active:0,note:2},
+    {t:'listing',name:'Carrots (Imperfect)',price:'$5',meta:'20 kg · Collect by 12 Aug',pill:'Available',
+      actions:['✎ Edit','🔒 Lock-in','🗑'],note:3,h:11},
+    {t:'listing',name:'Leafy Greens Mix',price:'Free',meta:'12 kg · Collect by 10 Aug',pill:'Locked-in',
+      actions:['✎ Edit','🔒 Lock-in','🗑'],note:4,h:11},
+    {t:'btn',label:'Load more (lazy loading)',style:'ghost',note:5},
+    {t:'tabbar',items:FARMER_TABS,active:1}
+  ],
+  purpose:'The farmer\'s inventory. Every listing the farmer owns, filterable by lifecycle state, with create / edit / delete / lock-in all reachable without leaving the list.',
+  notes:[
+    'Create action in the app bar, duplicating the dashboard tile so posting is always one tap away from the listings context.',
+    'Status filter chips. These map directly to the four listing states defined in the components document: available, locked-in, completed, cancelled.',
+    'Each card carries inline edit, lock-in and delete. Keeping destructive and state-changing actions on the card avoids a separate detail round-trip for routine changes.',
+    'A locked-in listing stays in the list rather than disappearing, so the farmer can still cancel the lock-in and return it to available.',
+    'Lazy loading control. The components document calls for paged loading of records rather than fetching everything at once.'
+  ],
+  inter:[
+    ['Filtering re-renders the list; cards animate in with a staggered rise.',1],
+    ['Delete slides the card off to the left and collapses it, then confirms via toast.',1],
+    ['Lock-in flips the status pill in place and re-sorts the list.'],
+    ['Empty filter results show the mascot with an explanatory line rather than blank space.'],
+    ['Load more inserts shimmering skeleton placeholders, then replaces them with records after a delay.',1]
+  ],
+  spec:'<code>1.a.ii.1–4</code> — create/publish/edit/delete; mark locked-in; complete only via QR; return to available when either side cancels. Lazy loading per <code>1.a.i.4</code>.' },
+
+/* ---------------------------------------------------------------- 07 */
+{ id:'f-detail', role:'farmer', name:'Listing Details (farmer view)', file:'#f-detail',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Listing Details',right:'♡'},
+    {t:'img',h:22,label:'produce photo   1/3',note:1},
+    {t:'h2',text:'Carrots (Imperfect)          $5'},
+    {t:'sub',text:'20 kg   ·   <b>Available</b>'},
+    {t:'detailmeta',items:['Collect by 12 Aug 2026','Camden, NSW (12 km away)','Pickup: Gate B, 8am–5pm'],note:2},
+    {t:'grower',name:'Green Valley Farm',note:3},
+    {t:'sect',text:'Transaction flow'},
+    {t:'listrows',numbered:true,items:[['Published','Live and visible to charities','✓'],['Locked-in','Reserved after negotiation','Mark'],['QR Verified','Only complete once scanned','Scan']],note:4},
+    {t:'btnrow',items:[['💬 Chat','ghost'],['🔍 Scan QR','solid']],note:5},
+    {t:'btn',label:'Cancel lock-in',style:'ghost',note:6}
+  ],
+  purpose:'Single listing, seen by its owner. Doubles as the state machine for the transaction — the three-step flow is the clearest expression in the whole product of how a sale is actually completed.',
+  notes:[
+    'Photo gallery with a position indicator. Multiple photos per listing are supported.',
+    'The logistics facts a charity needs before committing: deadline, location with distance, and pickup window.',
+    'Grower identity with a verification marker and a direct call button.',
+    'Explicit three-stage progression: Published → Locked-in → QR Verified. Each stage carries its own action, making it unambiguous that a sale is not complete until the collector\'s QR code is scanned.',
+    'Chat and scan side by side — the two things the farmer does between locking in and completing.',
+    'Cancel returns the listing to available. Either party can do this from their own side.'
+  ],
+  inter:[
+    ['The heart in the app bar pops with a spring when toggled.',1],
+    ['"Mark" confirms the lock-in via toast; "Scan" routes to the QR scanner.'],
+    ['Cancelling confirms via toast that the listing has reopened.']
+  ],
+  spec:'<code>1.a.ii.2</code> mark locked-in after negotiation; <code>1.a.ii.3</code> success only on QR scan; <code>1.a.ii.4</code> reopens when either side cancels.' },
+
+/* ---------------------------------------------------------------- 08 */
+{ id:'f-scan', role:'farmer', name:'QR Scanner', file:'#f-scan',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Scan Procurement QR'},
+    {t:'spacer',h:10},
+    {t:'scanner',note:1},
+    {t:'spacer',h:4},
+    {t:'sub',text:'Ask the collector to show their pickup QR code. The sale is marked <b>Successful</b> only after a scan.',note:2},
+    {t:'spacer',h:4},
+    {t:'btn',label:'Simulate successful scan',note:3},
+    {t:'btn',label:'Enter code manually',style:'ghost',note:4}
+  ],
+  purpose:'The verification gate. This is the mechanism that makes a completed sale trustworthy: the farmer must physically scan a code held by the collector, so neither party can unilaterally mark a handover as done.',
+  notes:[
+    'Camera viewport with corner brackets and a sweeping scan line. The framing guides are the only affordance needed.',
+    'Explicit statement of the rule, placed where the farmer will read it while waiting for the collector.',
+    'Prototype affordance standing in for a real camera capture.',
+    'Manual fallback. Necessary because farm gates frequently have poor light and no signal — a scan-only design would strand users.'
+  ],
+  inter:[
+    ['Scan line sweeps vertically on a continuous loop.',1],
+    ['On success the viewport is replaced by a filled confirmation state that scales in, a toast reports the amount credited, and the flow advances to the "Nice!" screen after a short pause.',1]
+  ],
+  spec:'<code>1.a.ii.3</code> — "Active Listings will be declared successful only when the final QR procurement code from individuals is scanned by the farmer."' },
+
+/* ---------------------------------------------------------------- 09 */
+{ id:'f-sales', role:'farmer', name:'Ongoing Sales', file:'#f-sales',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Ongoing Sales',right:'🔔'},
+    {t:'chips',items:['Locked-in 2','Pending 1','History'],active:0,note:1},
+    {t:'rowcard',icon:'🍲',name:'Hope Kitchen',sub:'Leafy Greens Mix · 12 kg',pill:'Locked-in',
+      foot:'📅 Pickup 10 Aug 2026 · 2:00 pm',actions:['💬 Chat','🔍 Scan','Cancel'],note:2},
+    {t:'rowcard',icon:'🏥',name:'FoodShare Sydney',sub:'Roma Tomatoes · 35 kg',pill:'Locked-in',
+      foot:'📅 Pickup 14 Aug 2026 · 2:00 pm',actions:['💬 Chat','🔍 Scan','Cancel'],note:3},
+    {t:'sect',text:'Recently completed'},
+    {t:'listrows',icons:['🌽','🍎'],items:[['Sweet Corn · 28 kg','Rotary Foodbank · 09 Aug','$9'],['Apples · 18 kg','Hope Kitchen · 05 Aug','$7']],note:4},
+    {t:'tabbar',items:FARMER_TABS,active:2}
+  ],
+  purpose:'Work in progress, organised by counterparty rather than by produce. Answers "who am I expecting, when, and what do I still need to do" — a different question from the inventory view on screen 06.',
+  notes:[
+    'Segmented by transaction state, with counts so the farmer can see the size of the queue before scanning it.',
+    'Each in-progress sale exposes exactly the three actions available at this stage: continue negotiating, complete via scan, or cancel.',
+    'Grouping by charity means a single organisation collecting several lines appears as one relationship.',
+    'Completed sales with realised amounts, kept on the same screen for continuity.'
+  ],
+  inter:[
+    ['Cancelling fades and scales the card away, then confirms that the listing has reopened.',1],
+    ['Cards animate in with a staggered rise on mount.',1]
+  ],
+  spec:'<code>1.a.iii.1</code> — "Ongoing sales: can mark as locked-in/cancelled."' },
+
+/* ---------------------------------------------------------------- 10 */
+{ id:'f-chatlist', role:'farmer', name:'Messages', file:'#f-chatlist',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Messages',right:'🔔'},
+    {t:'search',label:'Search conversations',note:1},
+    {t:'thread',items:[
+      ['Hope Kitchen','Could we move the pickup to 2pm?','2'],
+      ['FoodShare Sydney','We have locked it in, thank you!',''],
+      ['Rotary Foodbank','Attaching last week\u2019s receipt PDF 📎','']
+    ],note:2},
+    {t:'spacer',h:4},
+    {t:'tabbar',items:FARMER_TABS,active:3}
+  ],
+  purpose:'Conversation index. Kept intentionally plain — a searchable list of counterparties with last message and unread count, following the pattern users already know from consumer messaging apps.',
+  notes:[
+    'Search across conversations. Farmers dealing with many organisations need to find a thread by name rather than scrolling.',
+    'Each row carries organisation, message preview, timestamp and unread badge. Attachment-bearing messages are previewed with a paperclip so receipts and invoices are findable.'
+  ],
+  inter:[
+    ['Rows slide right slightly on hover and animate in with a stagger.',1],
+    ['Tapping a row opens the thread.']
+  ],
+  spec:'<code>1.a.iv</code> — chat with charity/volunteer. Index screen supporting the thread on screen 11.' },
+
+/* ---------------------------------------------------------------- 11 */
+{ id:'f-chat', role:'farmer', name:'Chat Thread', file:'#f-chat',
+  wf:[
+    {t:'status'},
+    {t:'chathead',name:'Hope Kitchen',note:1},
+    {t:'bubbles',items:[
+      ['you','Hi Dave! We saw your Leafy Greens Mix listing — is it still available?'],
+      ['me','Yes it is, all 12 kg is yours 🙂'],
+      ['you','Wonderful. Could we move the pickup to 2pm?'],
+      ['me','Sure, 2pm works!','Hope Kitchen · Could we move the pickup…']
+    ],typing:true,note:2},
+    {t:'composer',note:3},
+    {t:'spacer',h:1}
+  ],
+  purpose:'Where negotiation actually happens. The components document places lock-in and cancellation inside the chat, so this screen is not just messaging — it is a transaction control surface.',
+  notes:[
+    'Header carries the two escalation paths: a call button that hands the number to the system dialler, and a lock icon opening the deal-status sheet where the listing is marked locked-in, completed by scan, or cancelled for this specific counterparty.',
+    'Quote-reply. Tapping any incoming message quotes it above the composer and the sent bubble renders with the quoted excerpt — the WhatsApp pattern named explicitly in the specification. Pickup logistics involve many small amendments, so replies need to be unambiguous about which message they answer.',
+    'Composer with an attachment sheet offering photo, PDF, location and a docket pre-filled from the listing.'
+  ],
+  inter:[
+    ['Bubbles animate in with a rise and slight scale.',1],
+    ['After sending, an animated three-dot typing indicator appears before the scripted reply arrives.',1],
+    ['The quote strip above the composer fades in when a message is selected for reply.',1],
+    ['Attachment and deal-status sheets slide up from the bottom over a dimmed backdrop.',1]
+  ],
+  spec:'<code>1.a.iv.1</code> lock-in/cancel from chat; <code>1.a.iv.2</code> attach PDF and photos; <code>1.a.iv.3</code> call option pasting the number into the dialler; <code>1.a.iv.4</code> reply to specific messages, WhatsApp-style.' },
+
+/* ---------------------------------------------------------------- 12 */
+{ id:'f-notif', role:'farmer', name:'Notifications', file:'#f-notif',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Notifications',right:'✓'},
+    {t:'sect',text:'Contact requests'},
+    {t:'notif',icon:'🍲',name:'Hope Kitchen wants to contact you',sub:'About Leafy Greens Mix · 12 kg',decide:true,fresh:true,note:1},
+    {t:'notif',icon:'🏥',name:'FoodShare Sydney wants to contact you',sub:'About Roma Tomatoes · 35 kg',decide:true,fresh:true},
+    {t:'sect',text:'Deal updates'},
+    {t:'notif',icon:'✓',name:'Sale successful',sub:'Sweet Corn · QR verified · $9 · 2 hours ago',note:2},
+    {t:'notif',icon:'🔒',name:'Listing locked-in',sub:'Leafy Greens Mix → Hope Kitchen · Yesterday'},
+    {t:'notif',icon:'↩',name:'Lock-in cancelled',sub:'Pumpkins is available again · 3 days ago'},
+    {t:'sect',text:'Subsidies'},
+    {t:'notif',icon:'💰',name:'You qualify for the Surplus Rebate',sub:'200 kg donated this month — claim up to $120',cta:'Apply',note:3}
+  ],
+  purpose:'Inbox for things that happened without the farmer present, split into items needing a decision and items that are purely informational.',
+  notes:[
+    'Approve / decline controls for contact requests, rendered as a tick and a cross on the right of the row — the Facebook friend-request pattern named in the specification. This is the gate that the "contact me directly" switch on screen 03 controls.',
+    'Deal state changes: successful, locked-in, and cancelled. Read-only records of transitions the farmer may not have initiated.',
+    'Subsidy eligibility, driven by cumulative volume. Flagged as speculative in the source document and shown here as one concrete interpretation.'
+  ],
+  inter:[
+    ['Approving or declining slides the row out to the right and collapses it, then confirms via toast.',1],
+    ['Unresolved requests are tinted to separate them from settled items.'],
+    ['Rows animate in with a staggered rise.',1]
+  ],
+  spec:'<code>1.a.v.1</code> contact request with green tick / red cross; <code>1.a.v.2</code> sale successful / locked-in / cancelled; <code>1.a.v.3</code> possible subsidy based on sales.' },
+
+/* ---------------------------------------------------------------- 13 */
+{ id:'f-stats', role:'farmer', name:'Sales Stats', file:'#f-stats',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Sales Stats',right:'⤓'},
+    {t:'chips',items:['Weekly','Monthly','Annual','Custom…'],active:0,note:1},
+    {t:'kpis',items:[['$412','Total revenue'],['9','Completed sales'],['186 kg','Produce sold'],['+18%','vs. last period']],note:2},
+    {t:'chart',note:3},
+    {t:'sect',text:'By produce category'},
+    {t:'breakdown',items:[['🥕 Root vegetables',42],['🥬 Leafy greens',28],['🍅 Fruit vegetables',19],['🌽 Grains',11]],note:4},
+    {t:'tabbar',items:FARMER_TABS,active:4}
+  ],
+  purpose:'Retrospective view. Lets the farmer see whether participating is worth it, in both money and volume, across whichever time window they care about.',
+  notes:[
+    'Period selector covering the four ranges named in the specification. "Custom…" opens a sheet with start and end date pickers.',
+    'Four headline figures: revenue, completed sale count, volume sold, and change against the previous equivalent period.',
+    'Trend chart. Bar labels and value scale change with the selected period — days for weekly, weeks for monthly, quarters for annual.',
+    'Category breakdown, showing which produce types actually move. Useful for deciding what to plant or what to list first.'
+  ],
+  inter:[
+    ['Changing period re-renders the chart; bars grow from zero in sequence with a staggered delay.',1],
+    ['Headline figures re-pop with a spring when the period changes.',1],
+    ['Category bars fill from the left on a stagger.',1],
+    ['Export control is a stub standing in for CSV download.']
+  ],
+  spec:'<code>1.a.vi.1</code> completed sales, total revenue, total produce sold; <code>1.a.vi.2</code> trends by weekly / monthly / annual / custom.' },
+
+/* ---------------------------------------------------------------- 14 */
+{ id:'f-profile', role:'farmer', name:'Profile', file:'#f-profile',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Profile',right:'⚙'},
+    {t:'rowcard',icon:'👨‍🌾',name:'Dave Miller',sub:'✓ Verified grower',actions:['✎ Edit details','📈 Sales stats'],note:1},
+    {t:'sect',text:'Personal details'},
+    {t:'listrows',items:[['Name','Dave Miller','✎'],['Number','0412 345 678','✎'],['Address','23 Ridge Rd, Camden NSW','✎'],['ABN','54 221 887 903','✎']],note:2},
+    {t:'sect',text:'Sales volume'},
+    {t:'kpis',items:[['$412','This week'],['$1,840','This month'],['742 kg','Sold this month'],['37','Completed sales']],note:3},
+    {t:'sect',text:'Recent sales'},
+    {t:'listrows',icons:['🌽','🍎'],items:[['Sweet Corn · 28 kg','Rotary Foodbank · 09 Aug','$9'],['Apples · 18 kg','Hope Kitchen · 05 Aug','$7']]},
+    {t:'btn',label:'Load 5 more',style:'ghost',note:4},
+    {t:'btn',label:'🗑 Delete Account',style:'danger',note:5},
+    {t:'tabbar',items:FARMER_TABS,active:4}
+  ],
+  purpose:'Account management plus a condensed version of the numbers. Everything the specification lists under the farmer\'s Profile node lives here.',
+  notes:[
+    'Identity card with verification state. Verification matters because charities are handing over money and planning meals around a stranger\'s produce.',
+    'Editable personal details — name, phone, address and ABN, matching the fields named in the specification. Each row opens an edit sheet.',
+    'Sales volume across weekly and monthly windows, duplicated from screen 13 so the profile is self-contained.',
+    'Individual sales, most recent first, loaded in small batches rather than all at once.',
+    'Account deletion, placed last and styled destructively. Opens a confirmation sheet spelling out that listings, transaction history and stats are removed permanently.'
+  ],
+  inter:[
+    ['Load more inserts shimmering skeletons, then replaces them with records.',1],
+    ['Edit and delete-confirmation both open bottom sheets that slide up over a dimmed backdrop.',1],
+    ['Volume figures count up from zero on mount.',1]
+  ],
+  spec:'<code>1.a.i.1</code> review/edit personal details (name, number, address, ABN); <code>1.a.i.2</code> delete account; <code>1.a.i.3</code> review sales volume by period; <code>1.a.i.4</code> review individual sales, recent first, in batches with lazy loading.' },
+
+/* ---------------------------------------------------------------- 15 */
+{ id:'c-home', role:'charity', name:'Home Dashboard', file:'#c-home',
+  wf:[
+    {t:'status'},
+    {t:'greet',title:'Hello! 👋',sub:'Good food finds a home.',right:'🔔',note:1},
+    {t:'hero',title:'Make a difference today.',sub:'12 new listings within 20 km of you',note:2},
+    {t:'grid2',items:[['Browse Listings','Find fresh produce'],['My Pickups','View your claims'],['Messages','Talk to growers'],['Community Impact','See the difference']],note:3},
+    {t:'sect',text:'Closing soon'},
+    {t:'listing',name:'Carrots (Imperfect)',price:'$5',meta:'20 kg · 12 km',pill:'Available',h:9,note:4},
+    {t:'sect',text:'Your impact'},
+    {t:'rowcard',icon:'🐄',name:'1,620 meals',sub:'served this month · $1,240 saved',note:5},
+    {t:'tabbar',items:CHARITY_TABS,active:0}
+  ],
+  purpose:'Mirror of screen 02 for the demand side. Same structure so the two roles feel like one product, but the primary action is finding produce rather than posting it.',
+  notes:[
+    'Organisation greeting with notification bell.',
+    'Primary action is browsing, with a live count of nearby listings — proximity is the charity\'s main constraint, so distance is surfaced in the call to action itself.',
+    'Four shortcuts to the charity\'s nav destinations. "Community Impact" replaces the farmer\'s "Sales Stats" — same screen structure, reframed from earning to serving.',
+    'Listings closest to their collection deadline, promoted onto the dashboard because these are the ones most likely to be wasted if nobody claims them.',
+    'Impact expressed in meals served and procurement cost avoided — the two numbers a food-relief organisation reports to its own funders.'
+  ],
+  inter:[
+    ['Tiles rise in on a stagger; icons rotate slightly on hover.',1],
+    ['Impact figures count up from zero on mount.',1],
+    ['Hero banner carries a slow sheen sweep.',1]
+  ],
+  spec:'Not itemised, mirroring screen 02. Feeds <code>2.a.ii</code> browse and <code>2.a.iii</code> ongoing procurements.' },
+
+/* ---------------------------------------------------------------- 16 */
+{ id:'c-browse', role:'charity', name:'Available Listings', file:'#c-browse',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Available Listings',right:'⚙',note:1},
+    {t:'search',label:'Search produce or farms…',note:2},
+    {t:'chips',items:['Nearest','Price: low to high','Largest qty','Closing soon'],active:0,note:3},
+    {t:'listing',name:'Carrots (Imperfect)',price:'$5',meta:'20 kg · 📍 12 km',pill:'Available',
+      foot:'📅 Collect by 12 Aug · Green Valley Farm',h:10,note:4},
+    {t:'listing',name:'Roma Tomatoes',price:'$12',meta:'35 kg · 📍 31 km',pill:'Available',
+      foot:'📅 Collect by 14 Aug · Sunrise Acres',h:10},
+    {t:'btn',label:'Load more listings',style:'ghost',note:5},
+    {t:'tabbar',items:CHARITY_TABS,active:1}
+  ],
+  purpose:'Discovery. The charity\'s core screen — everything currently available, sortable and filterable along the four dimensions the specification names: produce type, price, quantity and distance.',
+  notes:[
+    'Filter sheet with produce type as multi-select chips, a maximum-distance slider, and price bands including free.',
+    'Free-text search across produce names and farm names, for charities with established grower relationships.',
+    'Sort chips covering the four axes. Only one sort is active at a time; the active one is filled.',
+    'Cards lead with photo, quantity, price and distance — the four facts that determine whether a listing is worth a trip. Deadline and farm name sit on a secondary line.',
+    'Paged loading rather than fetching the full catalogue.'
+  ],
+  inter:[
+    ['Changing sort or search re-renders the list with a staggered rise animation.',1],
+    ['No results shows the mascot with an explanatory line.'],
+    ['Filter sheet slides up over a dimmed backdrop.',1]
+  ],
+  spec:'<code>2.a.ii.1</code> — "Browse and sort/filter listings by produce type, price, quantity, and distance."' },
+
+/* ---------------------------------------------------------------- 17 */
+{ id:'c-detail', role:'charity', name:'Listing Details (charity view)', file:'#c-detail',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Listing Details',right:'♡',note:1},
+    {t:'img',h:22,label:'produce photo   1/3'},
+    {t:'h2',text:'Carrots (Imperfect)          $5'},
+    {t:'sub',text:'20 kg'},
+    {t:'detailmeta',items:['Collect by 12 Aug 2026','Camden, NSW (12 km away)'],note:2},
+    {t:'grower',name:'Green Valley Farm',note:3},
+    {t:'sect',text:'About this produce'},
+    {t:'lines',w:[96,92,64],note:4},
+    {t:'btnrow',items:[['💬 Contact','ghost'],['Claim Listing','solid']],note:5}
+  ],
+  purpose:'Same listing as screen 07, seen by a prospective collector. The difference is instructive: no lifecycle controls, and the two actions are contacting the grower or claiming.',
+  notes:[
+    'Save to favourites, for listings a charity wants to track without committing to yet.',
+    'Deadline and distance. Distance is the deciding factor for an organisation running a van on a volunteer roster.',
+    'Grower identity, verification marker and a direct call button.',
+    'Free-text description covering condition and handling — for instance that produce is cosmetically irregular but sound, and that collectors should bring their own containers.',
+    'Two actions: open a conversation, or claim. Claiming is what triggers the farmer-side contact request or lock-in.'
+  ],
+  inter:[
+    ['Heart pops with a spring when toggled.',1],
+    ['Photo gallery emoji floats gently.'],
+    ['"Claim Listing" advances to the confirmation on screen 18.']
+  ],
+  spec:'<code>2.a.ii.2</code> view listing details; <code>2.a.ii.3</code> contact the farmer/producer from a selected listing.' },
+
+/* ---------------------------------------------------------------- 18 */
+{ id:'c-claimed', role:'charity', name:'Claim Confirmation', file:'#c-claimed',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'',right:'✕'},
+    {t:'spacer',h:5},
+    {t:'celebrate',title:'Claimed!',sub:'The farm has received your request.',variant:'basket',size:22,confetti:true,note:1},
+    {t:'spacer',h:3},
+    {t:'note',text:'🌱 Show your QR code at pickup<br><span class="nano">The deal completes once the farm scans it</span>',note:2},
+    {t:'spacer',h:3},
+    {t:'btn',label:'🔍 View pickup QR',note:3},
+    {t:'btn',label:'Chat with the farm',style:'ghost'}
+  ],
+  purpose:'Counterpart to screen 04. Confirms the claim landed and, critically, teaches the collector what happens next — that they hold a code the farmer must scan.',
+  notes:[
+    'Confetti and mascot with basket, matching the farmer-side celebration so the reward moment is consistent across roles.',
+    'Explicit statement of the QR rule at the exact moment it becomes relevant to the collector. Without this the code on screen 19 would be unexplained.',
+    'Direct route to the code, plus a fallback into conversation if collection details still need arranging.'
+  ],
+  inter:[
+    ['Confetti burst with randomised colour, delay, duration and rotation.',1],
+    ['Headline scales in with a spring overshoot.',1]
+  ],
+  spec:'Not itemised. Bridges <code>2.a.ii.3</code> (contact) and <code>1.a.ii.3</code> (QR-verified completion) by explaining the collector\'s role in verification.' },
+
+/* ---------------------------------------------------------------- 19 */
+{ id:'c-qr', role:'charity', name:'Pickup QR Code', file:'#c-qr',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Procurement QR'},
+    {t:'sub',text:'Show this QR code when you collect'},
+    {t:'spacer',h:3},
+    {t:'qr',note:1},
+    {t:'spacer',h:3},
+    {t:'rowcard',icon:'🥬',name:'Leafy Greens Mix · 12 kg',sub:'Green Valley Farm · 10 Aug 2:00 pm',pill:'Locked-in',note:2},
+    {t:'btn',label:'Cancel this pickup',style:'ghost',note:3}
+  ],
+  purpose:'The collector\'s half of the verification handshake. Held up at the farm gate for the farmer to scan on screen 08.',
+  notes:[
+    'Machine-readable code with a human-readable reference beneath it. The reference exists so the manual-entry fallback on screen 08 has something to fall back to when a camera scan fails.',
+    'The specific booking the code refers to — produce, quantity, farm, and scheduled collection time — so a collector carrying several codes can tell them apart.',
+    'Cancel from the collector\'s side, returning the listing to available for other organisations.'
+  ],
+  inter:[
+    ['Code modules animate in on a diagonal wave when the screen mounts.',1],
+    ['The rendered pattern includes the three corner finder squares and timing lines of a real QR symbol, so it reads as scannable at a glance. It is decorative in the prototype — see the gap noted on the final page.']
+  ],
+  spec:'<code>1.a.ii.3</code> — the "final QR procurement code from individuals" that the farmer scans; <code>2.a.iii.1</code> cancel from their end.' },
+
+/* ---------------------------------------------------------------- 20 */
+{ id:'c-proc', role:'charity', name:'Ongoing Procurements', file:'#c-proc',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Ongoing Procurements',right:'🔔'},
+    {t:'chips',items:['Locked-in 2','Completed','Cancelled'],active:0,note:1},
+    {t:'rowcard',icon:'🥬',name:'Leafy Greens Mix · 12 kg',sub:'Green Valley Farm',pill:'Locked-in',
+      foot:'📅 10 Aug · 2:00 pm',actions:['🔍 Show QR','💬 Chat','Cancel'],note:2},
+    {t:'rowcard',icon:'🍅',name:'Roma Tomatoes · 35 kg',sub:'Sunrise Acres',pill:'Locked-in',
+      foot:'📅 14 Aug · 9:30 am',actions:['🔍 Show QR','💬 Chat','Cancel']},
+    {t:'sect',text:'Completed procurements'},
+    {t:'listrows',icons:['🌽','🥔'],items:[['Sweet Corn · 28 kg','Green Valley Farm · 09 Aug','Done'],['Potatoes · 50 kg','Hill Ridge · 02 Aug','Done']],note:3},
+    {t:'tabbar',items:CHARITY_TABS,active:2}
+  ],
+  purpose:'The collection schedule. Functions as a run sheet: what has been committed to, from where, when, and what to bring.',
+  notes:[
+    'Segmented by state, including a cancelled tab. Charities need a record of cancellations because a failed collection means a gap in meal planning.',
+    '"Show QR" is the primary action on every locked-in row, because the code is what the collector needs the moment they arrive.',
+    'Historical record of all locked-in transactions that completed, per the specification.'
+  ],
+  inter:[
+    ['Cancelling fades and scales the card away, then confirms via toast.',1],
+    ['Cards animate in with a staggered rise.',1]
+  ],
+  spec:'<code>2.a.iii.1</code> can mark as cancelled from their end; <code>2.a.iii.2</code> can review all locked-in transactions.' },
+
+/* ---------------------------------------------------------------- 21 */
+{ id:'c-chatlist', role:'charity', name:'Messages', file:'#c-chatlist',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Messages',right:'🔔'},
+    {t:'search',label:'Search farms',note:1},
+    {t:'thread',items:[
+      ['Green Valley Farm','No problem, see you at 2pm!','1'],
+      ['Sunrise Acres','We can still set aside 35 kg of tomatoes',''],
+      ['Hill Ridge Produce','Receipt has been sent 📎','']
+    ],note:2},
+    {t:'spacer',h:4},
+    {t:'tabbar',items:CHARITY_TABS,active:3}
+  ],
+  purpose:'Conversation index for the charity, mirroring screen 10.',
+  notes:[
+    'Search scoped to farm names, since the charity\'s counterparties are growers.',
+    'Same row anatomy as the farmer side: counterparty, preview, timestamp, unread badge.'
+  ],
+  inter:[
+    ['Rows slide right slightly on hover and animate in with a stagger.',1]
+  ],
+  spec:'<code>2.a.iv</code> — chat with farmers/producers. Index screen supporting screen 22.' },
+
+/* ---------------------------------------------------------------- 22 */
+{ id:'c-chat', role:'charity', name:'Chat Thread', file:'#c-chat',
+  wf:[
+    {t:'status'},
+    {t:'chathead',name:'Green Valley Farm',note:1},
+    {t:'bubbles',items:[
+      ['me','Hi! Is the Leafy Greens Mix still available? We\u2019re Hope Kitchen'],
+      ['you','Yes it is, all 12 kg is yours 🙂'],
+      ['me','Wonderful — could we collect at 2pm instead?'],
+      ['you','No problem, see you at 2pm! Locked in for you 🔒']
+    ],note:2},
+    {t:'composer',note:3},
+    {t:'spacer',h:1}
+  ],
+  purpose:'Charity-side thread. Same messaging capabilities as screen 11, but the deal controls are narrower: a collector can cancel a lock-in, not create one.',
+  notes:[
+    'Header carries call and a deal-status sheet. The asymmetry with the farmer side is deliberate and follows the specification — the farmer marks locked-in, the charity can only cancel.',
+    'Quote-reply, attachments and call all behave identically to the farmer side, so a single implementation serves both roles.',
+    'Composer with the same attachment sheet.'
+  ],
+  inter:[
+    ['Bubbles animate in with a rise and slight scale.',1],
+    ['Typing indicator animates before the scripted reply.',1],
+    ['Sheets slide up over a dimmed backdrop.',1]
+  ],
+  spec:'<code>2.a.iv.1</code> attach PDF and photos; <code>2.a.iv.2</code> call option; <code>2.a.iv.3</code> reply to specific messages; <code>2.a.iv.4</code> can mark listing as cancelled from chat.' },
+
+/* ---------------------------------------------------------------- 23 */
+{ id:'c-notif', role:'charity', name:'Notifications', file:'#c-notif',
+  wf:[
+    {t:'status'},
+    {t:'appbar',back:true,title:'Notifications',right:'✓'},
+    {t:'sect',text:'Deal updates'},
+    {t:'notif',icon:'🔒',name:'Lock-in confirmed',sub:'Green Valley Farm · Leafy Greens Mix · 10 min ago',fresh:true,note:1},
+    {t:'notif',icon:'✓',name:'Procurement complete',sub:'Sweet Corn · 28 kg · QR verified · Yesterday',fresh:true},
+    {t:'notif',icon:'↩',name:'Farm cancelled the lock-in',sub:'Pumpkins · Sunrise Acres · 3 days ago'},
+    {t:'sect',text:'New listing alerts'},
+    {t:'notif',icon:'🥕',name:'New listing near you',sub:'Carrots (Imperfect) · 20 kg · 12 km',cta:'View',note:2},
+    {t:'spacer',h:2},
+    {t:'toggle',name:'Push notifications',sub:'Instant alerts for new listings and status changes',note:3}
+  ],
+  purpose:'Charity inbox. Narrower than the farmer\'s equivalent — no approval decisions, since the charity initiates contact rather than receiving requests.',
+  notes:[
+    'Deal state changes: locked-in confirmed, completed, and cancelled by the farm. All read-only.',
+    'Proximity alerts for new listings, with a direct route into the detail screen. This is the mechanism that gets surplus claimed before its deadline.',
+    'Push notification control, corresponding to the standalone push requirement in the specification.'
+  ],
+  inter:[
+    ['Rows animate in with a staggered rise.',1],
+    ['Unread items are tinted; the tick in the app bar marks all as read.']
+  ],
+  spec:'<code>2.a.v.1</code> sale successful / locked-in / cancelled; <code>3</code> push notifications.' },
+
+/* ---------------------------------------------------------------- 24 */
+{ id:'c-stats', role:'charity', name:'Community Impact', file:'#c-stats',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Community Impact',right:'⤓'},
+    {t:'chips',items:['Weekly','Monthly','Annual','Custom…'],active:0,note:1},
+    {t:'kpis',items:[['$389','Total spending'],['11','Completed pickups'],['214 kg','Produce procured'],['+18%','vs. last period']],note:2},
+    {t:'chart',note:3},
+    {t:'sect',text:'By produce category'},
+    {t:'breakdown',items:[['🥕 Root vegetables',42],['🥬 Leafy greens',28],['🍅 Fruit vegetables',19],['🌽 Grains',11]],note:4},
+    {t:'tabbar',items:CHARITY_TABS,active:4}
+  ],
+  purpose:'Structurally identical to screen 13 but inverted: spending instead of revenue, produce procured instead of sold. Named "Community Impact" rather than "Stats" because these are the figures a charity reports outward.',
+  notes:[
+    'Same four period ranges, including a custom date range sheet.',
+    'Spending, completed pickup count, volume procured, and change against the previous period.',
+    'Trend chart with period-appropriate axis labels.',
+    'Category mix, useful for spotting reliance on a single produce type when planning menus.'
+  ],
+  inter:[
+    ['Bars grow from zero on a stagger when the period changes.',1],
+    ['Headline figures re-pop with a spring.',1],
+    ['Category bars fill from the left on a stagger.',1]
+  ],
+  spec:'<code>2.a.vi.1</code> completed procurements, total spending, total produce procured; <code>2.a.vi.2</code> trends by weekly / monthly / annual / custom.' },
+
+/* ---------------------------------------------------------------- 25 */
+{ id:'c-profile', role:'charity', name:'Profile', file:'#c-profile',
+  wf:[
+    {t:'status'},
+    {t:'appbar',title:'Profile',right:'⚙'},
+    {t:'rowcard',icon:'🤝',name:'Hope Kitchen',sub:'✓ Registered charity',actions:['✎ Edit details','📈 Procurement stats'],note:1},
+    {t:'sect',text:'Personal details'},
+    {t:'listrows',items:[['Name','Hope Kitchen Inc.','✎'],['Number','0412 345 678','✎'],['Address','8 Elder St, Sydney NSW','✎'],['ABN','54 221 887 903','✎']],note:2},
+    {t:'sect',text:'Procurement volume'},
+    {t:'kpis',items:[['$389','This week'],['$1,620','This month'],['742 kg','Collected'],['37','Completed']],note:3},
+    {t:'sect',text:'Recent procurements'},
+    {t:'listrows',icons:['🌽','🥔'],items:[['Sweet Corn · 28 kg','Green Valley Farm · 09 Aug','$9'],['Potatoes · 50 kg','Hill Ridge · 02 Aug','$14']]},
+    {t:'btn',label:'Load 5 more',style:'ghost',note:4},
+    {t:'btn',label:'🗑 Delete Account',style:'danger',note:5},
+    {t:'tabbar',items:CHARITY_TABS,active:4}
+  ],
+  purpose:'Charity account management. Mirrors screen 14 field for field, with registration status in place of grower verification.',
+  notes:[
+    'Organisation identity with registered-charity status — the trust signal that matters in the other direction, since farmers are giving produce away.',
+    'Editable organisation details: name, number, address and ABN.',
+    'Procurement volume by period, duplicated from screen 24.',
+    'Individual procurements, most recent first, in lazily loaded batches.',
+    'Account deletion with the same destructive confirmation sheet as the farmer side.'
+  ],
+  inter:[
+    ['Load more inserts shimmering skeletons before revealing records.',1],
+    ['Edit and delete-confirmation open bottom sheets.',1],
+    ['Volume figures count up from zero on mount.',1]
+  ],
+  spec:'<code>2.a.i.1</code> review/edit personal details; <code>2.a.i.2</code> delete account; <code>2.a.i.3</code> review procurement volume by period; <code>2.a.i.4</code> review individual procurement, recent first, with lazy loading.' }
+];
+
+/* =====================================================================
+   Page builders
+   ===================================================================== */
+const roleBadge = r => r==='charity'
+  ? '<span class="badge charity">Charity / Volunteer</span>'
+  : r==='farmer' ? '<span class="badge">Farmer / Producer</span>'
+  : '<span class="badge">Shared</span>';
+
+const foot = (l,r) => `<div class="pg-foot"><span>${l}</span><span>${r}</span></div>`;
+
+function coverPage(){
+  return `<section class="page cover" id="cover">
+    <div class="logo">Farm<span class="g">Link</span></div>
+    <div class="tag">Connecting fresh produce to brighter tomorrows.</div>
+    <hr>
+    <div class="title">Screen Sketches &amp; Annotations</div>
+    <div style="font-size:10pt;color:var(--grey)">Low-fidelity wireframes for all 25 screens<br>across the farmer and charity/volunteer roles</div>
+    <div class="meta">
+      <b>25</b> annotated screens &nbsp;·&nbsp; <b>14</b> farmer &nbsp;·&nbsp; <b>11</b> charity<br>
+      Derived from <i>Components of FarmLink App</i><br>
+      and the working prototype in <code>index.html</code>
+    </div>
+    ${foot('FarmLink — Screen Sketches','Cover')}
+  </section>`;
+}
+
+function indexPage(){
+  const row = (s,i)=>`<tr>
+      <td class="c">${String(i+1).padStart(2,'0')}</td>
+      <td><b>${s.name}</b>
+        <div class="nano" style="margin-top:.3mm">${s.role==='charity'?'Charity':s.role==='farmer'?'Farmer':'Shared'} · <code>${s.file}</code></div>
+      </td>
+    </tr>`;
+  const half = Math.ceil(SCREENS.length/2);
+  const tbl = list => `<table><thead><tr><th>#</th><th>Screen</th></tr></thead>
+      <tbody>${list.map(([s,i])=>row(s,i)).join('')}</tbody></table>`;
+  const idx = SCREENS.map((s,i)=>[s,i]);
+  return `<section class="page" id="contents">
+    <div class="pg-head"><span class="nm">Contents</span><span class="sp"></span>
+      <span class="badge">25 screens</span></div>
+    <div style="display:flex;gap:8mm;align-items:flex-start">
+      <div style="flex:1;min-width:0">${tbl(idx.slice(0,half))}</div>
+      <div style="flex:1;min-width:0">${tbl(idx.slice(half))}</div>
+    </div>
+    <p style="margin-top:5mm;line-height:1.55;font-size:7pt;color:var(--grey)">
+      Deep links refer to fragment identifiers in the interactive prototype — opening
+      <code>index.html#c-stats</code> loads that screen directly and switches to the matching role.
+      Screens 01–14 are the farmer/producer tree; 15–25 are the charity/volunteer tree.
+    </p>
+    ${foot('FarmLink — Screen Sketches','Contents')}
+  </section>`;
+}
+
+function legendPage(){
+  const items = [
+    [`<div class="wf-inner" style="border-radius:2mm;min-height:0">${P.appbar({back:true,title:'Title',right:'⚙'})}</div>`,
+     'App bar','Back chevron on the left, centred title, optional action square on the right. A screen with no chevron is a bottom-nav destination and cannot be backed out of.'],
+    [`<div class="pad" style="padding:0">${P.lines({w:[92,72,54]}).replace('class="b "','class="b"')}</div>`,
+     'Text placeholder','Grey bars stand in for body copy whose exact wording is not decided. Real labels are typeset where the wording is load-bearing.'],
+    [`<div class="img x" style="height:12mm">photo</div>`,
+     'Image region','Dashed border with a diagonal cross marks a photo, gallery or camera viewport.'],
+    [`<div>${P.btn({label:'Primary',style:'solid'})}${P.btn({label:'Secondary',style:'ghost'})}${P.btn({label:'Destructive',style:'danger'})}</div>`,
+     'Buttons','Filled marks the primary action on a screen. Dashed outline is secondary or dismissive. Double outline is destructive and always opens a confirmation sheet.'],
+    [`<div>${P.chips({items:['Active','Other','Third'],active:0})}</div>`,
+     'Filter / sort chips','Horizontally scrolling single-select or multi-select row. The filled chip is the active selection.'],
+    [`<div class="wf-inner" style="border-radius:2mm;min-height:0">${P.tabbar({items:['Home','Two','Three','Four','Five'],active:0})}</div>`,
+     'Bottom navigation','Five persistent destinations. The heavier icon and darker label mark the current tab. Absent on modal and flow screens.'],
+    [`<span class="pill">Available</span> <span class="pill dark">Locked-in</span>`,
+     'Status pill','Listing lifecycle state. Four values are used: available, locked-in, completed, cancelled.'],
+    [`<span class="co" style="position:static;display:inline-grid">3</span>`,
+     'Callout marker','Numbered circle on the wireframe, keyed to the matching entry in the Annotations list beside it.']
+  ];
+  return `<section class="page" id="notation">
+    <div class="pg-head"><span class="nm">Notation</span><span class="sp"></span>
+      <span class="badge">How to read these sketches</span></div>
+    <p class="purpose" style="margin-bottom:4mm">These are low-fidelity sketches: they fix layout, hierarchy and
+      interaction, and deliberately leave colour, typography and final copy to the working prototype. Each screen
+      is drawn at phone proportions with numbered callouts keyed to an annotation list.</p>
+    <div class="legend-grid">
+      ${items.map(([demo,t,d])=>`<div class="lg">
+        <div class="demo">${demo}</div>
+        <div class="txt"><b>${t}</b>${d}</div></div>`).join('')}
+    </div>
+    <p class="specref" style="margin-top:6mm">Filled circles in the <b>Interactions</b> list of each screen mark
+      behaviour that is <b>animated</b> in the prototype. Hollow circles mark navigation or state changes with no
+      motion attached.</p>
+    ${foot('FarmLink — Screen Sketches','Notation')}
+  </section>`;
+}
+
+function flowPage(){
+  /* cont=true prefixes a leading arrow so a chain broken across two rows
+     still reads as one continuous path. */
+  const chain = (arr, cont) => (cont?'<span class="arr"></span>':'') + arr.map((b,i)=>
+    `${i?'<span class="arr"></span>':''}<span class="fbox${b[1]?' alt':''}">${b[0]}</span>`).join('');
+  return `<section class="page" id="flows">
+    <div class="pg-head"><span class="nm">Task flows</span><span class="sp"></span>
+      <span class="badge">Both roles</span></div>
+
+    <h4 style="font-size:9pt;font-weight:800;margin:2mm 0 1mm">Farmer — post surplus and complete a sale</h4>
+    <div class="flow">
+      <div class="frow">${chain([['01 Splash'],['02 Home'],['03 Post Surplus'],['04 Hurray!'],['05 Nice!']])}</div>
+      <div class="frow">${chain([['06 Active Listings'],['07 Listing Details'],['11 Chat — negotiate'],['07 Mark locked-in']])}</div>
+      <div class="frow" style="padding-left:8mm">${chain([['08 Scan QR'],['05 Nice!']], true)}</div>
+      <div class="frow">${chain([['12 Notifications'],['Approve contact ✓',1],['11 Chat']])}</div>
+    </div>
+
+    <h4 style="font-size:9pt;font-weight:800;margin:8mm 0 1mm">Charity — find, claim and collect</h4>
+    <div class="flow">
+      <div class="frow">${chain([['15 Home'],['16 Browse'],['17 Listing Details'],['18 Claimed!'],['19 Pickup QR']])}</div>
+      <div class="frow">${chain([['22 Chat — negotiate'],['20 Ongoing Procurements'],['19 Show QR at gate'],['Farmer scans →',1]])}</div>
+    </div>
+
+    <h4 style="font-size:9pt;font-weight:800;margin:8mm 0 1mm">Listing lifecycle</h4>
+    <div class="flow">
+      <div class="frow">${chain([['Available'],['Locked-in'],['QR scanned'],['Completed']])}</div>
+      <p style="margin:1mm 0 0;line-height:1.55;font-size:7.5pt">
+        A lock-in cancelled by <i>either</i> party returns the listing to <b>Available</b>. Only a QR scan performed by
+        the farmer moves a listing to <b>Completed</b> — neither side can mark a handover complete alone.
+      </p>
+    </div>
+
+    <p class="specref" style="margin-top:8mm">The two roles meet at exactly two points: the chat thread, where a
+      lock-in is negotiated, and the QR handshake at collection. Everything else is role-private. This is why the
+      farmer and charity navigation trees are near-mirrors rather than a shared set of screens.</p>
+    ${foot('FarmLink — Screen Sketches','Task flows')}
+  </section>`;
+}
+
+function screenPage(s, i){
+  const n = String(i+1).padStart(2,'0');
+  return `<section class="page" id="s${n}">
+    <div class="pg-head">
+      <span class="num">${n}</span><span class="nm">${s.name}</span>
+      <span class="sp"></span>${roleBadge(s.role)}
+    </div>
+    <div class="split">
+      <div class="col-wf">
+        <div class="wf"><div class="wf-inner">${render(s.wf)}</div></div>
+        <div class="wf-cap">Prototype deep link · <code>index.html${s.file}</code></div>
+      </div>
+      <div class="col-notes">
+        <div class="notes"><h4>Purpose</h4><p class="purpose">${s.purpose}</p></div>
+        <div class="notes"><h4>Annotations</h4>
+          <ul class="alist">${s.notes.map((t,k)=>
+            `<li><span class="n">${k+1}</span><span>${t}</span></li>`).join('')}</ul></div>
+        <div class="notes"><h4>Interactions &amp; motion</h4>
+          <ul class="ilist">${s.inter.map(([t,anim])=>
+            `<li class="${anim?'anim':''}">${t}</li>`).join('')}</ul></div>
+        <div class="notes"><h4>Specification reference</h4><p class="specref">${s.spec}</p></div>
+      </div>
+    </div>
+    ${foot('FarmLink — Screen Sketches',`${n} / 25 · ${s.name}`)}
+  </section>`;
+}
+
+function gapsPage(){
+  const gaps = [
+    ['Authentication and sign-up','There is no log-in, registration, or initial "am I a farmer or a charity?" role-selection flow. The prototype switches roles through a sidebar control, which is a debugging affordance rather than a product path. The specification assumes accounts exist (it lists personal details and account deletion) without describing how they are created.'],
+    ['Spatial context','Distance is the primary sort and filter axis for the charity, but it appears only as a line of text such as "12 km away". Collection is fundamentally a geographic problem and there is no map, no route estimate, and no sense of clustering — a charity cannot see that three listings sit on one road.'],
+    ['Real QR encoding','The code on screen 19 renders the finder squares and timing lines of a genuine QR symbol so that it reads correctly as a code, but it encodes nothing. A working implementation needs a real encoder and a camera decoder, plus a signed payload so a screenshot of someone else\'s code cannot be replayed.'],
+    ['Persistence','Nothing survives a reload. Posting a listing walks a fixed confirmation path rather than appending to the catalogue, editing a listing is a stub, and lock-ins, deletions and sent messages all reset. This limits how convincingly the prototype can be handed to someone else to explore.'],
+    ['Accessibility','The prototype has no ARIA roles, no keyboard focus order, and no reduced-motion handling. Given how animation-dense the interface is, honouring the operating system\'s reduced-motion preference is the most pressing of these. Most interactive elements are non-semantic containers and are not reachable by keyboard or announced by a screen reader.'],
+    ['Cancellation semantics','The specification allows either party to cancel a lock-in but does not say what happens to a listing cancelled repeatedly, whether a collection deadline that passes while locked-in reopens the listing automatically, or whether cancellations affect a participant\'s standing. These rules would need settling before implementation.']
+  ];
+  return `<section class="page" id="gaps">
+    <div class="pg-head"><span class="nm">Known gaps &amp; open questions</span><span class="sp"></span>
+      <span class="badge">For the next iteration</span></div>
+    <p class="purpose" style="margin-bottom:5mm">Recorded here rather than left implicit in the sketches, so the
+      boundary between what has been designed and what remains open is explicit.</p>
+    <table><tbody>
+      ${gaps.map(([t,d],i)=>`<tr>
+        <td class="c">${String(i+1).padStart(2,'0')}</td>
+        <td><b style="font-size:9pt">${t}</b>
+        <div style="font-size:8pt;line-height:1.5;margin-top:1mm">${d}</div></td></tr>`).join('')}
+    </tbody></table>
+    ${foot('FarmLink — Screen Sketches','Known gaps')}
+  </section>`;
+}
+
+/* ---------------------------------------------------------------- build */
+document.getElementById('doc').innerHTML =
+  coverPage() + indexPage() + legendPage() + flowPage() +
+  SCREENS.map(screenPage).join('') + gapsPage();
+
+/* Pages are built by script, so an #s07 anchor in the URL is resolved
+   before its target exists — re-apply it once the document is in place. */
+if (location.hash) {
+  const target = document.querySelector(location.hash);
+  if (target) target.scrollIntoView();
+}
+
+/* ?only=s07 isolates a single page, for reviewing or printing one sheet. */
+const only = new URLSearchParams(location.search).get('only');
+if (only) {
+  document.querySelectorAll('.page').forEach(p => {
+    if (p.id !== only) p.remove();
+  });
+}
+
+/* Authoring aid: flag any page whose content exceeds one A4 sheet, which
+   would silently spill onto an extra page when printed. Screen-only. */
+(function checkOverflow(){
+  const MM = 297 / 25.4 * 96;              // A4 height in CSS px at 96dpi
+  const over = [];
+  document.querySelectorAll('.page').forEach((p, i) => {
+    if (p.scrollHeight > MM + 2) {
+      p.dataset.overflow = 'yes';
+      p.style.outline = '2px solid #c0392b';
+      over.push(`p${i + 1} (${Math.round(p.scrollHeight - MM)}px)`);
+    }
+  });
+  const el = document.getElementById('overflow');
+  el.textContent = over.length
+    ? `⚠ ${over.length} page(s) overflow A4: ${over.join(', ')}`
+    : `✓ all ${document.querySelectorAll('.page').length} pages fit A4`;
+  el.style.color = over.length ? '#ffb3a7' : '#a8e0a8';
+})();
+</script>
+</body>
+</html>

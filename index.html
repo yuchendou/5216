@@ -190,16 +190,10 @@ body{
 }
 @keyframes tabIn{from{width:0;opacity:0}to{width:26px;opacity:1}}
 
-/* mascot */
-.cow{display:block}
-.cow-bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 90%}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-9px) rotate(1.5deg)}}
-.ear-l{animation:earL 2.6s ease-in-out infinite;transform-origin:62px 78px}
-.ear-r{animation:earR 2.6s ease-in-out infinite;transform-origin:138px 78px}
-@keyframes earL{0%,100%{transform:rotate(0)}45%{transform:rotate(-9deg)}}
-@keyframes earR{0%,100%{transform:rotate(0)}45%{transform:rotate(9deg)}}
-.heart-beat{animation:beat 1.5s ease-in-out infinite;transform-origin:100px 150px}
-@keyframes beat{0%,100%{transform:scale(1)}25%{transform:scale(1.12)}40%{transform:scale(1)}}
+/* mascot — animated GIFs (idle / wave / hurray / claimed / …) */
+.cow{display:block;margin:0 auto;object-fit:contain;image-rendering:auto;user-select:none;pointer-events:none}
+.cow.sm{margin:0}
+.cow-wrap{display:inline-flex;align-items:center;justify-content:center}
 
 /* splash */
 .splash-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 30px;gap:6px}
@@ -500,46 +494,24 @@ const I = {
   up:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></svg>'
 };
 
-/* Mascot ---------------------------------------------------------------- */
-function cow(size, opts={}){
-  const heart = opts.heart ? `
-    <path d="M58 156q12 28 34 32" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M142 156q-12 28-34 32" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <g class="heart-beat">
-      <path d="M100 214c-20-15-34-24-34-40a16 16 0 0 1 34-8 16 16 0 0 1 34 8c0 16-14 25-34 40z" fill="#e2635e" stroke="#c04a45" stroke-width="3" stroke-linejoin="round"/>
-      <ellipse cx="83" cy="176" rx="7" ry="4.5" fill="#fff" opacity=".38" transform="rotate(-28 83 176)"/>
-    </g>` : '';
-  const basket = opts.basket ? `
-    <path d="M56 156q12 22 30 26" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <path d="M144 156q-12 22-30 26" stroke="#3a3a3a" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <circle cx="80" cy="176" r="11" fill="#e8604c" stroke="#b8453a" stroke-width="2.5"/>
-    <circle cx="103" cy="171" r="12" fill="#e8a33a" stroke="#b8762a" stroke-width="2.5"/>
-    <path d="M119 164q14-14 22 2t-14 14z" fill="#6fbf5f" stroke="#3f8a37" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M62 180h76l-8 27a9 9 0 0 1-9 7H79a9 9 0 0 1-9-7z" fill="#cf9350" stroke="#8a5a2b" stroke-width="3.2" stroke-linejoin="round"/>
-    <path d="M78 182v31M100 182v33M122 182v31" stroke="#8a5a2b" stroke-width="2.2" opacity=".55"/>` : '';
-  const tall = opts.heart || opts.basket;
-  const vb = tall ? '0 0 200 228' : '0 0 200 172';
-  return `<svg class="cow ${opts.still?'':'cow-bob'}" width="${size}" height="${size*(tall?1.14:.86)}" viewBox="${vb}">
-    <ellipse cx="100" cy="${tall?221:166}" rx="${tall?52:48}" ry="6.5" fill="#1f4d27" opacity=".1"/>
-    <path class="ear-l" d="M56 92C38 80 20 82 18 93s14 22 32 21z" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4" stroke-linejoin="round"/>
-    <path class="ear-r" d="M144 92c18-12 36-10 38 1s-14 22-32 21z" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4" stroke-linejoin="round"/>
-    <path class="ear-l" d="M40 92c-9-5-16-4-17 1s6 10 15 10z" fill="#f4b9b6"/>
-    <path class="ear-r" d="M160 92c9-5 16-4 17 1s-6 10-15 10z" fill="#f4b9b6"/>
-    <path d="M72 48c-7-12 5-19 12-9" stroke="#c69a68" stroke-width="8" stroke-linecap="round" fill="none"/>
-    <path d="M128 48c7-12-5-19-12-9" stroke="#c69a68" stroke-width="8" stroke-linecap="round" fill="none"/>
-    <ellipse cx="100" cy="96" rx="54" ry="48" fill="#fffdf8" stroke="#3a3a3a" stroke-width="4"/>
-    <ellipse cx="70" cy="63" rx="20" ry="14" fill="#3a3a3a" transform="rotate(-16 70 63)"/>
-    <ellipse cx="133" cy="59" rx="13" ry="9" fill="#3a3a3a" transform="rotate(18 133 59)"/>
-    <path d="M74 95q10-12 20 0" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <path d="M106 95q10-12 20 0" stroke="#3a3a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="62" cy="110" rx="9" ry="5.5" fill="#f4b9b6" opacity=".9"/>
-    <ellipse cx="138" cy="110" rx="9" ry="5.5" fill="#f4b9b6" opacity=".9"/>
-    <ellipse cx="100" cy="122" rx="30" ry="20" fill="#fbd3ce" stroke="#3a3a3a" stroke-width="3.4"/>
-    <ellipse cx="89" cy="117" rx="3.4" ry="4.6" fill="#3a3a3a"/><ellipse cx="111" cy="117" rx="3.4" ry="4.6" fill="#3a3a3a"/>
-    <path d="M88 126q12 12 24 0z" fill="#8c4a48" stroke="#3a3a3a" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M66 138q34 17 68 0l-7 16q-27 11-54 0z" fill="#4c9a56" stroke="#2e6b34" stroke-width="3.2" stroke-linejoin="round"/>
-    ${heart}${basket}
-  </svg>`;
+/* Mascot — GIF moods ---------------------------------------------------- */
+const COW_SRC = {
+  idle:      'assets/cow_idle.gif',
+  wave:      'assets/cow_wave.gif',
+  hurray:    'assets/cow_hurray.gif',
+  claimed:   'assets/cow_claimed.gif',
+  collected: 'assets/cow_collected.gif',
+  loading:   'assets/cow_loading.gif',
+  oops:      'assets/cow_oops.gif',
+  walking:   'assets/cow_walking.gif',
+  goodbye:   'assets/cow_goodbye.gif'
+};
+/** @param {number} size  display width in px
+ *  @param {string} mood  one of COW_SRC keys */
+function cow(size, mood='idle'){
+  const src = COW_SRC[mood] || COW_SRC.idle;
+  const cls = size <= 90 ? 'cow sm' : 'cow';
+  return `<img class="${cls}" src="${src}" width="${size}" height="${size}" alt="FarmLink cow" draggable="false">`;
 }
 
 /* =======================================================================
@@ -605,7 +577,7 @@ reg('splash', {nav:false, html:()=>`
     <div class="logo-big"><span class="fm">Farm</span><span class="lk">Link</span>
       <span class="leaf-sway" style="display:inline-block">🌿</span></div>
     <div class="f12 muted" style="text-align:center;animation:fadeUp .8s .15s both">Connecting fresh produce<br>to brighter tomorrows.</div>
-    <div style="margin:18px 0 26px;animation:popIn .8s .2s both">${cow(190,{heart:true})}</div>
+    <div style="margin:18px 0 26px;animation:popIn .8s .2s both">${cow(200,'wave')}</div>
     <button class="btn" onclick="go('${'home'}')">Get Started</button>
     <button class="btn ghost" style="margin-top:10px" onclick="toast('Log in screen (prototype stub)')">Log In</button>
     <div class="f11 muted" style="margin-top:16px">Signed in as <b id="roleLabel">Farmer / Producer</b> · switch on the left</div>
@@ -653,7 +625,7 @@ reg('f-home', {nav:'home', html:()=>`
 
     <div class="sect">Community impact</div>
     <div class="card row" style="gap:14px">
-      <div>${cow(70,{still:false})}</div>
+      <div>${cow(72,'idle')}</div>
       <div style="flex:1">
         <div class="b8" style="font-size:19px"><span class="cnt" data-to="742">0</span> kg</div>
         <div class="f11 muted">of food waste avoided · about <b class="cnt" data-to="1484">0</b> meals</div>
@@ -692,7 +664,7 @@ function renderF(f){
           <button class="btn ghost sm" style="color:var(--red)" onclick="delListing(this,'${l.name}')">${I.trash}</button>
         </div>
       </div>
-    </div>`).join('') || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">No listings in this category</div></div>`;
+    </div>`).join('') || `<div class="card" style="text-align:center;padding:34px">${cow(120,'oops')}<div class="f13 muted" style="margin-top:8px">No listings in this category</div></div>`;
 }
 function filterF(btn,f){ [...btn.parentNode.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on'); renderF(f); }
 function delListing(btn,name){ const card = btn.closest('.listing'); card.style.transition='.35s'; card.style.transform='translateX(-110%)'; card.style.opacity='0'; setTimeout(()=>{card.remove(); toast('Deleted "'+name+'"');},340); }
@@ -732,7 +704,7 @@ function stepUp(){ const a=document.getElementById('st2'), b=document.getElement
 reg('f-success', {nav:false, html:()=>`
   <div class="appbar"><span style="width:36px"></span><div class="title"></div><button class="iconbtn" onclick="go('f-nice')">✕</button></div>
   <div class="celebrate" id="confettiHost">
-    ${cow(180)}
+    ${cow(200,'hurray')}
     <div class="big-title" style="margin-top:8px">Hurray!</div>
     <div class="f13 muted" style="margin-top:6px">Your listing has been posted.</div>
     <div class="note">🌱 <div>You're helping reduce food waste!<br><span class="f11 muted">8 nearby charities have been notified</span></div></div>
@@ -744,7 +716,7 @@ reg('f-success', {nav:false, html:()=>`
 reg('f-nice', {nav:false, html:()=>`
   ${bar('','f-home')}
   <div class="celebrate">
-    ${cow(190,{basket:true})}
+    ${cow(200,'claimed')}
     <div class="big-title" style="margin-top:4px">Nice!</div>
     <div class="f13 muted" style="margin-top:6px">This produce is on its way<br>to a better future.</div>
     <div class="note">🌿 <div>Small actions make a big difference.</div></div>
@@ -1032,7 +1004,7 @@ function openEditSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">
   <div class="field"><label>Address</label><input value="23 Ridge Rd, Camden NSW"></div>
   <div class="field"><label>ABN</label><input value="54 221 887 903"></div>
   <button class="btn" style="margin-top:8px" onclick="closeSheet();toast('Details updated ✅')">Save</button>`); }
-function confirmDelete(){ openSheet(`<div style="text-align:center">${cow(110)}<div class="b8" style="font-size:17px;margin-top:6px">Delete your account?</div>
+function confirmDelete(){ openSheet(`<div style="text-align:center">${cow(130,'goodbye')}<div class="b8" style="font-size:17px;margin-top:6px">Delete your account?</div>
   <div class="f12 muted" style="margin:8px 0 16px">All listings, transaction history and stats will be permanently removed. This cannot be undone.</div></div>
   <button class="btn danger" onclick="closeSheet();toast('Account deletion request sent')">Delete permanently</button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Never mind</button>`); }
@@ -1063,7 +1035,7 @@ reg('c-home', {nav:'home', html:()=>`
 
     <div class="sect">Your impact</div>
     <div class="card row" style="gap:14px">
-      <div>${cow(70,{basket:true})}</div>
+      <div>${cow(72,'collected')}</div>
       <div style="flex:1">
         <div class="b8" style="font-size:19px"><span class="cnt" data-to="1620">0</span> meals</div>
         <div class="f11 muted">served this month · <b>$1,240</b> saved on procurement</div>
@@ -1090,7 +1062,7 @@ reg('c-browse', {nav:'search', html:()=>`
 function renderC(rows){
   const el=document.getElementById('cList'); if(!el) return;
   el.innerHTML = rows.map((l,i)=>`<div style="animation:tileIn .45s ${i*.06}s both">${listingCard(l,`openListing(${l.id},'charity')`)}</div>`).join('')
-    || `<div class="card" style="text-align:center;padding:34px">${cow(100)}<div class="f13 muted" style="margin-top:8px">No listings match your search</div></div>`;
+    || `<div class="card" style="text-align:center;padding:34px">${cow(120,'loading')}<div class="f13 muted" style="margin-top:8px">No listings match your search</div></div>`;
 }
 function searchC(q){ const s=q.toLowerCase(); renderC(LISTINGS.filter(l=>l.status==='avail'&&(l.name.toLowerCase().includes(s)||l.farm.toLowerCase().includes(s)))); }
 function sortC(btn,key){
@@ -1139,7 +1111,7 @@ reg('c-detail', {nav:false, html:()=>{
 reg('c-claimed', {nav:false, html:()=>`
   <div class="appbar"><span style="width:36px"></span><div class="title"></div><button class="iconbtn" onclick="go('c-proc')">✕</button></div>
   <div class="celebrate" id="confettiHost2">
-    ${cow(180,{basket:true})}
+    ${cow(200,'claimed')}
     <div class="big-title" style="margin-top:8px">Claimed!</div>
     <div class="f13 muted" style="margin-top:6px">The farm has received your request.</div>
     <div class="note">🌱 <div>Show your QR code at pickup<br><span class="f11 muted">The deal completes once the farm scans it</span></div></div>
@@ -1380,7 +1352,8 @@ let lazyCount=0;
 function lazyMore(hostId){
   const host=document.getElementById(hostId); if(!host) return;
   const sk=document.createElement('div');
-  sk.innerHTML = Array(3).fill(`<div class="skel"><div class="sk" style="width:58%"></div><div class="sk" style="width:38%;margin-top:8px;height:9px"></div></div>`).join('');
+  sk.innerHTML = `<div class="card" style="text-align:center;padding:18px">${cow(88,'walking')}<div class="f11 muted" style="margin-top:6px">Fetching more…</div></div>`
+    + Array(2).fill(`<div class="skel"><div class="sk" style="width:58%"></div><div class="sk" style="width:38%;margin-top:8px;height:9px"></div></div>`).join('');
   host.appendChild(sk);
   setTimeout(()=>{
     const items=['🍐 Pears · 22 kg','🥦 Broccoli · 15 kg','🍆 Eggplant · 19 kg','🧅 Onions · 44 kg','🍇 Grapes · 12 kg'];
