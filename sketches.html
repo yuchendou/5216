@@ -328,7 +328,7 @@ body{padding-top:44px}
 
 <div class="bar-print">
   <b>FarmLink — Screen Sketches</b>
-  <span>25 screens · A4 booklet</span>
+  <span id="screenCountLabel">screens · A4 booklet</span>
   <span id="overflow"></span>
   <div class="sp"></div>
   <span>Print / Save as PDF →</span>
@@ -594,6 +594,67 @@ const SCREENS = [
   ],
   spec:'Not specified in the components document — added as a necessary entry point so the two role-specific navigation trees have a shared origin.' },
 
+/* ---------------------------------------------------------------- auth */
+{ id:'auth-login', role:'shared', name:'Log In', file:'#auth-login',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Log In'},
+    {t:'mascot',size:14,variant:'plain'},
+    {t:'h2',text:'Welcome back',note:1},
+    {t:'sub',text:'Sign in with email or phone — we send a one-time password.'},
+    {t:'chips',items:['Email','Phone'],active:0,note:2},
+    {t:'field',label:'✉️ Email',value:'dave@farm.au'},
+    {t:'btn',label:'Send OTP',note:3},
+    {t:'sub',text:'New here? Create an account'}
+  ],
+  purpose:'Returning-user entry. Collects a contact channel and hands off to OTP verification — no password stored in the prototype.',
+  notes:[
+    'Greeting with mascot. Keeps the brand presence consistent with splash.',
+    'Email / phone toggle. Matches the Components requirement to manage authentication via email or phone using OTP.',
+    'Send OTP advances to the Verify OTP screen with the contact pre-filled.'
+  ],
+  inter:[['Tapping Send OTP opens Verify OTP with a toast confirming delivery.'],['Method chips swap the field label and placeholder.',1]],
+  spec:'FR1 / Components §1.a.i.1 & §2.a.i.1 — authentication via email or phone using OTP.' },
+
+{ id:'auth-signup', role:'shared', name:'Sign Up + Role', file:'#auth-signup',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Sign Up'},
+    {t:'h2',text:'Create your account'},
+    {t:'sub',text:'Choose a role first — this unlocks the right screens.'},
+    {t:'rowcard',icon:'🚜',name:'Farmer / Producer',sub:'Post surplus · scan pickup QR · AI estimates',note:1},
+    {t:'rowcard',icon:'🤝',name:'Charity / Volunteer',sub:'Browse · claim · show or scan QR',note:1},
+    {t:'chips',items:['Email','Phone'],active:0},
+    {t:'field',label:'👤 Name',value:'Dave Miller'},
+    {t:'field',label:'✉️ Email',value:'dave@farm.au'},
+    {t:'btn',label:'Continue with OTP',note:2}
+  ],
+  purpose:'Account creation with mandatory role selection before OTP. Implements FR1 / FR2 role-based access at the earliest possible moment.',
+  notes:[
+    'Two role cards. Selecting one lights it and sets the pending role applied after OTP succeeds.',
+    'Continue with OTP sends a code and routes to Verify OTP. After verify, the app opens the matching home dashboard.'
+  ],
+  inter:[['Role cards toggle a filled border state.',1],['Continue advances to OTP and remembers the chosen role.']],
+  spec:'FR1 role selected at signup; FR2 role-based access to farmer vs charity screens.' },
+
+{ id:'auth-otp', role:'shared', name:'Verify OTP', file:'#auth-otp',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Verify OTP'},
+    {t:'mascot',size:14,variant:'plain'},
+    {t:'h2',text:'Enter the 4-digit code',note:1},
+    {t:'sub',text:'Sent to dave@farm.au · demo code 1 2 3 4'},
+    {t:'spacer',h:3},
+    {t:'chips',items:['1','2','3','4'],active:-1,note:2},
+    {t:'btn',label:'Verify & continue',note:3},
+    {t:'btn',label:'Resend code',style:'ghost'}
+  ],
+  purpose:'One-time password gate shared by login and signup. Demo accepts 1234 and auto-advances when all four digits are filled.',
+  notes:[
+    'Headline states the channel the code was sent on.',
+    'Four discrete digit cells with auto-advance focus — the standard OTP pattern.',
+    'Verify applies the pending role (on signup) and routes to the role home.'
+  ],
+  inter:[['Digits auto-advance; completing all four triggers verify.',1],['Wrong code toasts an error; 1234 succeeds.']],
+  spec:'Components §1.a.i.1 / §2.a.i.1 — manage authentication via OTP.' },
+
 /* ---------------------------------------------------------------- 02 */
 { id:'f-home', role:'farmer', name:'Home Dashboard', file:'#f-home',
   wf:[
@@ -630,30 +691,67 @@ const SCREENS = [
     {t:'appbar',back:true,title:'Post Surplus'},
     {t:'sub',text:'Share your surplus produce with local food-relief organisations.'},
     {t:'stepper',at:1,note:1},
-    {t:'img',h:16,label:'Add a photo',note:2},
-    {t:'field',label:'🥕 Produce type',value:'e.g. Carrots',note:3},
+    {t:'img',h:16,label:'Open camera assistant',note:2},
+    {t:'rowcard',icon:'✨',name:'AI estimate · Good · 4★',sub:'91% confidence · tap to edit',note:3},
+    {t:'field',label:'🥕 Produce type',value:'e.g. Carrots',note:4},
     {t:'field',label:'🧺 Quantity',value:'e.g. 20 kg'},
     {t:'field',label:'📅 Deadline',value:'12 Aug 2026'},
-    {t:'field',label:'📍 Farm location',value:'Camden, NSW'},
+    {t:'field',label:'📍 Farm location',value:'Camden, NSW · GPS'},
     {t:'field',label:'🏷 Price',value:'optional'},
     {t:'field',label:'🚚 Pickup info',value:'Gate B, 8am–5pm'},
-    {t:'toggle',name:'Let charities contact me directly',sub:'When off, requests need approval',note:4},
-    {t:'btn',label:'Post Listing',note:5}
+    {t:'toggle',name:'Let charities contact me directly',sub:'When off, requests need approval',note:5},
+    {t:'btn',label:'Post Listing',note:6}
   ],
-  purpose:'Creation form for a new listing. Optimised for speed on a phone in a field: one column, large tap targets, sensible defaults pre-filled, and only two genuinely required fields.',
+  purpose:'Creation form for a new listing. Photo capture now opens the Camera Assistant, which returns a Vertex AI condition estimate the farmer can edit before publishing (FR3–FR5).',
   notes:[
     'Three-segment progress indicator gives a sense of completion without paginating the form.',
-    'Photo upload. Produce photos materially affect whether a charity claims a listing, so this is placed first and given the largest area.',
-    'Produce details. Price is explicitly optional — the components document allows for free donation as well as sale.',
-    'Controls whether charities can open a chat immediately or must first appear as an approvable request in Notifications. This is the switch that drives screen 13.',
-    'Submit. Leads to the confirmation screen rather than straight back to the list, so the farmer gets clear closure.'
+    'Opens Camera Assistant rather than a silent file picker — capture triggers Cloud Storage upload + Vertex AI classification.',
+    'Returned AI estimate card. Farmer can edit label before publish (FR5).',
+    'Produce details. Price may be a dollar amount or Donation.',
+    'Controls whether charities can open a chat immediately or must first appear as an approvable request in Notifications.',
+    'Submit. Requires a photo; leads to Hurray confirmation.'
   ],
   inter:[
-    ['Tapping the photo area swaps it for a filled thumbnail state and advances the progress stepper.',1],
+    ['Tapping the photo area opens Camera Assistant.',1],
     ['Focused fields lift slightly and gain a coloured ring.',1],
-    ['Typing in produce type or quantity advances the remaining stepper segments in sequence.',1]
+    ['GPS chip toasts an auto-filled location.']
   ],
-  spec:'<code>1.a.ii.1</code> — "Farmer/producer can create, publish, and edit or delete new listings with produce details, photos, price, and pickup information."' },
+  spec:'FR3–FR5 · <code>1.a.ii.1</code> — create/publish with photos; AI estimate reviewed before publishing.' },
+
+{ id:'f-camera', role:'farmer', name:'Camera Assistant', file:'#f-camera',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Camera Assistant'},
+    {t:'sub',text:'Frame the produce. Capture calls Vertex AI (FR4).'},
+    {t:'img',h:42,label:'viewfinder · align produce',note:1},
+    {t:'spacer',h:2},
+    {t:'btnrow',items:[['⚡', 'ghost'],['● Capture','solid'],['🖼','ghost']],note:2}
+  ],
+  purpose:'In-app camera for listing photos. Capture (or gallery pick) flashes the viewfinder and advances to the AI estimate screen.',
+  notes:[
+    'Viewfinder with guide frame and a produce silhouette so the farmer knows what to aim at.',
+    'Shutter is the primary action; flash and gallery are secondary.'
+  ],
+  inter:[['Shutter flash animation then routes to AI Estimate.',1]],
+  spec:'FR4 — photo uploads to Cloud Storage, triggering a classification call to Vertex AI.' },
+
+{ id:'f-ai', role:'farmer', name:'AI Estimate Review', file:'#f-ai',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'AI Estimate'},
+    {t:'mascot',size:14,variant:'plain'},
+    {t:'h2',text:'Estimate ready',note:1},
+    {t:'rowcard',icon:'✨',name:'Good · slight cosmetic blemishes',sub:'Confidence 91% · ★★★★☆',note:2},
+    {t:'sub',text:'Suitable for soups and meal prep within 4–5 days. Farmer can edit before publishing.'},
+    {t:'btn',label:'Confirm estimate',note:3},
+    {t:'btn',label:'Retake photo',style:'ghost'}
+  ],
+  purpose:'Shows the Vertex AI freshness/condition estimate and lets the farmer edit it before it is attached to the listing (FR5).',
+  notes:[
+    'First mounts as an analysing spinner, then reveals the estimate after ~1.6s to simulate NFR1 latency.',
+    'Editable condition dropdown plus confidence and star rating.',
+    'Confirm returns to Post Surplus with the estimate card filled in.'
+  ],
+  inter:[['Analysing ring spins until the result card appears.',1],['Confirm saves estimate into the post draft.']],
+  spec:'FR5 — farmer reviews and can edit the returned condition/freshness estimate before publishing.' },
 
 /* ---------------------------------------------------------------- 04 */
 { id:'f-success', role:'farmer', name:'Confirmation — "Hurray!"', file:'#f-success',
@@ -778,20 +876,60 @@ const SCREENS = [
     {t:'sub',text:'Ask the collector to show their pickup QR code. The sale is marked <b>Successful</b> only after a scan.',note:2},
     {t:'spacer',h:4},
     {t:'btn',label:'Simulate successful scan',note:3},
-    {t:'btn',label:'Enter code manually',style:'ghost',note:4}
+    {t:'btn',label:'Enter code manually',style:'ghost',note:4},
+    {t:'btn',label:'Or show your deal QR instead',style:'ghost'}
   ],
-  purpose:'The verification gate. This is the mechanism that makes a completed sale trustworthy: the farmer must physically scan a code held by the collector, so neither party can unilaterally mark a handover as done.',
+  purpose:'The verification gate. Farmer scans the collector’s pickup QR. On success the flow advances to Confirm & Pay rather than skipping payment.',
   notes:[
-    'Camera viewport with corner brackets and a sweeping scan line. The framing guides are the only affordance needed.',
-    'Explicit statement of the rule, placed where the farmer will read it while waiting for the collector.',
-    'Prototype affordance standing in for a real camera capture.',
-    'Manual fallback. Necessary because farm gates frequently have poor light and no signal — a scan-only design would strand users.'
+    'Camera viewport with corner brackets and a sweeping scan line.',
+    'Explicit statement of the rule, placed where the farmer will read it while waiting.',
+    'Prototype affordance standing in for a real camera capture (expo-camera in production).',
+    'Manual fallback plus an alternate path to show the farmer’s own deal QR for the charity to scan.'
   ],
   inter:[
     ['Scan line sweeps vertically on a continuous loop.',1],
-    ['On success the viewport is replaced by a filled confirmation state that scales in, a toast reports the amount credited, and the flow advances to the "Nice!" screen after a short pause.',1]
+    ['On success → Confirm & Pay (FR14).',1]
   ],
-  spec:'<code>1.a.ii.3</code> — "Active Listings will be declared successful only when the final QR procurement code from individuals is scanned by the farmer."' },
+  spec:'FR11–FR12 · <code>1.a.ii.3</code> — success only when the final QR procurement code is scanned.' },
+
+{ id:'f-qr-show', role:'farmer', name:'Show Deal QR', file:'#f-qr-show',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Deal QR'},
+    {t:'sub',text:'Show this QR so the charity can scan and finalise'},
+    {t:'qr',note:1},
+    {t:'rowcard',icon:'🥬',name:'Leafy Greens Mix · 12 kg',sub:'Hope Kitchen · awaiting scan',pill:'Locked-in',note:2},
+    {t:'btn',label:'Mark paid after scan',note:3}
+  ],
+  purpose:'Farmer-held deal QR for the charity-side scanner path described in Components §1.a.iv.5.',
+  notes:[
+    'Unique deal code (FL-DEAL-…) distinct from the charity pickup code.',
+    'Booking summary so the correct listing is shown if several deals are open.',
+    'Shortcut into Confirm & Pay once the other party has scanned.'
+  ],
+  inter:[['QR modules animate in on a diagonal wave.',1]],
+  spec:'Components §1.a.iv.5 — show QR to finalise; payment via mock or Stripe.' },
+
+{ id:'pay', role:'shared', name:'Confirm & Pay', file:'#pay',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Confirm & Pay'},
+    {t:'mascot',size:12,variant:'heart'},
+    {t:'h2',text:'Confirm & Pay'},
+    {t:'sub',text:'In-house mock — no real charge (FR14 Option A)'},
+    {t:'rowcard',icon:'🥬',name:'Leafy Greens Mix · 12 kg',sub:'Amount $5.00',note:1},
+    {t:'img',h:18,label:'•••• 4242  demo card',note:2},
+    {t:'field',label:'Name on card',value:'Dave Miller'},
+    {t:'field',label:'Card number',value:'4242 4242 4242 4242'},
+    {t:'btn',label:'Pay $5.00',note:3},
+    {t:'btn',label:'Skip — mark as donation',style:'ghost'}
+  ],
+  purpose:'Mock payment after QR verification. Updates paymentStatus to paid (or n/a for donation) with no third-party charge.',
+  notes:[
+    'Listing summary and amount.',
+    'Demo card UI using Stripe test-style number 4242… without calling Stripe.',
+    'Pay completes the flow; Skip marks donation.'
+  ],
+  inter:[['Pay toasts paymentStatus: paid and routes to Nice! / Collected!.',1]],
+  spec:'FR14 Option A — fully in-house mock Confirm & Pay screen.' },
 
 /* ---------------------------------------------------------------- 09 */
 { id:'f-sales', role:'farmer', name:'Ongoing Sales', file:'#f-sales',
@@ -1080,19 +1218,34 @@ const SCREENS = [
     {t:'qr',note:1},
     {t:'spacer',h:3},
     {t:'rowcard',icon:'🥬',name:'Leafy Greens Mix · 12 kg',sub:'Green Valley Farm · 10 Aug 2:00 pm',pill:'Locked-in',note:2},
-    {t:'btn',label:'Cancel this pickup',style:'ghost',note:3}
+    {t:'btn',label:'Scan farm deal QR instead',note:3},
+    {t:'btn',label:'Cancel this pickup',style:'ghost'}
   ],
-  purpose:'The collector\'s half of the verification handshake. Held up at the farm gate for the farmer to scan on screen 08.',
+  purpose:'The collector\'s half of the verification handshake. Held up at the farm gate, or swapped for scanning the farmer\'s deal QR.',
   notes:[
-    'Machine-readable code with a human-readable reference beneath it. The reference exists so the manual-entry fallback on screen 08 has something to fall back to when a camera scan fails.',
-    'The specific booking the code refers to — produce, quantity, farm, and scheduled collection time — so a collector carrying several codes can tell them apart.',
-    'Cancel from the collector\'s side, returning the listing to available for other organisations.'
+    'Unique per-claim code (FR11 / NFR4) with human-readable fallback.',
+    'Booking summary for multi-pickup days.',
+    'Alternate path into the charity scanner.'
   ],
-  inter:[
-    ['Code modules animate in on a diagonal wave when the screen mounts.',1],
-    ['The rendered pattern includes the three corner finder squares and timing lines of a real QR symbol, so it reads as scannable at a glance. It is decorative in the prototype — see the gap noted on the final page.']
+  inter:[['Code modules animate in on a diagonal wave.',1]],
+  spec:'FR11 · <code>1.a.ii.3</code> · <code>2.a.iii.1</code>.' },
+
+{ id:'c-scan', role:'charity', name:'Scan Deal QR', file:'#c-scan',
+  wf:[
+    {t:'status'},{t:'appbar',back:true,title:'Scan Deal QR'},
+    {t:'spacer',h:8},
+    {t:'scanner',note:1},
+    {t:'sub',text:'Scan the farmer’s deal QR to finalise collection'},
+    {t:'btn',label:'Simulate successful scan',note:2},
+    {t:'btn',label:'Enter code manually',style:'ghost'}
   ],
-  spec:'<code>1.a.ii.3</code> — the "final QR procurement code from individuals" that the farmer scans; <code>2.a.iii.1</code> cancel from their end.' },
+  purpose:'Charity-side scanner matching Components §2.a.iv.5 and FR12. On success routes to Confirm & Pay.',
+  notes:[
+    'Same viewfinder pattern as the farmer scanner for a shared mental model.',
+    'Simulate / manual entry for the prototype; production uses expo-camera.'
+  ],
+  inter:[['Successful scan → Confirm & Pay.',1]],
+  spec:'FR12 · Components §2.a.iv.5 — QR scanner to finalise transaction.' },
 
 /* ---------------------------------------------------------------- 20 */
 { id:'c-proc', role:'charity', name:'Ongoing Procurements', file:'#c-proc',
@@ -1271,10 +1424,10 @@ function coverPage(){
     <div class="tag">Connecting fresh produce to brighter tomorrows.</div>
     <hr>
     <div class="title">Screen Sketches &amp; Annotations</div>
-    <div style="font-size:10pt;color:var(--grey)">Low-fidelity wireframes for all 25 screens<br>across the farmer and charity/volunteer roles</div>
+    <div style="font-size:10pt;color:var(--grey)">Low-fidelity wireframes for auth, camera AI, QR &amp; payment<br>plus the farmer and charity/volunteer role trees</div>
     <div class="meta">
-      <b>25</b> annotated screens &nbsp;·&nbsp; <b>14</b> farmer &nbsp;·&nbsp; <b>11</b> charity<br>
-      Derived from <i>Components of FarmLink App</i><br>
+      <b id="coverCount">—</b> annotated screens &nbsp;·&nbsp; printable A4 POP booklet<br>
+      Derived from <i>Components</i> + <i>Functional Requirements</i><br>
       and the working prototype in <code>index.html</code>
     </div>
     ${foot('FarmLink — Screen Sketches','Cover')}
@@ -1294,7 +1447,7 @@ function indexPage(){
   const idx = SCREENS.map((s,i)=>[s,i]);
   return `<section class="page" id="contents">
     <div class="pg-head"><span class="nm">Contents</span><span class="sp"></span>
-      <span class="badge">25 screens</span></div>
+      <span class="badge" id="contentsBadge">screens</span></div>
     <div style="display:flex;gap:8mm;align-items:flex-start">
       <div style="flex:1;min-width:0">${tbl(idx.slice(0,half))}</div>
       <div style="flex:1;min-width:0">${tbl(idx.slice(half))}</div>
@@ -1354,32 +1507,32 @@ function flowPage(){
     <div class="pg-head"><span class="nm">Task flows</span><span class="sp"></span>
       <span class="badge">Both roles</span></div>
 
-    <h4 style="font-size:9pt;font-weight:800;margin:2mm 0 1mm">Farmer — post surplus and complete a sale</h4>
+    <h4 style="font-size:9pt;font-weight:800;margin:2mm 0 1mm">Auth · OTP</h4>
     <div class="flow">
-      <div class="frow">${chain([['01 Splash'],['02 Home'],['03 Post Surplus'],['04 Hurray!'],['05 Nice!']])}</div>
-      <div class="frow">${chain([['06 Active Listings'],['07 Listing Details'],['11 Chat — negotiate'],['07 Mark locked-in']])}</div>
-      <div class="frow" style="padding-left:8mm">${chain([['08 Scan QR'],['05 Nice!']], true)}</div>
-      <div class="frow">${chain([['12 Notifications'],['Approve contact ✓',1],['11 Chat']])}</div>
+      <div class="frow">${chain([['Splash'],['Sign Up / Log In'],['Verify OTP'],['Role home']])}</div>
     </div>
 
-    <h4 style="font-size:9pt;font-weight:800;margin:8mm 0 1mm">Charity — find, claim and collect</h4>
+    <h4 style="font-size:9pt;font-weight:800;margin:6mm 0 1mm">Farmer — post with Camera AI</h4>
     <div class="flow">
-      <div class="frow">${chain([['15 Home'],['16 Browse'],['17 Listing Details'],['18 Claimed!'],['19 Pickup QR']])}</div>
-      <div class="frow">${chain([['22 Chat — negotiate'],['20 Ongoing Procurements'],['19 Show QR at gate'],['Farmer scans →',1]])}</div>
+      <div class="frow">${chain([['Post Surplus'],['Camera Assistant'],['AI Estimate'],['Post Surplus'],['Hurray!']])}</div>
     </div>
 
-    <h4 style="font-size:9pt;font-weight:800;margin:8mm 0 1mm">Listing lifecycle</h4>
+    <h4 style="font-size:9pt;font-weight:800;margin:6mm 0 1mm">Farmer — complete sale + pay</h4>
     <div class="flow">
-      <div class="frow">${chain([['Available'],['Locked-in'],['QR scanned'],['Completed']])}</div>
-      <p style="margin:1mm 0 0;line-height:1.55;font-size:7.5pt">
-        A lock-in cancelled by <i>either</i> party returns the listing to <b>Available</b>. Only a QR scan performed by
-        the farmer moves a listing to <b>Completed</b> — neither side can mark a handover complete alone.
-      </p>
+      <div class="frow">${chain([['Scan QR / Show Deal QR'],['Confirm & Pay'],['Nice!']])}</div>
     </div>
 
-    <p class="specref" style="margin-top:8mm">The two roles meet at exactly two points: the chat thread, where a
-      lock-in is negotiated, and the QR handshake at collection. Everything else is role-private. This is why the
-      farmer and charity navigation trees are near-mirrors rather than a shared set of screens.</p>
+    <h4 style="font-size:9pt;font-weight:800;margin:6mm 0 1mm">Charity — claim, QR, pay</h4>
+    <div class="flow">
+      <div class="frow">${chain([['Browse'],['Claim'],['Pickup QR / Scan Deal'],['Confirm & Pay'],['Collected!']])}</div>
+    </div>
+
+    <h4 style="font-size:9pt;font-weight:800;margin:6mm 0 1mm">Listing lifecycle</h4>
+    <div class="flow">
+      <div class="frow">${chain([['Available'],['Locked-in'],['QR scanned'],['Paid / Collected']])}</div>
+    </div>
+
+    <p class="specref" style="margin-top:6mm">Auth (FR1–2), Camera AI (FR4–5), QR (FR11–12) and mock Pay (FR14) close the gaps called out in the previous booklet. POP / paper cut-outs can be printed directly from this HTML via Print → Save as PDF.</p>
     ${foot('FarmLink — Screen Sketches','Task flows')}
   </section>`;
 }
@@ -1413,18 +1566,18 @@ function screenPage(s, i){
 
 function gapsPage(){
   const gaps = [
-    ['Authentication and sign-up','There is no log-in, registration, or initial "am I a farmer or a charity?" role-selection flow. The prototype switches roles through a sidebar control, which is a debugging affordance rather than a product path. The specification assumes accounts exist (it lists personal details and account deletion) without describing how they are created.'],
-    ['Spatial context','Distance is the primary sort and filter axis for the charity, but it appears only as a line of text such as "12 km away". Collection is fundamentally a geographic problem and there is no map, no route estimate, and no sense of clustering — a charity cannot see that three listings sit on one road.'],
-    ['Real QR encoding','The code on screen 19 renders the finder squares and timing lines of a genuine QR symbol so that it reads correctly as a code, but it encodes nothing. A working implementation needs a real encoder and a camera decoder, plus a signed payload so a screenshot of someone else\'s code cannot be replayed.'],
-    ['Persistence','Nothing survives a reload. Posting a listing walks a fixed confirmation path rather than appending to the catalogue, editing a listing is a stub, and lock-ins, deletions and sent messages all reset. This limits how convincingly the prototype can be handed to someone else to explore.'],
-    ['Accessibility','The prototype has no ARIA roles, no keyboard focus order, and no reduced-motion handling. Given how animation-dense the interface is, honouring the operating system\'s reduced-motion preference is the most pressing of these. Most interactive elements are non-semantic containers and are not reachable by keyboard or announced by a screen reader.'],
-    ['Cancellation semantics','The specification allows either party to cancel a lock-in but does not say what happens to a listing cancelled repeatedly, whether a collection deadline that passes while locked-in reopens the listing automatically, or whether cancellations affect a participant\'s standing. These rules would need settling before implementation.']
+    ['Real OTP delivery','The prototype accepts demo code 1234 and never calls Firebase Auth / SMS. Production should use Firebase Auth phone/email OTP with rate limits and device checks.'],
+    ['Real camera + Vertex AI','Camera Assistant simulates capture and returns a canned estimate. Production needs expo-camera, Cloud Storage upload, and a Cloud Function invoking Vertex AI AutoML Vision (FR4 / NFR1).'],
+    ['Real QR encode/decode','QR patterns are decorative with finder squares. Production needs a signed, non-guessable payload per claim (NFR4) and expo-camera decoding.'],
+    ['Real payments','Confirm & Pay is Option A (mock). Stripe test mode (Option B) remains a stretch if a card UI must look production-real.'],
+    ['Maps navigation','“Navigate to farm” is a toast stub. Production should deep-link into the native maps app with the farm GPS (FR10).'],
+    ['Persistence & offline','Nothing survives a reload. NFR2 retry/queue for intermittent connectivity is not yet modelled.']
   ];
   return `<section class="page" id="gaps">
     <div class="pg-head"><span class="nm">Known gaps &amp; open questions</span><span class="sp"></span>
       <span class="badge">For the next iteration</span></div>
-    <p class="purpose" style="margin-bottom:5mm">Recorded here rather than left implicit in the sketches, so the
-      boundary between what has been designed and what remains open is explicit.</p>
+    <p class="purpose" style="margin-bottom:5mm">Auth, Camera AI, dual QR paths and mock Pay are now in the prototype.
+      What remains is the production wiring called out in the Functional Requirements doc.</p>
     <table><tbody>
       ${gaps.map(([t,d],i)=>`<tr>
         <td class="c">${String(i+1).padStart(2,'0')}</td>
@@ -1439,6 +1592,12 @@ function gapsPage(){
 document.getElementById('doc').innerHTML =
   coverPage() + indexPage() + legendPage() + flowPage() +
   SCREENS.map(screenPage).join('') + gapsPage();
+
+const nScreens = SCREENS.length;
+const lbl = document.getElementById('screenCountLabel');
+if(lbl) lbl.textContent = `${nScreens} screens · A4 booklet`;
+const cc = document.getElementById('coverCount'); if(cc) cc.textContent = nScreens;
+const cb = document.getElementById('contentsBadge'); if(cb) cb.textContent = `${nScreens} screens`;
 
 /* Pages are built by script, so an #s07 anchor in the URL is resolved
    before its target exists — re-apply it once the document is in place. */

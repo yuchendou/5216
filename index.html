@@ -216,6 +216,77 @@ body{
   color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:.25s;margin-bottom:14px;
 }
 .dropzone:hover{background:var(--green-050);border-color:var(--green-500);color:var(--green-700);transform:scale(1.015)}
+.dropzone.has-photo{background:var(--green-050);border-color:var(--green-500);border-style:solid}
+
+/* auth */
+.auth-body{flex:1;display:flex;flex-direction:column;padding:8px 22px 22px;overflow:auto}
+.auth-tabs{display:flex;background:var(--green-050);border-radius:14px;padding:4px;margin-bottom:18px}
+.auth-tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:11px;font:inherit;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.auth-tabs button.on{background:#fff;color:var(--green-900);box-shadow:0 2px 8px rgba(31,77,39,.1)}
+.otp-row{display:flex;gap:10px;justify-content:center;margin:18px 0 8px}
+.otp-row input{
+  width:48px;height:56px;border:1.5px solid var(--line);border-radius:14px;text-align:center;
+  font-size:22px;font-weight:800;font-family:inherit;background:#fff;outline:0;transition:.2s;
+}
+.otp-row input:focus{border-color:var(--green-500);box-shadow:0 0 0 4px rgba(76,154,86,.14)}
+.role-cards{display:flex;flex-direction:column;gap:12px;margin:12px 0 20px}
+.role-card{
+  display:flex;gap:14px;align-items:center;padding:16px;border-radius:18px;background:#fff;
+  border:2px solid var(--line);cursor:pointer;transition:.22s;text-align:left;font:inherit;color:inherit;width:100%;
+}
+.role-card:hover{border-color:var(--green-500);transform:translateY(-2px)}
+.role-card.on{border-color:var(--green-700);background:var(--green-050);box-shadow:0 8px 20px -10px rgba(46,107,52,.45)}
+.role-card .rc-ic{font-size:32px;width:52px;height:52px;border-radius:16px;background:var(--green-100);display:grid;place-items:center;flex:0 0 auto}
+.role-card .rc-t{font-size:15px;font-weight:800}
+.role-card .rc-s{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+/* camera assistant */
+.cam-stage{
+  position:relative;width:100%;aspect-ratio:3/4;border-radius:22px;overflow:hidden;
+  background:linear-gradient(160deg,#1a2e1f 0%,#2a4a32 40%,#1f3a28 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.cam-stage .cam-grid{position:absolute;inset:18% 14%;border:1.5px dashed rgba(255,255,255,.35);border-radius:12px;pointer-events:none}
+.cam-stage .cam-hint{position:absolute;left:0;right:0;top:12px;text-align:center;color:rgba(255,255,255,.85);font-size:12px;font-weight:700}
+.cam-stage .cam-produce{
+  position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);
+  font-size:92px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.35));
+  animation:camBob 2.4s ease-in-out infinite;
+}
+@keyframes camBob{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-54%) scale(1.04)}}
+.cam-stage.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards}
+@keyframes flash{from{opacity:.85}to{opacity:0}}
+.cam-controls{display:flex;align-items:center;justify-content:space-between;padding:18px 28px 8px}
+.cam-shutter{
+  width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:transparent;
+  box-shadow:0 0 0 3px var(--green-700),0 8px 20px rgba(0,0,0,.25);cursor:pointer;
+  position:relative;flex:0 0 auto;
+}
+.cam-shutter::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--green-600)}
+.cam-shutter:active::after{transform:scale(.92)}
+.ai-analyzing{display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 16px}
+.ai-ring{
+  width:64px;height:64px;border-radius:50%;border:3px solid var(--green-100);
+  border-top-color:var(--green-600);animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-card{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 15px;margin-top:12px;
+  box-shadow:0 4px 14px rgba(31,77,39,.07);
+}
+.ai-badge{
+  display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#eef7e9,#e0eefb);
+  border-radius:999px;padding:5px 11px;font-size:11px;font-weight:800;color:var(--green-900);
+}
+.stars{color:var(--amber);letter-spacing:1px;font-size:15px}
+
+/* payment */
+.pay-card{
+  background:linear-gradient(135deg,#2e6b34,#1f4d27);border-radius:18px;padding:18px;color:#fff;
+  margin:8px 0 14px;box-shadow:0 12px 28px -10px rgba(31,77,39,.55);position:relative;overflow:hidden;
+}
+.pay-card::after{content:"";position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08)}
+.pay-card .chip-icon{width:36px;height:24px;border-radius:5px;background:linear-gradient(135deg,#ffd76b,#e0a32e);margin-bottom:28px}
 
 /* home tiles */
 .hero{
@@ -435,7 +506,7 @@ body{
   <h3>Screens</h3>
   <nav class="jump" id="jumpList"></nav>
 
-  <p class="hint">💡 Every screen is clickable — the post form, lock-in, QR scan, chat quote-reply and stats charts all animate.</p>
+  <p class="hint">💡 Auth (OTP), Camera AI, QR show/scan and mock Pay are live — jump list on the left covers every screen.</p>
 </aside>
 
 <!-- ============ PHONE ============ -->
@@ -570,18 +641,111 @@ function listingCard(l, onclick){
 }
 
 /* =======================================================================
-   SHARED · Splash
+   SHARED · Splash + Auth (FR1 / FR2 · OTP)
 ======================================================================= */
+let AUTH = { mode:'login', method:'email', contact:'', pendingRole:'farmer', otp:['','','',''] };
+let POST_DRAFT = { hasPhoto:false, estimate:null, produce:'Carrots (Imperfect)', qty:'20 kg' };
+
 reg('splash', {nav:false, html:()=>`
   <div class="splash-body" style="background:linear-gradient(180deg,#eaf6ff 0%,#eef7e9 60%,#f7f3e8 100%)">
     <div class="logo-big"><span class="fm">Farm</span><span class="lk">Link</span>
       <span class="leaf-sway" style="display:inline-block">🌿</span></div>
     <div class="f12 muted" style="text-align:center;animation:fadeUp .8s .15s both">Connecting fresh produce<br>to brighter tomorrows.</div>
     <div style="margin:18px 0 26px;animation:popIn .8s .2s both">${cow(200,'wave')}</div>
-    <button class="btn" onclick="go('${'home'}')">Get Started</button>
-    <button class="btn ghost" style="margin-top:10px" onclick="toast('Log in screen (prototype stub)')">Log In</button>
-    <div class="f11 muted" style="margin-top:16px">Signed in as <b id="roleLabel">Farmer / Producer</b> · switch on the left</div>
+    <button class="btn" onclick="AUTH.mode='signup';go('auth-signup')">Get Started</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="AUTH.mode='login';go('auth-login')">Log In</button>
+    <div class="f11 muted" style="margin-top:16px">Prototype · OTP auth · role-based access</div>
   </div>`});
+
+reg('auth-login', {nav:false, html:()=>`
+  ${bar('Log In','splash')}
+  <div class="auth-body">
+    <div style="text-align:center;margin-bottom:6px">${cow(110,'idle')}</div>
+    <div class="b8" style="font-size:20px;text-align:center">Welcome back</div>
+    <div class="f12 muted" style="text-align:center;margin:6px 0 16px">Sign in with email or phone — we’ll send a one-time password.</div>
+    <div class="auth-tabs">
+      <button class="on" id="tabEmail" onclick="setAuthMethod('email',this)">Email</button>
+      <button id="tabPhone" onclick="setAuthMethod('phone',this)">Phone</button>
+    </div>
+    <div class="field" id="authField"><label id="authLabel">✉️ Email</label><input id="authInput" type="email" placeholder="dave@farm.au" value="dave@farm.au"></div>
+    <button class="btn" style="margin-top:8px" onclick="sendOtp()">Send OTP</button>
+    <div class="f12 muted" style="text-align:center;margin-top:16px">New here? <b style="color:var(--green-700);cursor:pointer" onclick="AUTH.mode='signup';go('auth-signup')">Create an account</b></div>
+  </div>`});
+
+reg('auth-signup', {nav:false, html:()=>`
+  ${bar('Sign Up','splash')}
+  <div class="auth-body">
+    <div class="b8" style="font-size:20px">Create your account</div>
+    <div class="f12 muted" style="margin:6px 0 14px">Choose a role first — this unlocks the right screens (FR1 / FR2).</div>
+    <div class="role-cards">
+      <button class="role-card ${AUTH.pendingRole==='farmer'?'on':''}" onclick="pickRole('farmer',this)">
+        <div class="rc-ic">🚜</div>
+        <div><div class="rc-t">Farmer / Producer</div><div class="rc-s">Post surplus, manage listings, scan pickup QR, review AI estimates</div></div>
+      </button>
+      <button class="role-card ${AUTH.pendingRole==='charity'?'on':''}" onclick="pickRole('charity',this)">
+        <div class="rc-ic">🤝</div>
+        <div><div class="rc-t">Charity / Volunteer</div><div class="rc-s">Browse nearby listings, claim batches, show or scan QR at collection</div></div>
+      </button>
+    </div>
+    <div class="auth-tabs">
+      <button class="on" id="tabEmail" onclick="setAuthMethod('email',this)">Email</button>
+      <button id="tabPhone" onclick="setAuthMethod('phone',this)">Phone</button>
+    </div>
+    <div class="field"><label>👤 Name</label><input id="authName" placeholder="Your name" value="Dave Miller"></div>
+    <div class="field" id="authField"><label id="authLabel">✉️ Email</label><input id="authInput" type="email" placeholder="dave@farm.au" value="dave@farm.au"></div>
+    <button class="btn" style="margin-top:8px" onclick="sendOtp()">Continue with OTP</button>
+    <div class="f12 muted" style="text-align:center;margin-top:16px">Already have an account? <b style="color:var(--green-700);cursor:pointer" onclick="AUTH.mode='login';go('auth-login')">Log in</b></div>
+  </div>`});
+
+reg('auth-otp', {nav:false, html:()=>`
+  ${bar('Verify OTP', AUTH.mode==='signup'?'auth-signup':'auth-login')}
+  <div class="auth-body" style="align-items:center">
+    <div style="margin:8px 0 4px">${cow(100,'loading')}</div>
+    <div class="b8" style="font-size:18px;text-align:center">Enter the 4-digit code</div>
+    <div class="f12 muted" style="text-align:center;margin:6px 0 4px;max-width:260px">Sent to <b>${AUTH.contact || 'dave@farm.au'}</b> via ${AUTH.method==='phone'?'SMS':'email'}. Demo code: <b>1 2 3 4</b></div>
+    <div class="otp-row">
+      ${[0,1,2,3].map(i=>`<input maxlength="1" inputmode="numeric" id="otp${i}" oninput="otpType(this,${i})" onkeydown="otpKey(event,${i})">`).join('')}
+    </div>
+    <button class="btn" style="margin-top:14px;width:100%" onclick="verifyOtp()">Verify &amp; continue</button>
+    <button class="btn ghost" style="margin-top:10px;width:100%" onclick="toast('OTP resent · still 1234')">Resend code</button>
+  </div>`,
+  mount(){ const a=document.getElementById('otp0'); if(a) a.focus(); }});
+
+function setAuthMethod(m, btn){
+  AUTH.method=m;
+  const tabs=btn.parentNode; [...tabs.children].forEach(c=>c.classList.remove('on')); btn.classList.add('on');
+  const lab=document.getElementById('authLabel'), inp=document.getElementById('authInput');
+  if(!lab||!inp) return;
+  if(m==='email'){ lab.textContent='✉️ Email'; inp.type='email'; inp.placeholder='dave@farm.au'; inp.value='dave@farm.au'; }
+  else { lab.textContent='📱 Phone'; inp.type='tel'; inp.placeholder='0412 345 678'; inp.value='0412 345 678'; }
+}
+function pickRole(r, btn){
+  AUTH.pendingRole=r;
+  btn.parentNode.querySelectorAll('.role-card').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+}
+function sendOtp(){
+  const inp=document.getElementById('authInput');
+  AUTH.contact = (inp && inp.value) || (AUTH.method==='phone'?'0412 345 678':'dave@farm.au');
+  toast(`OTP sent to ${AUTH.contact}`);
+  go('auth-otp');
+}
+function otpType(el,i){
+  el.value = el.value.replace(/\D/g,'').slice(0,1);
+  AUTH.otp[i]=el.value;
+  if(el.value && i<3) document.getElementById('otp'+(i+1)).focus();
+  if(AUTH.otp.every(Boolean)) setTimeout(verifyOtp,180);
+}
+function otpKey(e,i){
+  if(e.key==='Backspace' && !e.target.value && i>0) document.getElementById('otp'+(i-1)).focus();
+}
+function verifyOtp(){
+  const code = AUTH.otp.join('') || [...Array(4)].map((_,i)=>document.getElementById('otp'+i)?.value||'').join('');
+  if(code && code!=='1234'){ toast('Wrong code — try 1234'); return; }
+  if(AUTH.mode==='signup') applyRole(AUTH.pendingRole);
+  toast(AUTH.mode==='signup'?'Account created · welcome! ✅':'Signed in ✅');
+  go('home');
+}
 
 /* =======================================================================
    FARMER SCREENS
@@ -670,23 +834,38 @@ function filterF(btn,f){ [...btn.parentNode.children].forEach(c=>c.classList.rem
 function delListing(btn,name){ const card = btn.closest('.listing'); card.style.transition='.35s'; card.style.transform='translateX(-110%)'; card.style.opacity='0'; setTimeout(()=>{card.remove(); toast('Deleted "'+name+'"');},340); }
 function lockIn(id){ const l = LISTINGS.find(x=>x.id===id); l.status='lock'; renderF('all'); toast('Marked as locked-in 🔒'); }
 
-/* -- Post Surplus ------------------------------------------------------- */
+/* -- Post Surplus + Camera AI assistant (FR3–FR5) ----------------------- */
 reg('f-post', {nav:false, html:()=>`
   ${bar('Post Surplus','f-home')}
   <div class="body">
     <div class="f12 muted" style="text-align:center;margin-bottom:12px">Share your surplus produce with local food-relief organisations.</div>
-    <div class="stepper"><div class="step done"></div><div class="step" id="st2"></div><div class="step" id="st3"></div></div>
+    <div class="stepper"><div class="step done"></div><div class="step ${POST_DRAFT.hasPhoto?'done':''}" id="st2"></div><div class="step ${POST_DRAFT.estimate?'done':''}" id="st3"></div></div>
 
-    <div class="dropzone" onclick="photoAdd(this)">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8h3.5L8 5.5h8L17.5 8H21v12H3z"/><circle cx="12" cy="13.5" r="3.7"/></svg>
-      <span>Add a photo</span>
+    <div class="dropzone ${POST_DRAFT.hasPhoto?'has-photo':''}" onclick="go('f-camera')">
+      ${POST_DRAFT.hasPhoto
+        ? `<div style="font-size:38px;animation:popIn .5s cubic-bezier(.68,-.6,.32,1.6)">🥕</div><span style="color:var(--green-700)">Photo added · tap to retake</span>`
+        : `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M3 8h3.5L8 5.5h8L17.5 8H21v12H3z"/><circle cx="12" cy="13.5" r="3.7"/></svg><span>Open camera assistant</span>`}
     </div>
 
-    <div class="field"><label>🥕 Produce type</label><input placeholder="e.g. Carrots" oninput="stepUp()"></div>
-    <div class="field"><label>🧺 Quantity</label><input placeholder="e.g. 20 kg" oninput="stepUp()"></div>
+    ${POST_DRAFT.estimate?`
+    <div class="ai-card">
+      <div class="row"><span class="ai-badge">✨ Camera AI · Vertex Vision</span><div class="sp"></div>
+        <button class="btn ghost sm" onclick="go('f-ai')">Edit</button></div>
+      <div class="row" style="margin-top:10px">
+        <div style="flex:1"><div class="f11 muted">Condition / freshness</div>
+          <div class="b8 f15" style="margin-top:2px">${POST_DRAFT.estimate.label}</div>
+          <div class="stars" style="margin-top:2px">${'★'.repeat(POST_DRAFT.estimate.stars)}${'☆'.repeat(5-POST_DRAFT.estimate.stars)}</div></div>
+        <div style="text-align:right"><div class="f11 muted">Confidence</div>
+          <div class="b8" style="font-size:18px;color:var(--green-700)">${POST_DRAFT.estimate.conf}%</div></div>
+      </div>
+      <div class="f11 muted" style="margin-top:8px;line-height:1.45">${POST_DRAFT.estimate.note}</div>
+    </div>`:''}
+
+    <div class="field"><label>🥕 Produce type</label><input placeholder="e.g. Carrots" value="${POST_DRAFT.produce}" oninput="POST_DRAFT.produce=this.value;stepUp()"></div>
+    <div class="field"><label>🧺 Quantity</label><input placeholder="e.g. 20 kg" value="${POST_DRAFT.qty}" oninput="POST_DRAFT.qty=this.value;stepUp()"></div>
     <div class="field"><label>${I.cal} Deadline</label><input type="date" value="2026-08-12"></div>
-    <div class="field"><label>${I.pin} Farm location</label><input placeholder="Camden, NSW" value="Camden, NSW"></div>
-    <div class="field"><label>🏷️ Price</label><input placeholder="e.g. $5 (optional)"></div>
+    <div class="field"><label>${I.pin} Farm location</label><input placeholder="Camden, NSW" value="Camden, NSW"><span class="f11" style="color:var(--green-700);font-weight:700;white-space:nowrap" onclick="toast('GPS auto-filled · Camden, NSW')">GPS</span></div>
+    <div class="field"><label>🏷️ Price</label><input placeholder="e.g. $5 or Donation"></div>
     <div class="field"><label>🚚 Pickup info</label><input placeholder="Gate B, 8am–5pm"></div>
 
     <div class="card row" style="margin:12px 0 16px">
@@ -694,10 +873,88 @@ reg('f-post', {nav:false, html:()=>`
       <div class="switch on" onclick="this.classList.toggle('on')"></div>
     </div>
 
-    <button class="btn" onclick="go('f-success')">Post Listing</button>
+    <button class="btn" onclick="publishListing()">Post Listing</button>
   </div>`});
 
-function photoAdd(el){ el.innerHTML = '<div style="font-size:38px;animation:popIn .5s cubic-bezier(.68,-.6,.32,1.6)">🥕</div><span style="color:var(--green-700)">Photo added · 1/3</span>'; el.style.background='var(--green-050)'; el.style.borderColor='var(--green-500)'; stepUp(); }
+reg('f-camera', {nav:false, html:()=>`
+  ${bar('Camera Assistant','f-post')}
+  <div class="body">
+    <div class="f12 muted" style="text-align:center;margin-bottom:12px">Frame the produce clearly. On capture we call Vertex AI for a condition estimate (FR4).</div>
+    <div class="cam-stage" id="camStage">
+      <div class="cam-hint">Align produce inside the guide</div>
+      <div class="cam-grid"></div>
+      <div class="cam-produce">🥕</div>
+    </div>
+    <div class="cam-controls">
+      <button class="iconbtn" onclick="toast('Flash toggled')" style="background:#fff">⚡</button>
+      <button class="cam-shutter" aria-label="Capture" onclick="capturePhoto()"></button>
+      <button class="iconbtn" onclick="toast('Picked from gallery');capturePhoto()" style="background:#fff">🖼</button>
+    </div>
+    <div class="f11 muted" style="text-align:center">Tip: outdoor light works best for freshness scoring</div>
+  </div>`});
+
+reg('f-ai', {nav:false, html:()=>`
+  ${bar('AI Estimate','f-post')}
+  <div class="body" id="aiBody">
+    <div class="ai-analyzing" id="aiBusy">
+      ${cow(120,'loading')}
+      <div class="ai-ring"></div>
+      <div class="b8" style="font-size:16px">Analysing produce…</div>
+      <div class="f12 muted" style="text-align:center">Uploading to Cloud Storage → Vertex AI Vision<br>Usually a few seconds (NFR1)</div>
+    </div>
+  </div>`,
+  mount(){ setTimeout(showAiResult, 1600); }});
+
+function capturePhoto(){
+  const stage=document.getElementById('camStage');
+  if(stage) stage.classList.add('flash');
+  POST_DRAFT.hasPhoto=true;
+  toast('Photo captured');
+  setTimeout(()=>go('f-ai'),380);
+}
+function showAiResult(){
+  const body=document.getElementById('aiBody'); if(!body) return;
+  POST_DRAFT.estimate = {
+    label:'Good · slight cosmetic blemishes',
+    stars:4, conf:91,
+    note:'Suitable for soups and meal prep within 4–5 days. Farmer can edit this before publishing (FR5).'
+  };
+  POST_DRAFT.produce = POST_DRAFT.produce || 'Carrots (Imperfect)';
+  body.innerHTML = `
+    <div style="text-align:center;margin-bottom:8px">${cow(100,'claimed')}</div>
+    <div class="b8" style="font-size:18px;text-align:center">Estimate ready</div>
+    <div class="f12 muted" style="text-align:center;margin:4px 0 12px">Review and edit before publishing</div>
+    <div class="ai-card">
+      <span class="ai-badge">✨ Vertex AI Vision</span>
+      <div class="field" style="margin-top:12px;margin-bottom:8px"><label>Condition</label>
+        <select id="aiLabel" style="border:0;outline:0;flex:1;font:inherit;text-align:right;background:transparent">
+          <option>Excellent · peak freshness</option>
+          <option selected>Good · slight cosmetic blemishes</option>
+          <option>Fair · use soon</option>
+          <option>Donate only · free</option>
+        </select>
+      </div>
+      <div class="row" style="margin:8px 0">
+        <div class="f12 muted">Confidence</div><div class="sp"></div>
+        <div class="b8" style="color:var(--green-700)">91%</div>
+      </div>
+      <div class="stars">★★★★☆</div>
+      <div class="f11 muted" style="margin-top:8px;line-height:1.45">${POST_DRAFT.estimate.note}</div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="confirmAi()">Confirm estimate</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="go('f-camera')">Retake photo</button>`;
+  stepUp();
+}
+function confirmAi(){
+  const sel=document.getElementById('aiLabel');
+  if(sel) POST_DRAFT.estimate.label = sel.value;
+  toast('Estimate saved — ready to publish');
+  go('f-post');
+}
+function publishListing(){
+  if(!POST_DRAFT.hasPhoto){ toast('Add a photo with the camera assistant first'); return; }
+  go('f-success');
+}
 function stepUp(){ const a=document.getElementById('st2'), b=document.getElementById('st3'); if(a) a.classList.add('done'); setTimeout(()=>b&&b.classList.add('done'),260); }
 
 /* -- Success screens ---------------------------------------------------- */
@@ -755,7 +1012,7 @@ reg('f-detail', {nav:false, html:()=>{
     <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="toast('Lock-in cancelled — listing is available again')">Cancel lock-in</button>
   </div>`;}});
 
-/* -- QR scanner --------------------------------------------------------- */
+/* -- QR scanner (farmer scans charity code · FR11–FR12) ----------------- */
 reg('f-scan', {nav:false, html:()=>`
   ${bar('Scan Procurement QR','f-detail')}
   <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
@@ -764,17 +1021,92 @@ reg('f-scan', {nav:false, html:()=>`
       <div class="scanline"></div>
     </div>
     <div class="f13 muted" style="text-align:center;margin-top:20px">Ask the collector to show their pickup QR code.<br>The sale is marked <b>Successful</b> only after a scan.</div>
-    <button class="btn" style="margin-top:26px" onclick="scanDone()">Simulate successful scan</button>
-    <button class="btn ghost" style="margin-top:10px" onclick="toast('Code entered manually')">Enter code manually</button>
+    <button class="btn" style="margin-top:26px" onclick="scanDone('farmer')">Simulate successful scan</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Code FL-2X9K-77QA entered')">Enter code manually</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="go('f-qr-show')">Or show your deal QR instead</button>
   </div>`});
 
-function scanDone(){
+reg('f-qr-show', {nav:false, html:()=>`
+  ${bar('Deal QR','f-chat')}
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="f13 muted" style="text-align:center;margin-bottom:14px">Show this QR so the charity can scan and finalise (Components §1.a.iv.5)</div>
+    <div class="qrbox" id="qrbox"></div>
+    <div class="b8" style="margin-top:16px;letter-spacing:2px">FL-DEAL-4F91</div>
+    <div class="card" style="margin-top:18px;width:100%">
+      <div class="row"><div class="av" style="background:#d8ecd2">🥬</div>
+        <div style="flex:1"><div class="b7 f13">Leafy Greens Mix · 12 kg</div><div class="f11 muted">Hope Kitchen · awaiting scan</div></div>
+        <span class="pill lock">Locked-in</span></div>
+    </div>
+    <button class="btn" style="margin-top:16px" onclick="go('pay')">Mark paid after scan</button>
+  </div>`,
+  mount(){ fillQr('qrbox','deal'); }});
+
+function scanDone(side){
   const s = document.getElementById('scanner');
-  s.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,#2e6b34,#1f4d27)">
+  if(s) s.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(150deg,#2e6b34,#1f4d27)">
     <div style="text-align:center;color:#fff;animation:popIn .55s cubic-bezier(.68,-.6,.32,1.6)">
-      <div style="font-size:52px">✅</div><div class="b8" style="margin-top:6px">Sale Successful</div></div></div>`;
-  toast('Sale complete! $5 added to your earnings 🎉');
-  setTimeout(()=>go('f-nice'),1400);
+      <div style="font-size:52px">✅</div><div class="b8" style="margin-top:6px">Scan confirmed</div></div></div>`;
+  toast(side==='charity'?'Collection verified · payment next 🎉':'Sale complete · payment next 🎉');
+  setTimeout(()=>go('pay'),1200);
+}
+
+/* -- Mock payment (Option A · FR14) ------------------------------------- */
+reg('pay', {nav:false, html:()=>`
+  ${bar('Confirm & Pay', ROLE==='farmer'?'f-sales':'c-proc')}
+  <div class="body">
+    <div style="text-align:center;margin-bottom:8px">${cow(100,'collected')}</div>
+    <div class="b8" style="font-size:18px;text-align:center">Confirm &amp; Pay</div>
+    <div class="f12 muted" style="text-align:center;margin:6px 0 12px">In-house mock — no real charge (FR14 Option A)</div>
+    <div class="card">
+      <div class="row"><div class="f13 muted">Listing</div><div class="sp"></div><div class="b7 f13">Leafy Greens Mix · 12 kg</div></div>
+      <div class="row" style="margin-top:8px"><div class="f13 muted">Counterparty</div><div class="sp"></div><div class="b7 f13">${ROLE==='farmer'?'Hope Kitchen':'Green Valley Farm'}</div></div>
+      <div class="row" style="margin-top:8px"><div class="f13 muted">Amount</div><div class="sp"></div><div class="b8" style="font-size:20px;color:var(--green-700)">$5.00</div></div>
+    </div>
+    <div class="pay-card">
+      <div class="chip-icon"></div>
+      <div class="f11" style="opacity:.8">Card ending</div>
+      <div class="b8" style="font-size:18px;letter-spacing:2px;margin-top:4px">•••• •••• •••• 4242</div>
+      <div class="row" style="margin-top:18px"><div class="f11" style="opacity:.8">Demo card</div><div class="sp"></div><div class="f11">08/28</div></div>
+    </div>
+    <div class="field"><label>Name on card</label><input value="Dave Miller"></div>
+    <div class="field"><label>Card number</label><input value="4242 4242 4242 4242"></div>
+    <button class="btn" style="margin-top:8px" onclick="completePay()">Pay $5.00</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="completePay(true)">Skip — mark as donation</button>
+  </div>`});
+
+function completePay(donate){
+  toast(donate?'Marked as donation · paymentStatus: n/a':'paymentStatus: paid ✅');
+  go(ROLE==='farmer'?'f-nice':'c-claimed-done');
+}
+
+reg('c-claimed-done', {nav:false, html:()=>`
+  ${bar('','c-home')}
+  <div class="celebrate" id="confettiPay">
+    ${cow(200,'hurray')}
+    <div class="big-title" style="margin-top:4px">Collected!</div>
+    <div class="f13 muted" style="margin-top:6px">QR verified · status → collected</div>
+    <div class="note">🌿 <div>Both parties updated in real time (FR13)</div></div>
+    <button class="btn" style="margin-top:26px" onclick="go('c-home')">Back to Home</button>
+  </div>`,
+  mount(){ confetti(document.getElementById('confettiPay')); }});
+
+function fillQr(id, seed){
+  const N=21, q=document.getElementById(id); if(!q) return;
+  const finderAt=[[0,0],[0,14],[14,0]];
+  const inFinder=(r,c)=>finderAt.find(([fr,fc])=>r>=fr&&r<fr+7&&c>=fc&&c<fc+7);
+  const inQuiet=(r,c)=>finderAt.some(([fr,fc])=>r>=fr-1&&r<=fr+7&&c>=fc-1&&c<=fc+7);
+  const salt = seed==='deal'?3:0;
+  let s='';
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    let on; const f=inFinder(r,c);
+    if(f){ const dr=r-f[0], dc=c-f[1];
+      on = dr===0||dr===6||dc===0||dc===6 || (dr>=2&&dr<=4&&dc>=2&&dc<=4);
+    } else if(inQuiet(r,c)) on=false;
+    else if(r===6||c===6) on=(r+c)%2===0;
+    else on=((r*7+c*13+((r*c)%5)+salt)%3)===0;
+    s+=`<i style="background:${on?'#1f4d27':'transparent'};animation-delay:${(r+c)*8}ms"></i>`;
+  }
+  q.innerHTML=s;
 }
 
 /* -- Ongoing sales ------------------------------------------------------ */
@@ -869,6 +1201,7 @@ function openAttachSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px
 function openLockSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">Deal status for this chat</div>
   <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Hope Kitchen</div>
   <button class="btn" onclick="closeSheet();toast('Marked as locked-in 🔒')">${I.lock} Mark as locked-in</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('f-qr-show')">${I.qr} Show deal QR</button>
   <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('f-scan')">${I.qr} Scan QR to complete</button>
   <button class="btn ghost danger" style="margin-top:10px;background:none;color:var(--red);border:1px solid #f0cdcb" onclick="closeSheet();toast('Lock-in cancelled')">Cancel lock-in</button>`); }
 
@@ -989,13 +1322,15 @@ function profileHTML(role){
     <div id="recent"></div>
     <button class="btn ghost" onclick="lazyMore('recent')">Load 5 more</button>
 
-    <div class="sect">Account</div>
+    <div class="sect">Account &amp; authentication</div>
     <div class="card">
-      <div class="listrow"><div style="flex:1"><div class="b7 f13">Push notifications</div><div class="f11 muted">Deal status and new messages</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
-      <div class="listrow"><div style="flex:1"><div class="b7 f13">Show my distance</div><div class="f11 muted">Let others see roughly how far you are</div></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="listrow" onclick="AUTH.mode='login';go('auth-otp')"><div style="flex:1"><div class="b7 f13">Manage OTP login</div><div class="f11 muted">Email or phone · One-Time Passwords</div></div><span class="f11 muted">›</span></div>
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">Push notifications</div><div class="f11 muted">Deal status and new messages</div></div><div class="switch on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+      <div class="listrow"><div style="flex:1"><div class="b7 f13">Show my distance</div><div class="f11 muted">Let others see roughly how far you are</div></div><div class="switch on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+      <div class="listrow" onclick="go('splash')"><div style="flex:1"><div class="b7 f13">Sign out</div><div class="f11 muted">Return to splash</div></div><span class="f11 muted">›</span></div>
     </div>
     <button class="btn danger" style="margin-top:14px" onclick="confirmDelete()">${I.trash} Delete Account</button>
-    <div class="f11 muted" style="text-align:center;margin-top:10px">FarmLink v0.9 · Prototype</div>
+    <div class="f11 muted" style="text-align:center;margin-top:10px">FarmLink v1.1 · Auth · Camera AI · QR · Pay</div>
   </div>`;
 }
 function openEditSheet(){ openSheet(`<div class="b8" style="margin-bottom:12px">Edit personal details</div>
@@ -1093,6 +1428,11 @@ reg('c-detail', {nav:false, html:()=>{
     <div class="f13 muted">${l.qty}</div>
     <div class="meta">${I.cal} Collect by ${l.dl}</div>
     <div class="meta">${I.pin} ${l.loc} (${l.dist} away)</div>
+    <div class="ai-card" style="margin-top:12px">
+      <span class="ai-badge">✨ Farmer-confirmed AI estimate</span>
+      <div class="row" style="margin-top:8px"><div class="b7 f13">Good · slight cosmetic blemishes</div><div class="sp"></div><div class="stars">★★★★☆</div></div>
+      <div class="f11 muted" style="margin-top:4px">Ideal for soups and meal prep · use within 4–5 days</div>
+    </div>
     <div class="grower">
       <div class="av" style="background:#d8ecd2">👨‍🌾</div>
       <div style="flex:1"><div class="f11 muted">Posted by</div><div class="b8 f13">${l.farm}</div><div class="verified">${I.check} Verified grower</div></div>
@@ -1106,6 +1446,7 @@ reg('c-detail', {nav:false, html:()=>{
       <button class="btn ghost" onclick="go('c-chat')">💬 Contact</button>
       <button class="btn" onclick="go('c-claimed')">Claim Listing</button>
     </div>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Opening Maps · Camden NSW')">🗺 Navigate to farm</button>
   </div>`;}});
 
 reg('c-claimed', {nav:false, html:()=>`
@@ -1123,7 +1464,7 @@ reg('c-claimed', {nav:false, html:()=>`
 reg('c-qr', {nav:false, html:()=>`
   ${bar('Procurement QR','c-proc')}
   <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-    <div class="f13 muted" style="text-align:center;margin-bottom:18px">Show this QR code when you collect</div>
+    <div class="f13 muted" style="text-align:center;margin-bottom:18px">Show this QR code when you collect · unique per claim (FR11 / NFR4)</div>
     <div class="qrbox" id="qrbox"></div>
     <div class="b8" style="margin-top:16px;letter-spacing:2px">FL-2X9K-77QA</div>
     <div class="card" style="margin-top:18px;width:100%">
@@ -1131,27 +1472,22 @@ reg('c-qr', {nav:false, html:()=>`
         <div style="flex:1"><div class="b7 f13">Leafy Greens Mix · 12 kg</div><div class="f11 muted">Green Valley Farm · 10 Aug 2:00 pm</div></div>
         <span class="pill lock">Locked-in</span></div>
     </div>
-    <button class="btn ghost" style="margin-top:14px;color:var(--red)" onclick="toast('Lock-in cancelled from your side')">Cancel this pickup</button>
+    <button class="btn" style="margin-top:14px" onclick="go('c-scan')">${I.qr} Scan farm deal QR instead</button>
+    <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="toast('Lock-in cancelled from your side')">Cancel this pickup</button>
   </div>`,
-  mount(){
-    const N=21, q=document.getElementById('qrbox');
-    // 7x7 finder patterns in three corners, timing lines on row/col 6, deterministic data fill
-    const finderAt=[[0,0],[0,14],[14,0]];
-    const inFinder=(r,c)=>finderAt.find(([fr,fc])=>r>=fr&&r<fr+7&&c>=fc&&c<fc+7);
-    const inQuiet=(r,c)=>finderAt.some(([fr,fc])=>r>=fr-1&&r<=fr+7&&c>=fc-1&&c<=fc+7);
-    let s='';
-    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
-      let on;
-      const f=inFinder(r,c);
-      if(f){ const dr=r-f[0], dc=c-f[1];
-        on = dr===0||dr===6||dc===0||dc===6 || (dr>=2&&dr<=4&&dc>=2&&dc<=4);
-      } else if(inQuiet(r,c)) on=false;
-      else if(r===6||c===6) on=(r+c)%2===0;
-      else on=((r*7+c*13+((r*c)%5))%3)===0;
-      s+=`<i style="background:${on?'#1f4d27':'transparent'};animation-delay:${(r+c)*8}ms"></i>`;
-    }
-    q.innerHTML=s; }});
+  mount(){ fillQr('qrbox','pickup'); }});
 
+reg('c-scan', {nav:false, html:()=>`
+  ${bar('Scan Deal QR','c-qr')}
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="scanner" id="scanner">
+      <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
+      <div class="scanline"></div>
+    </div>
+    <div class="f13 muted" style="text-align:center;margin-top:20px">Scan the farmer’s deal QR to finalise collection<br>(Components §2.a.iv.5 · FR12)</div>
+    <button class="btn" style="margin-top:26px" onclick="scanDone('charity')">Simulate successful scan</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="toast('Code FL-DEAL-4F91 entered')">Enter code manually</button>
+  </div>`});
 reg('c-proc', {nav:'box', html:()=>`
   ${bar('Ongoing Procurements', null, bellBtn('c-notif',2))}
   <div class="body">
@@ -1220,6 +1556,7 @@ reg('c-chat', {nav:false, html:()=>`
 function openCancelSheet(){ openSheet(`<div class="b8" style="margin-bottom:6px">Deal status for this chat</div>
   <div class="f12 muted" style="margin-bottom:14px">Leafy Greens Mix · 12 kg · Green Valley Farm</div>
   <button class="btn" onclick="closeSheet();go('c-qr')">${I.qr} Show pickup QR</button>
+  <button class="btn ghost" style="margin-top:10px" onclick="closeSheet();go('c-scan')">${I.qr} Scan farm deal QR</button>
   <button class="btn ghost" style="margin-top:10px;color:var(--red)" onclick="closeSheet();toast('Lock-in cancelled from your side')">Cancel this lock-in</button>`); }
 
 reg('c-notif', {nav:false, html:()=>`
@@ -1249,8 +1586,22 @@ const NAVS = {
   charity:[['c-home','Home','home'],['c-browse','Browse','search'],['c-proc','Pickups','box'],['c-chatlist','Messages','chat'],['c-profile','Profile','user']]
 };
 const JUMPS = {
-  farmer:[['splash','Splash'],['f-home','Home Dashboard'],['f-post','Post Surplus'],['f-success','Hurray!'],['f-nice','Nice!'],['f-listings','Active Listings'],['f-detail','Listing Details'],['f-scan','QR Scanner'],['f-sales','Ongoing Sales'],['f-chatlist','Messages'],['f-chat','Chat Thread'],['f-notif','Notifications'],['f-stats','Sales Stats'],['f-profile','Profile']],
-  charity:[['splash','Splash'],['c-home','Home Dashboard'],['c-browse','Available Listings'],['c-detail','Listing Details'],['c-claimed','Claimed!'],['c-qr','Pickup QR'],['c-proc','Ongoing Procurements'],['c-chatlist','Messages'],['c-chat','Chat Thread'],['c-notif','Notifications'],['c-stats','Community Impact'],['c-profile','Profile']]
+  farmer:[
+    ['splash','Splash'],['auth-login','Log In'],['auth-signup','Sign Up'],['auth-otp','Verify OTP'],
+    ['f-home','Home Dashboard'],['f-post','Post Surplus'],['f-camera','Camera Assistant'],['f-ai','AI Estimate'],
+    ['f-success','Hurray!'],['f-nice','Nice!'],['f-listings','Active Listings'],['f-detail','Listing Details'],
+    ['f-scan','QR Scanner'],['f-qr-show','Show Deal QR'],['pay','Confirm & Pay'],
+    ['f-sales','Ongoing Sales'],['f-chatlist','Messages'],['f-chat','Chat Thread'],
+    ['f-notif','Notifications'],['f-stats','Sales Stats'],['f-profile','Profile']
+  ],
+  charity:[
+    ['splash','Splash'],['auth-login','Log In'],['auth-signup','Sign Up'],['auth-otp','Verify OTP'],
+    ['c-home','Home Dashboard'],['c-browse','Available Listings'],['c-detail','Listing Details'],
+    ['c-claimed','Claimed!'],['c-qr','Pickup QR'],['c-scan','Scan Deal QR'],['pay','Confirm & Pay'],
+    ['c-claimed-done','Collected!'],['c-proc','Ongoing Procurements'],
+    ['c-chatlist','Messages'],['c-chat','Chat Thread'],['c-notif','Notifications'],
+    ['c-stats','Community Impact'],['c-profile','Profile']
+  ]
 };
 
 function renderTabbar(){
@@ -1387,8 +1738,11 @@ setInterval(()=>{
 
 /* boot — an optional #screen-id in the URL deep-links straight to that screen */
 const boot = location.hash.slice(1);
-if(SCREENS[boot]){ if(boot.startsWith('c-')) applyRole('charity'); go(boot); }
-else go('splash');
+if(SCREENS[boot]){
+  if(boot.startsWith('c-')) applyRole('charity');
+  else if(boot.startsWith('f-')) applyRole('farmer');
+  go(boot);
+} else go('splash');
 </script>
 </body>
 </html>
